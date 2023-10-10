@@ -1,29 +1,19 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import routes from "./global/routes";
 import AuthState from "./contexts/AuthContext/AuthState";
 import PrivateRoute from "./PrivateRoute";
 import AdminRoute from "./AdminRoute";
 import NotAuthRoute from "./NotAuthRoute";
 import Header from "./components/header/Header";
-import LeftSideBar from "./components/leftSideBarComponents/LeftSideBar";
-import { useEffect } from "react";
 import AppState from "./contexts/AppContext/AppState";
-import AdminOwnerRoute from "./AdminRecruiterRoute";
 import AdminRecruiterRoute from "./AdminRecruiterRoute";
 import AdminApplicantRoute from "./AdminApplicantRoute";
+import Footer from "./components/footer/Footer";
 
 function App() {
-  const navigate = useNavigate();
-  // useEffect(() => {
-  //   const urlLocalStorage = localStorage.getItem("currentUrl");
-  //   urlLocalStorage && navigate(urlLocalStorage);
-  // }, []);
-  const pathname = window.location.pathname;
-  const ignore_css = ["/login", "/register"];
   return (
     <AppState>
       <AuthState>
-       
         <>
           <Header />
           <Routes>
@@ -63,8 +53,8 @@ function App() {
               );
             })}
           </Routes>
+          <Footer />
         </>
-        {/* </div> */}
       </AuthState>
     </AppState>
   );
