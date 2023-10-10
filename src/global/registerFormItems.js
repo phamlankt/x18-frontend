@@ -1,0 +1,47 @@
+import {
+  FaEnvelope,
+  FaLock,
+  FaLockOpen,
+  FaPhoneFlip,
+  FaUser,
+} from "react-icons/fa6";
+
+const registerFormItems = [
+  {
+    label: "Email Address",
+    fieldName: "email",
+    fieldIcon: <FaEnvelope />,
+    type: "email",
+  },
+
+  {
+    label: "Password",
+    fieldName: "password",
+    fieldIcon: <FaLock />,
+    type: "password",
+  },
+  {
+    label: "Confirm Password",
+    fieldName: "conf_password",
+    fieldIcon: <FaLockOpen />,
+    type: "password",
+  },
+  {
+    label: "Role",
+    fieldName: "role",
+    as: "select",
+    options: [
+      { value: "", name: "Choose a role ...", options: "disabled selected hidden" },
+      {
+        value: "recruiter",
+        name: "Nhà tuyển dụng",
+      },
+      {
+        value: "applicant",
+        name: "Người lao động",
+      },
+    ],
+  },
+];
+
+export { registerFormItems };
