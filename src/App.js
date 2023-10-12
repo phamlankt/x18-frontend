@@ -15,7 +15,6 @@ function App() {
     <AppState>
       <AuthState>
         <>
-          <Header />
           <Routes>
             {routes.map((route, index) => {
               const {
@@ -53,7 +52,6 @@ function App() {
               );
             })}
           </Routes>
-          <Footer />
         </>
       </AuthState>
     </AppState>
