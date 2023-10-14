@@ -38,17 +38,15 @@ export const routes = [
   {
     path: "/profile",
     component: <Profile />,
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: "/login",
     component: <Login />,
-    notAuth: true,
   },
   {
     path: "/register",
     component: <Register />,
-    notAuth: true,
   },
 ];
 export default routes;

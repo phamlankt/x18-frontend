@@ -1,23 +1,31 @@
 import React, { useContext, useState } from "react";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
-
+import userAPI from "../../apis/userAPI";
+import AlertContext from "../../contexts/AlertContext/AlertContext";
 
 function Avatar() {
-  const { auth,handleLogin } = useContext(AuthContext);
+  const { auth, handleLogin } = useContext(AuthContext);
+  const { handleAlertStatus } = useContext(AlertContext);
   const [loading, setLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const handleFileUpload = (e) => {
+  const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     try {
       setLoading(true);
       const formData = new FormData();
-      formData.append("avatar", selectedFile);
-
+      formData.append("avatar", file);
+      await userAPI.uploadAvatar(formData);
       handleLogin();
-      setSelectedFile();
+      handleAlertStatus({
+        type: "success",
+        message: "Upload avatar image sucessfully!",
+      });
     } catch (error) {
-      console.error(error);
+      handleAlertStatus({
+        type: "error",
+        message: error.response.data.message,
+      });
+      console.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -34,16 +42,25 @@ function Avatar() {
         }
       />
       <span className="fw-bold">{auth.user.username}</span>
-      {loading && (
-        <p className="text-info mt-3">Upload avatar in progress...</p>
-      )}
       <div className="mb-3 mt-3">
+        <label
+          className="btn-primary btn"
+          for="formFile"
+          onChange={handleFileUpload}
+        >
+          {loading && (
+            <span className="spinner-border spinner-border-sm mr-1"></span>
+          )}
+          {loading ? "Uploading..." : "Upload Image"}
+        </label>
+
         <input
           className="form-control"
           type="file"
           id="formFile"
           onChange={handleFileUpload}
           accept="image/*"
+          style={{ display: "none" }}
         />
       </div>
     </div>

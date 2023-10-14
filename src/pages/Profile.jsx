@@ -6,7 +6,6 @@ import ResetPasswordModal from "../components/profile/ResetPasswordModal";
 
 const Profile = () => {
   const [resetPasswordModalOpen, setResetPasswordModalOpen] = useState(false);
-
   return (
     <>
       <Header />

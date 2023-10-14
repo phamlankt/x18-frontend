@@ -5,20 +5,16 @@ import {
   FaRightToBracket,
   FaTwitter,
 } from "react-icons/fa6";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext/AuthContext";
 import authAPI from "../apis/authAPI";
-import AppContext from "../contexts/AppContext/AppContext";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { loginFormItems } from "../global/loginFormItems";
 
 const Login = () => {
-  useEffect(() => {
-    localStorage.setItem("currentUrl", window.location.pathname);
-  }, []);
-  const { handleLeftSideBarSelectedItem } = useContext(AppContext);
+  const {auth}=useContext(AuthContext)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -46,13 +42,11 @@ const Login = () => {
       localStorage.setItem("accessToken", response.data.data.accessToken);
 
       const userInfo = await handleLogin();
-      if (userInfo.role === "admin" || userInfo.role === "admin_l1") {
+      if (userInfo.roleName === "superadmin" || userInfo.roleName === "admin") {
         // navigate("/admin/users");
         navigate("/");
-        // handleLeftSideBarSelectedItem(6);
       } else {
-        // handleLeftSideBarSelectedItem(1);
-        navigate("/");
+        navigate("/profile");
       }
     } catch (error) {
       console.log(error);

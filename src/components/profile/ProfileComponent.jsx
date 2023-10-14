@@ -17,7 +17,9 @@ import AlertContext from "../../contexts/AlertContext/AlertContext";
 function ProfileComponent({ onOpenResetPasswordModal }) {
   const { handleAlertStatus } = useContext(AlertContext);
   const { auth, handleLogin } = useContext(AuthContext);
+  
   const roleName = auth.user.roleName;
+  
   const initialValues_recruiter = {
     companyName: auth.user.companyName,
     email: auth.user.email,
@@ -221,7 +223,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                 <div className="text-center ">
                   <button
                     className="btn btn-primary reset-password-button"
-                    style={{ marginTop: "5rem" }}
+                    style={{ marginTop: "10rem" }}
                     type="button"
                     onClick={onOpenResetPasswordModal}
                   >

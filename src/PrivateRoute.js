@@ -6,7 +6,6 @@ import AuthContext from "./contexts/AuthContext/AuthContext";
 const PrivateRoute = ({ component }) => {
   const { auth } = useContext(AuthContext);
   const { isAuthenticated } = auth;
-
   if (isAuthenticated) {
     return component;
   }

@@ -9,12 +9,16 @@ const AdminApplicantRoute = ({ component }) => {
 
   if (
     isAuthenticated &&
-    (user.role === "admin" || user.role === "admin_l1" || user.role_id === "applicant")
+    (user.roleName === "superadmin" ||
+      user.roleName === "admin" ||
+      user.roleName === "applicant")
   ) {
     return component;
   } else if (
     isAuthenticated &&
-    (user.role !== "admin" || user.role === "admin_l1" || user.role !== "applicant")
+    (user.roleName !== "superadmin" ||
+      user.roleName === "admin" ||
+      user.roleName !== "applapplicanticant")
   ) {
     return <Forbidden />;
   }
