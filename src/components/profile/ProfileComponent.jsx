@@ -12,11 +12,11 @@ import {
 } from "../../global/profileModalFormItems";
 import businessSectorAPI from "../../apis/businessSectorAPI";
 import userAPI from "../../apis/userAPI";
+import AlertContext from "../../contexts/AlertContext/AlertContext";
 
 function ProfileComponent({ onOpenResetPasswordModal }) {
+  const { handleAlertStatus } = useContext(AlertContext);
   const { auth, handleLogin } = useContext(AuthContext);
-  const [actionStatus, setActionStatus] = useState();
-  const dismissAlert = () => setActionStatus();
   const roleName = auth.user.roleName;
   const initialValues_recruiter = {
     companyName: auth.user.companyName,
@@ -138,23 +138,22 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
         : userInfo_admin;
     updateUser(userInfo);
   }
-  const setTimeoutAlert = (actionSt) => {
-    if (actionSt) {
-      setActionStatus(actionSt);
-      setTimeout(() => {
-        setActionStatus();
-      }, 5000);
-    }
-  };
+
   async function updateUser(fields, setSubmitting) {
     await userAPI
       .update(fields)
       .then(() => {
-        setTimeoutAlert({ status: 1, message: "Update user sucessfully!" });
+        handleAlertStatus({
+          type: "success",
+          message: "Update user sucessfully!",
+        });
       })
       .catch((error) => {
         // setSubmitting(false);
-        setTimeoutAlert({ status: 0, message: error.response.data.message });
+        handleAlertStatus({
+          type: "error",
+          message: error.response.data.message,
+        });
         console.log(error.response.data.message);
       });
     handleLogin();
@@ -216,24 +215,6 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
       {({ errors, touched, isSubmitting, setFieldValue }) => {
         return (
           <Form className="container rounded bg-white ">
-            {actionStatus && (
-              <div
-                class={
-                  actionStatus.status === 1
-                    ? "alert alert-success alert-dismissible"
-                    : "alert alert-danger alert-dismissible"
-                }
-              >
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="alert"
-                  onClick={dismissAlert}
-                ></button>
-
-                <strong>{actionStatus.message}</strong>
-              </div>
-            )}
             <div className="row">
               <div className="col-md-4 border-right">
                 <Avatar />
@@ -273,6 +254,9 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                       className="btn btn-primary profile-button"
                       type="submit"
                     >
+                      {isSubmitting && (
+                        <span className="spinner-border spinner-border-sm mr-1"></span>
+                      )}
                       Save Profile
                     </button>
                   </div>
