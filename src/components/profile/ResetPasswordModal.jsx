@@ -6,8 +6,10 @@ import ModalFormItem from "../../global/ModalFormItem";
 import { passwordProfileModal } from "../../global/profileModalFormItems";
 import userAPI from "../../apis/userAPI";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
+import AlertContext from "../../contexts/AlertContext/AlertContext";
 
 const ResetPasswordModal = ({ show, handleClose }) => {
+  const { handleAlertStatus } = useContext(AlertContext);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { auth } = useContext(AuthContext);
@@ -21,10 +23,13 @@ const ResetPasswordModal = ({ show, handleClose }) => {
       .min(6, "Password must be at least 6 characters"),
     password: Yup.string()
       .required("Password is required")
-      .min(6, "Password must be at least 6 characters").test(
-        'passwords-not-match-old', 'Passwords should not match the old one', function(value){
-            return this.parent.currentPassword !== value
-          }
+      .min(6, "Password must be at least 6 characters")
+      .test(
+        "passwords-not-match-old",
+        "Passwords should not match the old one",
+        function (value) {
+          return this.parent.currentPassword !== value;
+        }
       ),
     confirmPassword: Yup.string()
       .when("password", (password, schema) => {
@@ -44,9 +49,17 @@ const ResetPasswordModal = ({ show, handleClose }) => {
     await userAPI
       .changePassword(userInfo)
       .then(() => {
+        handleAlertStatus({
+          type: "success",
+          message: "Update password sucessfully!",
+        });
         handleClose();
       })
       .catch((error) => {
+        handleAlertStatus({
+          type: "error",
+          message: error.response.data.message,
+        });
         setErrorMessage(error.response.data.error);
         console.log("error", error.response.data.error);
       });
