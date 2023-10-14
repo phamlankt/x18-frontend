@@ -13,7 +13,6 @@ import {
 import businessSectorAPI from "../../apis/businessSectorAPI";
 import userAPI from "../../apis/userAPI";
 
-
 function ProfileComponent({ onOpenResetPasswordModal }) {
   const { auth, handleLogin } = useContext(AuthContext);
   const [actionStatus, setActionStatus] = useState();
@@ -150,9 +149,12 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
   async function updateUser(fields, setSubmitting) {
     await userAPI
       .update(fields)
-      .then(() => {})
+      .then(() => {
+        setTimeoutAlert({ status: 1, message: "Update user sucessfully!" });
+      })
       .catch((error) => {
         // setSubmitting(false);
+        setTimeoutAlert({ status: 0, message: error.response.data.message });
         console.log(error.response.data.message);
       });
     handleLogin();
@@ -235,6 +237,16 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
             <div className="row">
               <div className="col-md-4 border-right">
                 <Avatar />
+                <div className="text-center ">
+                  <button
+                    className="btn btn-primary reset-password-button"
+                    style={{ marginTop: "5rem" }}
+                    type="button"
+                    onClick={onOpenResetPasswordModal}
+                  >
+                    Change Password
+                  </button>
+                </div>
               </div>
               <div className="col-md-7 border-right">
                 <div className="p-3 py-5">
@@ -262,13 +274,6 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                       type="submit"
                     >
                       Save Profile
-                    </button>
-                    <button
-                      className="btn btn-primary reset-password-button"
-                      type="button"
-                      onClick={onOpenResetPasswordModal}
-                    >
-                      Change Password
                     </button>
                   </div>
                 </div>
