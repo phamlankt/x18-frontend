@@ -17,7 +17,9 @@ import AlertContext from "../../contexts/AlertContext/AlertContext";
 function ProfileComponent({ onOpenResetPasswordModal }) {
   const { handleAlertStatus } = useContext(AlertContext);
   const { auth, handleLogin } = useContext(AuthContext);
+  
   const roleName = auth.user.roleName;
+  
   const initialValues_recruiter = {
     companyName: auth.user.companyName,
     email: auth.user.email,

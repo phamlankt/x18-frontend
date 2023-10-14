@@ -1,9 +1,11 @@
 import React, { useContext, useState } from "react";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
 import userAPI from "../../apis/userAPI";
+import AlertContext from "../../contexts/AlertContext/AlertContext";
 
 function Avatar() {
   const { auth, handleLogin } = useContext(AuthContext);
+  const { handleAlertStatus } = useContext(AlertContext);
   const [loading, setLoading] = useState(false);
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -14,8 +16,16 @@ function Avatar() {
       formData.append("avatar", file);
       await userAPI.uploadAvatar(formData);
       handleLogin();
+      handleAlertStatus({
+        type: "success",
+        message: "Upload avatar image sucessfully!",
+      });
     } catch (error) {
-      console.error(error);
+      handleAlertStatus({
+        type: "error",
+        message: error.response.data.message,
+      });
+      console.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
