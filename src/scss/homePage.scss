@@ -1,0 +1,63 @@
+.Header{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: white;
+    justify-content: space-around;
+    .menu{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        .logo{
+            width: 200px;
+        }
+        .menuIcon {
+         padding: 10px;
+         border: none;
+         height: 50px;
+         background-color: white;
+         font-weight: 600;
+        }
+        .menuIcon:hover {
+            color : #ef6526;
+        }
+    }
+    .navbar{
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        font-size: 15px;
+        .navIconLogin{
+            font-weight: 600;
+            width: 120px;
+            background-color: white;
+            color: rgb(158, 78, 38);
+            text-align: center;
+            border: 1px solid rgb(158, 78, 38);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .navIconRegister{
+            font-weight: 600;
+            width: 120px;
+            background-color: rgb(215, 160, 133);
+            color: white;
+            text-align: center;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .navIconPublishedRecruitment{
+            font-weight: 600;
+            width: 220px;
+            background-color: rgb(63, 50, 111);
+            color: white;
+            text-align: center;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    }
+}
