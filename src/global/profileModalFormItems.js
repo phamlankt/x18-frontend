@@ -1,6 +1,67 @@
-const profileModalFormItems = [
+const profileModalFormItems_recruiter = [
   {
-    label: "Full name",
+    label: "Company Name",
+    fieldName: "companyName",
+  },
+  {
+    label: "Email",
+    fieldName: "email",
+  },
+  {
+    label: "Phone Number",
+    fieldName: "phoneNumber",
+  },
+  {
+    label: "Address",
+    fieldName: "address",
+  },
+  {
+    label: "Company Description",
+    fieldName: "description",
+    as: "textarea",
+  },
+];
+
+const profileModalFormItems_applicant = [
+  {
+    label: "Full Name",
+    fieldName: "fullName",
+  },
+  {
+    label: "Age",
+    fieldName: "age",
+  },
+  {
+    label: "Gender",
+    fieldName: "gender",
+    as: "select",
+    options: [
+      { name: "Male", value: "male" },
+      { name: "Female", value: "female" },
+    ],
+  },
+  {
+    label: "Email",
+    fieldName: "email",
+  },
+  {
+    label: "Phone Number",
+    fieldName: "phoneNumber",
+  },
+  {
+    label: "Address",
+    fieldName: "address",
+  },
+  {
+    label: "Self Description",
+    fieldName: "description",
+    as: "textarea",
+  },
+];
+
+const profileModalFormItems_default = [
+  {
+    label: "Full Name",
     fieldName: "fullName",
   },
   {
@@ -10,10 +71,6 @@ const profileModalFormItems = [
   {
     label: "Phone Number",
     fieldName: "phone",
-  },
-  {
-    label: "Address",
-    fieldName: "address",
   },
 ];
 
@@ -30,32 +87,9 @@ const passwordProfileModal = [
   },
 ];
 
-const kiotProfileModalFormItems = [
-  {
-    label: "Kiot Name",
-    fieldName: "kiotName",
-  },
-  {
-    label: "Kiot Phone",
-    fieldName: "kiotPhone",
-  },
-  {
-    label: "Kiot Address",
-    fieldName: "kiotAddress",
-  },
-  {
-    label: "Kiot Email",
-    fieldName: "kiotEmail",
-  },
-  {
-    label: "Kiot Description",
-    fieldName: "description",
-    as: "textarea",
-  },
-];
-
 export {
-  profileModalFormItems,
+  profileModalFormItems_default,
+  profileModalFormItems_recruiter,
+  profileModalFormItems_applicant,
   passwordProfileModal,
-  kiotProfileModalFormItems,
 };
