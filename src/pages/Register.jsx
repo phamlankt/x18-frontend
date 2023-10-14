@@ -8,12 +8,11 @@ import { registerFormItems } from "../global/registerFormItems";
 import * as Yup from "yup";
 
 const Register = () => {
- 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
-
+  const { handleLogin } = useContext(AuthContext);
   const validationSchema = Yup.object().shape({
     email: Yup.string().email().required("Email is required"),
     role: Yup.string().required("Role is required"),
@@ -32,17 +31,24 @@ const Register = () => {
     role: "",
   };
   async function onSubmit(values) {
-    
     try {
       setLoading(true);
       setError(null);
       const response = await authAPI.register({
         email: values.email,
         password: values.password,
-        role:values.role,
+        role: values.role,
       });
       if (response.status === 200) {
-        navigate("/login");
+        const response = await authAPI.login({
+          email: values.email,
+          password: values.password,
+        });
+
+        localStorage.setItem("accessToken", response.data.data.accessToken);
+
+        await handleLogin();
+        navigate("/profile");
       }
     } catch (error) {
       setError(error.response.data.error);
@@ -100,7 +106,8 @@ const Register = () => {
                                 >
                                   {item.options &&
                                     item.options.map((option) => (
-                                      <option key={option.value}
+                                      <option
+                                        key={option.value}
                                         value={option.value}
                                         disabled={option.options && true}
                                         hidden={option.options && true}

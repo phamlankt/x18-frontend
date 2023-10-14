@@ -1,5 +1,5 @@
 import { Field, ErrorMessage } from "formik";
-import React from "react";
+
 
 function ModalFormItem({ item, isEditMode, errors, touched }) {
   return (
@@ -8,9 +8,12 @@ function ModalFormItem({ item, isEditMode, errors, touched }) {
         <label>{item.label}</label>
         <Field
           name={item.fieldName}
-          disabled={item.fieldName==="username" && isEditMode}
+          disabled={item.fieldName === "email" && isEditMode}
           type={item.type && item.type}
           as={item.as && item.as}
+          multiple={item.as && item.fieldName === "businessSector" && true}
+          size={item.as && item.fieldName === "businessSector" && 3}
+          rows={item.as && item.as === "textarea" && "3"}
           className={
             "form-control" +
             (errors[item.fieldName] && touched[item.fieldName]
@@ -20,7 +23,9 @@ function ModalFormItem({ item, isEditMode, errors, touched }) {
         >
           {item.options &&
             item.options.map((option) => (
-              <option value={option.value}>{option.name}</option>
+              <option key={option.value} value={option.value}>
+                {option.name}
+              </option>
             ))}
         </Field>
         <ErrorMessage
