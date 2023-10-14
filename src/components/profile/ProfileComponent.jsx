@@ -221,7 +221,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                 <div className="text-center ">
                   <button
                     className="btn btn-primary reset-password-button"
-                    style={{ marginTop: "5rem" }}
+                    style={{ marginTop: "10rem" }}
                     type="button"
                     onClick={onOpenResetPasswordModal}
                   >
