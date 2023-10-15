@@ -1,11 +1,17 @@
 import { Field, ErrorMessage } from "formik";
 
-
 function ModalFormItem({ item, isEditMode, errors, touched }) {
   return (
     <div className="form-row">
       <div className="form-group col">
-        <label>{item.label}</label>
+        <label>
+          {item.label}
+          {item.isRequired && (
+            <span>
+              (<span className="text-danger">*</span>)
+            </span>
+          )}
+        </label>
         <Field
           name={item.fieldName}
           disabled={item.fieldName === "email" && isEditMode}
