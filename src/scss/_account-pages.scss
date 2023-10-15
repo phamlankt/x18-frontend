@@ -8,7 +8,9 @@ body {
 }
 
 .account-body {
-  background: linear-gradient(0deg, #f7f7f7 0%, #fcdede 55%);
+  // background: linear-gradient(0deg, #f7f7f7 0%, #fcdede 55%);
+  background: linear-gradient(0deg, #f7f7f7 0%, rgb(173, 229, 230)
+   55%);
   max-width: 100vw;
   .auth-page {
     max-width: 460px;

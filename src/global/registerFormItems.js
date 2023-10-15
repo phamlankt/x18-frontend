@@ -34,11 +34,11 @@ const registerFormItems = [
       { value: "", name: "Choose a role ...", options: "disabled selected hidden" },
       {
         value: "recruiter",
-        name: "Nhà tuyển dụng",
+        name: "Recruiter",
       },
       {
         value: "applicant",
-        name: "Người lao động",
+        name: "Job Seeker",
       },
     ],
   },
