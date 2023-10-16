@@ -17,9 +17,9 @@ import AlertContext from "../../contexts/AlertContext/AlertContext";
 function ProfileComponent({ onOpenResetPasswordModal }) {
   const { handleAlertStatus } = useContext(AlertContext);
   const { auth, handleLogin } = useContext(AuthContext);
-  
+  const [isLoading, setLoading] = useState(false);
   const roleName = auth.user.roleName;
-  
+
   const initialValues_recruiter = {
     companyName: auth.user.companyName,
     email: auth.user.email,
@@ -142,6 +142,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
   }
 
   async function updateUser(fields, setSubmitting) {
+    setLoading(true);
     await userAPI
       .update(fields)
       .then(() => {
@@ -151,12 +152,14 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
         });
       })
       .catch((error) => {
-        // setSubmitting(false);
         handleAlertStatus({
           type: "error",
           message: error.response.data.message,
         });
         console.log(error.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
     handleLogin();
   }
@@ -176,7 +179,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
   const bsOptions = [];
   businessSectors.map((businessSector) => {
     return bsOptions.push({
-      name: businessSector.name.toLowerCase(),
+      name: businessSector.name,
       value: businessSector.name,
     });
   });
@@ -256,7 +259,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                       className="btn btn-primary profile-button"
                       type="submit"
                     >
-                      {isSubmitting && (
+                      {isLoading && (
                         <span className="spinner-border spinner-border-sm mr-1"></span>
                       )}
                       Save Profile

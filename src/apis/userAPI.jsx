@@ -5,7 +5,10 @@ const userAPI = {
   // getAll: () => axiosInstance.get("/users"),
   // create: (values) => axiosInstance.post("/users/create", values),
   update: (values) => axiosInstance.put("/users/update", values),
-  changePassword: (values) => axiosInstance.put("/users/changePassword", values),
+  changePassword: (values) =>
+    axiosInstance.put("/users/changePassword", values),
+  resetPassword: (values) =>
+    axiosInstance.put(`/users/resetPassword`, values),
   uploadAvatar: (formData) =>
     axiosInstance.post("/users/upload-avatar", formData, {
       headers: {
