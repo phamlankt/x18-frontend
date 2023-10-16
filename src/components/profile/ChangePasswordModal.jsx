@@ -8,7 +8,7 @@ import userAPI from "../../apis/userAPI";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 
-const ResetPasswordModal = ({ show, handleClose }) => {
+const ChangePasswordModal = ({ show, handleClose }) => {
   const { handleAlertStatus } = useContext(AlertContext);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -131,4 +131,4 @@ const ResetPasswordModal = ({ show, handleClose }) => {
   );
 };
 
-export default ResetPasswordModal;
+export default ChangePasswordModal;

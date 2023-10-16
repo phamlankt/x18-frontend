@@ -4,6 +4,7 @@ import Home from "../pages/Home.jsx";
 import Login from "../pages/Login.jsx";
 import Profile from "../pages/Profile.jsx";
 import Register from "../pages/Register.jsx";
+import ResetPassword from "../pages/ResetPassword.jsx";
 import User from "../pages/User.jsx";
 
 export const routes = [
@@ -47,6 +48,10 @@ export const routes = [
   {
     path: "/register",
     component: <Register />,
+  },
+  {
+    path: "/resetPassword/:token",
+    component: <ResetPassword />,
   },
 ];
 export default routes;

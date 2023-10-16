@@ -2,7 +2,7 @@ import { useState } from "react";
 import Footer from "../components/footer/Footer";
 import Header from "../components/header/Header";
 import ProfileComponent from "../components/profile/ProfileComponent";
-import ResetPasswordModal from "../components/profile/ResetPasswordModal";
+import ChangePasswordModal from "../components/profile/ChangePasswordModal";
 
 const Profile = () => {
   const [resetPasswordModalOpen, setResetPasswordModalOpen] = useState(false);
@@ -12,7 +12,7 @@ const Profile = () => {
       <ProfileComponent
         onOpenResetPasswordModal={() => setResetPasswordModalOpen(true)}
       />
-      <ResetPasswordModal
+      <ChangePasswordModal
         show={resetPasswordModalOpen}
         handleClose={() => setResetPasswordModalOpen(false)}
       />

@@ -3,58 +3,81 @@ import BootstrapModal from "react-bootstrap/Modal";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import ModalFormItem from "../../global/ModalFormItem";
+import { passwordProfileModal } from "../../global/profileModalFormItems";
+import userAPI from "../../apis/userAPI";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
-import mailAPI from "../../apis/mailAPI";
+import { useNavigate, useParams } from "react-router-dom";
 
-const ForgotPasswordModal = ({ show, handleClose }) => {
+
+const ResetPasswordModal = ({ show, handleClose }) => {
   const { handleAlertStatus } = useContext(AlertContext);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
   const initialValues = {
-    email: "",
+    password: "",
+    confirmPassword: "",
   };
+  const token = useParams().token;
+  
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email().required("Email is required"),
+    password: Yup.string()
+      .required("Password is required")
+      .min(6, "Password must be at least 6 characters")
+      .test(
+        "passwords-not-match-old",
+        "Passwords should not match the old one",
+        function (value) {
+          return this.parent.currentPassword !== value;
+        }
+      ),
+    confirmPassword: Yup.string()
+      .when("password", (password, schema) => {
+        if (true) return schema.required("Confirm Password is required");
+      })
+      .oneOf([Yup.ref("password")], "Passwords must match"),
   });
 
   async function onSubmit(fields, { setStatus, setSubmitting, resetForm }) {
     setStatus();
     setErrorMessage("");
     const userInfo = {
-      id: auth.user._id,
-      email: fields.email,
+      password: fields.password,
+      token:token
     };
-    await mailAPI
-      .send(userInfo)
-      .then(() => {
+
+    await userAPI
+      .resetPassword(userInfo)
+      .then(async (response) => {
         handleAlertStatus({
           type: "success",
-          message: "Email sent!",
+          message: "Reset password sucessfully!",
         });
+        
         handleClose();
+        navigate("/");
       })
       .catch((error) => {
-        setErrorMessage(error.response.data.message);
-        console.log("error", error.response.data.message);
+        console.log("error Message",error)
+        setErrorMessage(error.response.data.error);
+        console.log("error", error.response.data.error);
       });
   }
 
-  const emailItem = {
-    label: "Email Address",
-    fieldName: "email",
-    type: "email",
-    isRequired: true,
+  const currentPasswordItem = {
+    label: "Current Password",
+    type: "password",
+    fieldName: "currentPassword",
   };
 
   return (
     <BootstrapModal show={show} onHide={handleClose}>
       <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>Forgot Password</BootstrapModal.Title>
+        <BootstrapModal.Title>Reset Password</BootstrapModal.Title>
       </BootstrapModal.Header>
       <BootstrapModal.Body>
-        {loading && <p className="text-info">Sending email ....</p>}
+        {loading && <p className="text-info">Changing Password ....</p>}
 
         <Formik
           enableReinitialize
@@ -65,13 +88,16 @@ const ForgotPasswordModal = ({ show, handleClose }) => {
           {({ errors, touched, isSubmitting, setFieldValue }) => {
             return (
               <Form>
-                <p>Link to reset password will be sent via email</p>
-                <ModalFormItem
-                  item={emailItem}
-                  errors={errors}
-                  touched={touched}
-                />
                 {errorMessage && <p className="text-danger">{errorMessage}</p>}
+                <h5>New password</h5>
+                {passwordProfileModal.map((item) => (
+                  <ModalFormItem
+                    item={item}
+                    errors={errors}
+                    touched={touched}
+                  />
+                ))}
+
                 <div className="form-group text-center">
                   <button
                     type="button"
@@ -88,7 +114,7 @@ const ForgotPasswordModal = ({ show, handleClose }) => {
                     {isSubmitting && (
                       <span className="spinner-border spinner-border-sm mr-1"></span>
                     )}
-                    Send
+                    Save
                   </button>
                 </div>
               </Form>
@@ -100,4 +126,4 @@ const ForgotPasswordModal = ({ show, handleClose }) => {
   );
 };
 
-export default ForgotPasswordModal;
+export default ResetPasswordModal;
