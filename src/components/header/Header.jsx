@@ -9,18 +9,11 @@ function Header() {
           alt=""
           className="logo"
         />
-        <button className="menuIcon">Việc Làm</button>
-        <button className="menuIcon">Hồ Sơ & CV</button>
-        <button className="menuIcon">Công Ty</button>
-        <button className="menuIcon">Phát Triển Sự Nghiệp</button>
-        <button className="menuIcon">Công Cụ</button>
+        <button className="menuIcon">Jobs</button>
       </div>
       <div className="navbar">
-        <button className="navIconLogin">Đăng Nhập</button>
-        <button className="navIconRegister">Đăng Kí</button>
-        <button className="navIconPublishedRecruitment">
-          Đăng Tuyển Và Tìm Hồ Sơ
-        </button>
+        <button className="navIconLogin">Login</button>
+        <button className="navIconRegister">Register</button>
       </div>
     </div>
   );

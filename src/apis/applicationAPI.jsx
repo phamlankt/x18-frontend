@@ -1,7 +1,7 @@
 import axiosInstance from "./axiosInstance";
 
 const applicationAPI = {
-  getAll: () => {},
+  getAll: () => axiosInstance.get("/applications/all"),
   create: (values) => axiosInstance.post("/application/create", values),
   update: (values) => axiosInstance.post("/application/update", values),
   getById: () => {},

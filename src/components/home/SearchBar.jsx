@@ -43,7 +43,6 @@ const SearchBar = () => {
   };
   return (
     <div className="search-bar">
-      <h4 className="text-primary">There are 1000 opportunities for you</h4>
       <form className="search-bar-form" action="submit" onSubmit={handleSubmit}>
         <label className="search-bar-wrapper">
           <BsSearch className="text-primary" />
@@ -75,6 +74,7 @@ const SearchBar = () => {
         </div>
         <button className="search-bar-submit-button bg-primary">Search</button>
       </form>
+      <h4 className="text-primary">There are 1000 opportunities for you</h4>
     </div>
   );
 };
