@@ -1,9 +1,24 @@
-import React from 'react'
+import { useState } from "react";
+import Footer from "../components/footer/Footer";
+import Header from "../components/header/Header";
+import ProfileComponent from "../components/profile/ProfileComponent";
+import ChangePasswordModal from "../components/profile/ChangePasswordModal";
 
-export default function Profile() {
+const Profile = () => {
+  const [resetPasswordModalOpen, setResetPasswordModalOpen] = useState(false);
   return (
-    <div>
-      Profile Page
-    </div>
-  )
-}
+    <>
+      <Header />
+      <ProfileComponent
+        onOpenResetPasswordModal={() => setResetPasswordModalOpen(true)}
+      />
+      <ChangePasswordModal
+        show={resetPasswordModalOpen}
+        handleClose={() => setResetPasswordModalOpen(false)}
+      />
+      <Footer />
+    </>
+  );
+};
+
+export default Profile;

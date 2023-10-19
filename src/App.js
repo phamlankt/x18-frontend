@@ -3,25 +3,24 @@ import routes from "./global/routes";
 import AuthState from "./contexts/AuthContext/AuthState";
 import PrivateRoute from "./PrivateRoute";
 import AdminRoute from "./AdminRoute";
-import NotAuthRoute from "./NotAuthRoute";
-import Header from "./components/header/Header";
-import AppState from "./contexts/AppContext/AppState";
 import AdminRecruiterRoute from "./AdminRecruiterRoute";
 import AdminApplicantRoute from "./AdminApplicantRoute";
-import Footer from "./components/footer/Footer";
+import "react-toastify/dist/ReactToastify.css";
+import AlertState from "./contexts/AlertContext/AlertState";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
-    <AppState>
+    <AlertState>
       <AuthState>
         <>
+          <ToastContainer />
           <Routes>
             {routes.map((route, index) => {
               const {
                 path,
                 component,
                 isPrivate,
-                notAuth,
                 isAdmin,
                 isSuperAdmin,
                 isAdminRecruiter,
@@ -42,8 +41,6 @@ function App() {
                       ) : (
                         <PrivateRoute component={component} />
                       )
-                    ) : notAuth ? (
-                      <NotAuthRoute component={component} />
                     ) : (
                       component
                     )
@@ -54,7 +51,7 @@ function App() {
           </Routes>
         </>
       </AuthState>
-    </AppState>
+    </AlertState>
   );
 }
 

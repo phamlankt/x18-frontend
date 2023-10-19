@@ -7,9 +7,19 @@ const AdminRecruiterRoute = ({ component }) => {
   const { auth } = useContext(AuthContext);
   const { isAuthenticated, user } = auth;
 
-  if (isAuthenticated && (user.role === "admin" || user.role === "recruiter")) {
+  if (
+    isAuthenticated &&
+    (user.roleName === "superadmin" ||
+      user.roleName === "admin" ||
+      user.roleName === "recruiter")
+  ) {
     return component;
-  } else if (isAuthenticated && (user.role !== "admin" || user.role !== "recruiter")) {
+  } else if (
+    isAuthenticated &&
+    (user.roleName !== "superadmin" ||
+      user.roleName !== "admin" ||
+      user.roleName !== "recruiter")
+  ) {
     return <Forbidden />;
   }
 

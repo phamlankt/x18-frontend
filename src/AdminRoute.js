@@ -5,10 +5,16 @@ import AuthContext from "./contexts/AuthContext/AuthContext";
 const AdminRoute = ({ component }) => {
   const { auth } = useContext(AuthContext);
   const { isAuthenticated, user } = auth;
-  
-  if (isAuthenticated && user.role_id === 1) {
+
+  if (
+    isAuthenticated &&
+    (user.roleName === "superadmin" || user.roleName === "admin")
+  ) {
     return component;
-  } else if (isAuthenticated && user.role_id !== 1) {
+  } else if (
+    isAuthenticated &&
+    (user.roleName !== "superadmin" || user.roleName !== "admin")
+  ) {
     return <Navigate to="/" />;
   }
 
