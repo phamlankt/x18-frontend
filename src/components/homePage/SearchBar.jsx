@@ -45,7 +45,7 @@ const SearchBar = () => {
     <div className="search-bar">
       <form className="search-bar-form" action="submit" onSubmit={handleSubmit}>
         <label className="search-bar-wrapper">
-          <BsSearch className="text-primary" />
+          <BsSearch className="text-form" />
           <input
             value={search}
             onChange={handleChangeSearch}
@@ -54,7 +54,7 @@ const SearchBar = () => {
           />
         </label>
         <div className="search-bar-wrapper">
-          <HiOutlineLocationMarker className="text-primary" />
+          <HiOutlineLocationMarker className="text-form" />
 
           <Select
             mode="tags"
@@ -72,9 +72,9 @@ const SearchBar = () => {
             }))}
           />
         </div>
-        <button className="search-bar-submit-button bg-primary">Search</button>
+        <button className="search-bar-submit-button">Search</button>
       </form>
-      <h4 className="text-primary">There are 1000 opportunities for you</h4>
+      <h5 className="job-quantity">There are 1000 opportunities for you</h5>
     </div>
   );
 };

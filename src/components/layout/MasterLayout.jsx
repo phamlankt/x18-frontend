@@ -2,55 +2,35 @@ import { Layout } from "antd";
 import HeaderComponent from "./Header";
 import FooterComponent from "./Footer";
 import React from "react";
-import Filter from "../homePage/Filter";
 
 const { Header, Content, Footer, Sider } = Layout;
-const MasterLayout = ({ children, leftSideComponent }) => {
+const MasterLayout = (props) => {
+  const HeaderContent = props.HeaderComponent || <HeaderComponent />;
+  const FooterContent = props.FooterComponent || <FooterComponent />;
+  const sideBarContent = props.sideBarComponent || <></>;
+  const mainContent = props.contentComponent || <></>;
+  const hasHeader = props.hasHeader || true;
+  const hasFooter = props.hasFooter || true;
+  const hasSideBar = props.hasSideBar || true;
+
   return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-        maxHeight: "100vh",
-      }}
-    >
-      <Header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 9,
-          width: "100%",
-          backgroundColor: "#ffffff",
-          padding: 0,
-        }}
-      >
-        <HeaderComponent />
-      </Header>
-      <Layout>
-        <Sider width={300} theme="light">
-          {leftSideComponent}
-        </Sider>
-        <Content
-          style={{
-            zIndex: 9,
-            overflowY: "scroll",
-            overflowX: "hidden",
-          }}
-        >
-          {children}
-        </Content>
+    <Layout className="master-layout">
+      {hasHeader && (
+        <Header className="master-layout-header">{HeaderContent}</Header>
+      )}
+
+      <Layout hasSider className="master-layout-main-content-container">
+        {hasSideBar && (
+          <Sider width="350px" className="master-layout-leftside">
+            {sideBarContent}
+          </Sider>
+        )}
+
+        <Content className="master-layout-main-content">{mainContent}</Content>
       </Layout>
-      <Footer
-        style={{
-          position: "relative",
-          bottom: 0,
-          zIndex: 9,
-          width: "100%",
-          backgroundColor: "#ffffff",
-          padding: 0,
-        }}
-      >
-        <FooterComponent />
-      </Footer>
+      {hasFooter && (
+        <Footer className="master-layout-footer">{FooterContent}</Footer>
+      )}
     </Layout>
   );
 };

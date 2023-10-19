@@ -4,12 +4,10 @@ function Header() {
   return (
     <div className="Header">
       <div className="menu">
-        <img
-          src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
-          alt=""
-          className="logo"
-        />
+        <h3 className="logo">{`<LOGO>`}</h3>
         <button className="menuIcon">Jobs</button>
+        <button className="menuIcon">bla</button>
+        <button className="menuIcon">bla</button>
       </div>
       <div className="navbar">
         <button className="navIconLogin">Login</button>

@@ -13,7 +13,7 @@ export const routes = [
   {
     path: "/",
     component: (
-      <MasterLayout children={<Home />} leftSideComponent={<Filter />} />
+      <MasterLayout contentComponent={<Home />} sideBarComponent={<Filter />} />
     ),
     isPrivate: false,
   },
