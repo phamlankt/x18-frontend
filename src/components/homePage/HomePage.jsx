@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MapPin } from "lucide-react";
 import { Pagination } from "antd";
 import { List } from "antd";
-import Filter from "../home/Filter";
+import Filter from "./Filter";
 import applicationAPI from "../../apis/applicationAPI";
 
 export default function HomePage() {
@@ -37,7 +37,6 @@ export default function HomePage() {
     <div style={{ display: "grid", justifyContent: "center", height: "700px" }}>
       <div className="homePage">
         <div className="main">
-          <Filter />
           <div className="Job">
             <div className="jobIcon">
               <List

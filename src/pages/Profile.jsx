@@ -1,8 +1,9 @@
 import { useState } from "react";
-import Footer from "../components/footer/Footer";
-import Header from "../components/header/Header";
+
 import ProfileComponent from "../components/profile/ProfileComponent";
 import ChangePasswordModal from "../components/profile/ChangePasswordModal";
+import Header from "../components/layout/Header";
+import { Footer } from "antd/es/layout/layout";
 
 const Profile = () => {
   const [resetPasswordModalOpen, setResetPasswordModalOpen] = useState(false);

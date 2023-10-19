@@ -1,3 +1,5 @@
+import Filter from "../components/homePage/Filter.jsx";
+import MasterLayout from "../components/layout/MasterLayout.jsx";
 import AdminJob from "../pages/AdminJob.jsx";
 import BusinessSector from "../pages/BusinessSector.jsx";
 import Home from "../pages/Home.jsx";
@@ -10,7 +12,9 @@ import User from "../pages/User.jsx";
 export const routes = [
   {
     path: "/",
-    component: <Home />,
+    component: (
+      <MasterLayout children={<Home />} leftSideComponent={<Filter />} />
+    ),
     isPrivate: false,
   },
   {

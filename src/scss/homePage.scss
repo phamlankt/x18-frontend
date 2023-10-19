@@ -72,15 +72,16 @@
     }
 }
 .side-filter{
-    position: sticky;
-    top: 100px;
+    margin: 12px;
+    position: relative;
+    top: 20%;
     background-color:antiquewhite ;
-    height: 25vh;
+    height: auto;
     display: flex;
+    gap: 10px;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    border-right: 1px solid rgb(187, 153, 153);
 }
 .search-bar{
     margin: 0 auto;
