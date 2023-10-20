@@ -39,7 +39,7 @@ export const routes = [
   {
     path: "/profile",
     component: <Profile />,
-    isPrivate: true,
+    isPrivate: false,
   },
   {
     path: "/login",

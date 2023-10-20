@@ -1,22 +1,27 @@
 import { useState } from "react";
-import Footer from "../components/footer/Footer";
-import Header from "../components/header/Header";
+
 import ProfileComponent from "../components/profile/ProfileComponent";
 import ChangePasswordModal from "../components/profile/ChangePasswordModal";
+import MasterLayout from "../components/layout/MasterLayout";
 
 const Profile = () => {
   const [resetPasswordModalOpen, setResetPasswordModalOpen] = useState(false);
   return (
     <>
-      <Header />
-      <ProfileComponent
-        onOpenResetPasswordModal={() => setResetPasswordModalOpen(true)}
+      <MasterLayout
+        ContentComponent={
+          <ProfileComponent
+            onOpenResetPasswordModal={() => setResetPasswordModalOpen(true)}
+          />
+        }
+        hasSideBar={false}
+        hasFooter={true}
       />
+
       <ChangePasswordModal
         show={resetPasswordModalOpen}
         handleClose={() => setResetPasswordModalOpen(false)}
       />
-      <Footer />
     </>
   );
 };
