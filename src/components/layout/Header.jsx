@@ -1,6 +1,10 @@
 import React from "react";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 
 function Header() {
+  const { auth } = useContext(AuthContext);
   return (
     <div className="Header">
       <div className="menu">
@@ -10,8 +14,13 @@ function Header() {
         <button className="menuIcon">bla</button>
       </div>
       <div className="navbar">
-        <button className="navIconLogin">Login</button>
-        <button className="navIconRegister">Register</button>
+        {auth.isAuthenticated ? (
+          <>logined</> /// add avatar dropdown
+        ) : (
+          <Link className="navIconLogin" to="/login">
+            Login
+          </Link>
+        )}
       </div>
     </div>
   );

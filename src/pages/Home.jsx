@@ -1,13 +1,14 @@
 import React from "react";
+import MasterLayout from "../components/layout/MasterLayout";
+import Filter from "../components/homePage/Filter";
 import HomePage from "../components/homePage/HomePage";
-import SearchBar from "../components/homePage/SearchBar";
 
 function Home() {
   return (
-    <div className="homePage">
-      <SearchBar />
-      <HomePage />
-    </div>
+    <MasterLayout
+      ContentComponent={<HomePage />}
+      SideBarComponent={<Filter />}
+    />
   );
 }
 

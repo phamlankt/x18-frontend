@@ -7,7 +7,7 @@
         background-size: cover;
         position: sticky;
         top: 0;
-        z-index: 99;
+        z-index: 9;
         padding: 0;
     }
     .master-layout-main-content-container{
@@ -16,13 +16,14 @@
         background-size: cover;
         .master-layout-leftside{
             background-color: rgba(0, 0, 0, 0.1);
+            z-index: 9;
         }
         .master-layout-main-content{
-            z-index: 99;
+            z-index: 1;
             overflow-y: scroll;
             overflow-x: hidden;
             &::-webkit-scrollbar {
-                width: 8px;
+                width: 0px;
               }
             
             &::-webkit-scrollbar-thumb {
@@ -39,7 +40,7 @@
     .master-layout-footer{
         position: relative;
         bottom: 0;
-        z-index: 99;
+        z-index: 9;
         width: 100%;
         background-image: url(../images/backgrounds/headerbg.png);
         background-position: center;

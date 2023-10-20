@@ -1,5 +1,3 @@
-import Filter from "../components/homePage/Filter.jsx";
-import MasterLayout from "../components/layout/MasterLayout.jsx";
 import AdminJob from "../pages/AdminJob.jsx";
 import BusinessSector from "../pages/BusinessSector.jsx";
 import Home from "../pages/Home.jsx";
@@ -12,9 +10,7 @@ import User from "../pages/User.jsx";
 export const routes = [
   {
     path: "/",
-    component: (
-      <MasterLayout contentComponent={<Home />} sideBarComponent={<Filter />} />
-    ),
+    component: <Home />,
     isPrivate: false,
   },
   {
@@ -43,7 +39,7 @@ export const routes = [
   {
     path: "/profile",
     component: <Profile />,
-    isPrivate: true,
+    isPrivate: false,
   },
   {
     path: "/login",

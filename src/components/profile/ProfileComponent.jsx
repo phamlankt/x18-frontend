@@ -219,14 +219,13 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     >
       {({ errors, touched, isSubmitting, setFieldValue }) => {
         return (
-          <Form className="container rounded bg-white ">
+          <Form className="container rounded">
             <div className="row">
               <div className="col-md-4 border-right">
                 <Avatar />
-                <div className="text-center ">
+                <div className="text-center">
                   <button
                     className="btn btn-primary reset-password-button"
-                    style={{ marginTop: "10rem" }}
                     type="button"
                     onClick={onOpenResetPasswordModal}
                   >

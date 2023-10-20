@@ -32,15 +32,24 @@ function Avatar() {
   };
 
   return (
-    <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-      <img
-        className="rounded-circle mt-5"
-        width="150px"
-        src={
-          auth.user?.avatarUrl ||
-          "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
-        }
-      />
+    <div className="d-flex flex-column align-items-center text-center">
+      <div
+        className="d-flex justify-content-center align-items-center rounded-circle mt-5 overflow-hidden"
+        style={{
+          width: "150px",
+          height: "150px",
+        }}
+      >
+        <img
+          alt="avatar"
+          width={150}
+          src={
+            auth.user?.avatarUrl ||
+            "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
+          }
+        />
+      </div>
+
       <span className="fw-bold">{auth.user.username}</span>
       <div className="mb-3 mt-3">
         <label

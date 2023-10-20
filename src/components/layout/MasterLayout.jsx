@@ -1,35 +1,46 @@
 import { Layout } from "antd";
-import HeaderComponent from "./Header";
-import FooterComponent from "./Footer";
+import DefaultHeader from "./Header";
+import DefaultFooter from "./Footer";
 import React from "react";
+import { useState } from "react";
+import { AiOutlineDoubleRight } from "react-icons/ai";
 
 const { Header, Content, Footer, Sider } = Layout;
 const MasterLayout = (props) => {
-  const HeaderContent = props.HeaderComponent || <HeaderComponent />;
-  const FooterContent = props.FooterComponent || <FooterComponent />;
-  const sideBarContent = props.sideBarComponent || <></>;
-  const mainContent = props.contentComponent || <></>;
-  const hasHeader = props.hasHeader || true;
-  const hasFooter = props.hasFooter || true;
-  const hasSideBar = props.hasSideBar || true;
+  const HeaderComponent = props.HeaderComponent || <DefaultHeader />;
+  const FooterComponent = props.FooterComponent || <DefaultFooter />;
+  const SideBarComponent = props.SideBarComponent || <></>;
+  const ContentComponent = props.ContentComponent || <></>;
+  const hasHeader = props.hasHeader === false ? false : true;
+  const hasFooter = props.hasFooter === false ? false : true;
+  const hasSideBar = props.hasSideBar === false ? false : true;
 
   return (
     <Layout className="master-layout">
       {hasHeader && (
-        <Header className="master-layout-header">{HeaderContent}</Header>
+        <Header className="master-layout-header">{HeaderComponent}</Header>
       )}
 
       <Layout hasSider className="master-layout-main-content-container">
         {hasSideBar && (
-          <Sider width="350px" className="master-layout-leftside">
-            {sideBarContent}
+          <Sider
+            width="350px"
+            className="master-layout-leftside"
+            breakpoint="lg"
+            collapsedWidth={0}
+            zeroWidthTriggerStyle={{ backgroundColor: "transparent" }}
+            trigger={<AiOutlineDoubleRight />}
+          >
+            {SideBarComponent}
           </Sider>
         )}
 
-        <Content className="master-layout-main-content">{mainContent}</Content>
+        <Content className="master-layout-main-content">
+          {ContentComponent}
+        </Content>
       </Layout>
       {hasFooter && (
-        <Footer className="master-layout-footer">{FooterContent}</Footer>
+        <Footer className="master-layout-footer">{FooterComponent}</Footer>
       )}
     </Layout>
   );
