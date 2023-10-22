@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import { MapPin } from "lucide-react";
 import { Pagination } from "antd";
 import { List } from "antd";
-import applicationAPI from "../../apis/applicationAPI";
+import jobAPI from "../../apis/jobAPI";
 import SearchBar from "./SearchBar";
 
 export default function HomePage() {
   const [dataJob, setDataJob] = useState([]);
   const [checkDataJob, setCheckDataJob] = useState(true);
   if (checkDataJob) {
-    applicationAPI
+    jobAPI
       .getAll()
       .then((response) => {
         console.log(response, 15);
-        setDataJob(response.data.data.applicationList.data);
+        setDataJob(response.data.data);
         setCheckDataJob(false);
       })
       .catch((error) => {
@@ -30,6 +30,17 @@ export default function HomePage() {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  // "_id": "6534e9393fb81b7da9e61c97",
+  // "title": "Designer",
+  // "deadline": "2023-11-20T17:00:00.000Z",
+  // "creator": "65290357dd680640c60dacc9",
+  // "salary": "7500000 VND",
+  // "location": "HCM",
+  // "city": "HCM",
+  // "position": "Part time",
+  // "amount": 1,
+  // "description": "Test job 2 from Lan",
 
   return (
     <div className="homePage">
@@ -51,15 +62,15 @@ export default function HomePage() {
                         alt=""
                       />
                       <div>
-                        <h5>{value.item}</h5>
-                        <h6>Công ty cổ phần BALA BALA</h6>
+                        <h5>{value.title}</h5>
+                        <h6>Position: {value.position}</h6>
                         <div>
-                          <p>Mức Lương : 10 - 15 triệu</p>
+                          <p>Salary: {value.salary}</p>
                           <p>
                             <MapPin />
-                            Thành phố HCM
+                            {value.city}
                           </p>
-                          <p>Hạn Nộp: 30/12/2023</p>
+                          <p>Deadline: {value.deadline}</p>
                         </div>
                       </div>
                     </div>
