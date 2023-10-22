@@ -49,7 +49,7 @@ const Login = () => {
         // navigate("/admin/users");
         navigate("/");
       } else {
-        navigate("/profile");
+        navigate("/");
       }
     } catch (error) {
       console.log(error);

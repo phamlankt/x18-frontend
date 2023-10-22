@@ -20,7 +20,7 @@ const PostedJobsListings = () => {
       <div className="list">
         <div className="topic">
           <p>Jobs postings have been created</p>
-          <Link to="/#">+ Create job postings</Link>
+          <Link to="/createJods">+ Create job postings</Link>
         </div>
         <div className="content">
           <div className="Job">
