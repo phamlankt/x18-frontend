@@ -12,6 +12,7 @@ export default function HomePage() {
     applicationAPI
       .getAll()
       .then((response) => {
+        console.log(response, 15);
         setDataJob(response.data.data.applicationList.data);
         setCheckDataJob(false);
       })

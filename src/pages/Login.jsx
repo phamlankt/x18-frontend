@@ -40,6 +40,8 @@ const Login = () => {
         password: values.password,
       });
 
+      console.log(response.data);
+
       localStorage.setItem("accessToken", response.data.data.accessToken);
 
       const userInfo = await handleLogin();

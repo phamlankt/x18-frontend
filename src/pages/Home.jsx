@@ -7,9 +7,9 @@ import CreateJobs from "../components/formCreateJobsPostings/CreateJobs";
 function Home() {
   return (
     <MasterLayout
-      ContentComponent={<CreateJobs />}
-      SideBarComponent={<null />}
-      hasSideBar={false}
+      ContentComponent={<HomePage />}
+      SideBarComponent={<Filter />}
+      // hasSideBar={false}
     />
   );
 }
