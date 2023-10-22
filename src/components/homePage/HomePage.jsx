@@ -12,19 +12,16 @@ export default function HomePage() {
     applicationAPI
       .getAll()
       .then((response) => {
-        console.log(response.data.data);
-        setDataJob(response.data.data);
+        setDataJob(response.data.data.applicationList.data);
         setCheckDataJob(false);
       })
       .catch((error) => {
         console.log(error, 15);
       });
   }
-
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 4; // Số lượng mục trên mỗi trang
   const totalItems = dataJob.length; // Tổng số mục trong danh sách của bạn
-
   // Tính toán mục trên trang hiện tại
   const startItemIndex = (currentPage - 1) * pageSize;
   const endItemIndex = startItemIndex + pageSize;
