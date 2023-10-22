@@ -31,17 +31,6 @@ export default function HomePage() {
     setCurrentPage(page);
   };
 
-  // "_id": "6534e9393fb81b7da9e61c97",
-  // "title": "Designer",
-  // "deadline": "2023-11-20T17:00:00.000Z",
-  // "creator": "65290357dd680640c60dacc9",
-  // "salary": "7500000 VND",
-  // "location": "HCM",
-  // "city": "HCM",
-  // "position": "Part time",
-  // "amount": 1,
-  // "description": "Test job 2 from Lan",
-
   return (
     <div className="homePage">
       <SearchBar />

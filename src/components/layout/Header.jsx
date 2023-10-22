@@ -9,7 +9,11 @@ function Header() {
   const [myInfor, setMyInFor] = useState({});
   const [stopFecthAPI, setStopFectAPI] = useState(false);
   const { auth } = useContext(AuthContext);
-  const myTokenToCheck = localStorage.getItem("access_toen");
+
+  const DeleteToken = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("token");
+  };
 
   if (!stopFecthAPI) {
     setStopFectAPI(true);
@@ -34,9 +38,13 @@ function Header() {
         >
           Jobs
         </Link>
-        <button className="menuIcon">
+        <Link
+          to={myInfor.roleName === "applicant" ? "/myListJob" : "/myPost"}
+          className="menuIcon"
+          style={{ display: "flex", alignItems: "center" }}
+        >
           {myInfor.roleName === "applicant" ? "Applicant" : "Recruiter"}
-        </button>
+        </Link>
       </div>
       <div className="navbar">
         {auth.isAuthenticated ? (
@@ -56,7 +64,11 @@ function Header() {
               />
               <h4>{myInfor.fullName}</h4>
             </Link>
-            <Link className="navIconLogin" to="/login">
+            <Link
+              className="navIconLogin"
+              to="/login"
+              onClick={() => DeleteToken()}
+            >
               Log out
             </Link>
           </div> /// add avatar dropdown
