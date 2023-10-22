@@ -43,6 +43,16 @@
         align-items: center;
         gap: 20px;
         font-size: 15px;
+            img{
+                padding: 10px;
+                width: 70px;
+                height: 70px;
+                border-radius: 999px;
+            }
+            h4{
+                color: white;
+                text-decoration: underline;
+               }
         .navIconLogin{
             font-weight: 600;
             width: 120px;
@@ -156,7 +166,7 @@
     display: flex;
     justify-content: center;
     gap: 30px;
-    width: 1150px;
+    // width: 1150px;
     height: fit-content;
     .Job{
         display: grid;
