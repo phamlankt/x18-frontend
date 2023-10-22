@@ -63,14 +63,14 @@ export default function HomePage() {
                       />
                       <div>
                         <h5>{value.title}</h5>
-                        <h6>Thời gian : {value.position}</h6>
+                        <h6>Position: {value.position}</h6>
                         <div>
-                          <p>Mức Lương : {value.salary}</p>
+                          <p>Salary: {value.salary}</p>
                           <p>
                             <MapPin />
                             {value.city}
                           </p>
-                          <p>Hạn Nộp: {value.deadline}</p>
+                          <p>Deadline: {value.deadline}</p>
                         </div>
                       </div>
                     </div>
