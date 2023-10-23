@@ -7,8 +7,8 @@ import Register from "../pages/Register.jsx";
 import ResetPassword from "../pages/ResetPassword.jsx";
 import ListJobOfApplicant from "../pages/ListJobOfApplicant.jsx";
 import ListJobOfRecruiter from "../pages/ListJobOfRecruiter.jsx";
-import FormCreateJobsForRecruiter from "../pages/FormCreateJobsForRecruiter.jsx";
 import User from "../pages/User.jsx";
+import CreateJobPage from "../pages/CreateJob.jsx";
 
 export const routes = [
   {
@@ -66,7 +66,7 @@ export const routes = [
   },
   {
     path: "/createJods",
-    component: <FormCreateJobsForRecruiter />,
+    component: <CreateJobPage />,
   },
 ];
 export default routes;
