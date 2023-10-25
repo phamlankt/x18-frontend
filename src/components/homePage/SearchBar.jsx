@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { HiOutlineLocationMarker } from "react-icons/hi";
-import cities from "../../global/constants/VNLocaion.json";
+import cities from "../../global/data/VNLocaion.json";
 import jobAPI from "../../apis/jobAPI";
 import { useSearchParams } from "react-router-dom";
 import { Select } from "antd";

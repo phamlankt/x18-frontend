@@ -17,7 +17,7 @@ import { capitalizeFirstLetter, formatDate } from "../../global/common";
 function JobDescription() {
   const jobId = useParams().jobId;
   const [jobInfo, setJobInfo] = useState();
-//   const { auth } = useContext(AuthContext);
+  //   const { auth } = useContext(AuthContext);
   useEffect(() => {
     getJobById();
   }, []);
@@ -80,16 +80,17 @@ function JobDescription() {
             </div>
           </div>
           {/* {auth.user.roleName === "applicant" && ( */}
-            <div className="text-center mt-5">
-              {/* <button className="btn btn-primary fw-bold w-50 me-4">
+          <div className="text-center mt-5">
+            {/* <button className="btn btn-primary fw-bold w-50 me-4">
                 Apply Now
               </button> */}
-              {/* <button className="btn btn-info btn-gradient ms-4" ><Share2 className="me-1" /></button> */}
-            </div>
+            {/* <button className="btn btn-info btn-gradient ms-4" ><Share2 className="me-1" /></button> */}
+          </div>
           {/* )} */}
           <div className="job_description my-4">
-            <h6 className="fw-bold">Job Description</h6>
-            {jobInfo.description}
+            <div
+              dangerouslySetInnerHTML={{ __html: jobInfo.description }}
+            ></div>
           </div>
         </>
       )}

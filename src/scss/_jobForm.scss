@@ -1,0 +1,151 @@
+.job-form-container {
+  min-height: 90vh;
+  h3 {
+    text-transform: uppercase;
+    color: white;
+    font-size: 2em;
+    font-weight: 500;
+    margin: 10px 0;
+    text-align: center;
+  }
+  .job-form {
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 2em 0;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 3em;
+    .form-group {
+      width: 100%;
+      position: relative;
+      margin: 0;
+      label {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      p {
+        font-weight: 500;
+        font-size: 1.2em;
+        margin: 0;
+        color: rgb(59, 122, 168);
+      }
+      input,
+      select {
+        flex: 1 1 auto;
+        padding: 5px 8px;
+        border-radius: 4px;
+        border: 1px solid #d9d9d9;
+        &:focus {
+          outline: none;
+          border: 1px solid #0d6efd;
+        }
+        &:hover {
+          border: 1px solid #0d6efd;
+        }
+      }
+      .form-error {
+        margin: 0;
+        font-size: 12px;
+        position: absolute;
+        font-style: italic;
+        bottom: -1.6em;
+      }
+      .form-upload {
+        background-color: rgba(255, 255, 255, 0.5);
+        width: 150px;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px dashed gray;
+        p {
+          margin: 0;
+          text-align: center;
+        }
+      }
+    }
+    .quill {
+      width: 100%;
+      height: fit-content;
+      p {
+        color: black;
+        font-weight: normal;
+      }
+      .ql-toolbar.ql-snow {
+        background-color: white;
+      }
+      .ql-container.ql-snow {
+        height: fit-content;
+        min-height: 40vh;
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+      .ql-editor.ql-blank {
+        height: fit-content;
+        min-height: 40vh;
+      }
+    }
+  }
+
+  .ant-select .ant-select-selector {
+    flex: 1 1 auto;
+    border-radius: 4px;
+    border: 1px solid #d9d9d9;
+    color: black;
+    &:focus {
+      outline: none !important;
+      border: 1px solid rgb(59, 122, 168);
+    }
+    &:hover {
+      border: 1px solid rgb(59, 122, 168);
+    }
+
+    .ant-select-selection-search-input {
+      border: none;
+      &:hover {
+        border: none;
+      }
+      &:focus {
+        border: none;
+      }
+    }
+  }
+
+  .react-datepicker__input-container,
+  .react-datepicker-wrapper,
+  #deadline {
+    width: 100%;
+  }
+
+  .react-datepicker__current-month,
+  .react-datepicker-time__header,
+  .react-datepicker-year-header,
+  .react-datepicker__day-name {
+    color: white;
+  }
+  .react-datepicker__day {
+    color: gray;
+  }
+  .react-datepicker__day--disabled {
+    color: #ccc;
+  }
+  .react-datepicker__day--selected {
+    background-color: rgb(63, 135, 173);
+    color: white;
+  }
+  .react-datepicker__header {
+    background-color: rgb(63, 135, 173);
+  }
+  .react-datepicker__triangle {
+    display: none;
+  }
+  .react-datepicker__navigation-icon {
+    color: white;
+    &::before {
+      color: white;
+      border-color: white;
+    }
+  }
+}
