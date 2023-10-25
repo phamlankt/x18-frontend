@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { MapPin } from "lucide-react";
 import { Settings } from "lucide-react";
 import { XCircle } from "lucide-react";
+import { History } from "lucide-react";
 import { CalendarCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import applicationAPI from "../../apis/applicationAPI";
@@ -25,7 +26,7 @@ const PostedJobsListings = () => {
   const menu = (
     <Menu onClick={handleMenuClick} className="menu">
       <button className="update">
-        <Settings /> Update
+        <History /> Update
       </button>
       <button className="delete">
         <XCircle /> Delete
