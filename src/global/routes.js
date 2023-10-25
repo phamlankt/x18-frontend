@@ -9,6 +9,7 @@ import ListJobOfApplicant from "../pages/ListJobOfApplicant.jsx";
 import ListJobOfRecruiter from "../pages/ListJobOfRecruiter.jsx";
 import User from "../pages/User.jsx";
 import CreateJobPage from "../pages/CreateJob.jsx";
+import JobDetails from "../pages/JobDetails.jsx";
 
 export const routes = [
   {
@@ -40,6 +41,11 @@ export const routes = [
     isPrivate: false,
   },
   {
+    path: "/jobs/:jobId",
+    component: <JobDetails />,
+    isPrivate: false,
+  },
+  {
     path: "/profile",
     component: <Profile />,
     isPrivate: false,
@@ -67,6 +73,7 @@ export const routes = [
   {
     path: "/createJods",
     component: <CreateJobPage />,
+    isPrivate: true,
   },
 ];
 export default routes;

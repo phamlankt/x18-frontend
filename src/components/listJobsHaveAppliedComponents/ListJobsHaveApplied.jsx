@@ -33,10 +33,48 @@ const ListJobHaveApplied = () => {
       return;
     }
   };
+
+  function convertSalaryText(salaryText) {
+    if (salaryText.endsWith(" USD")) {
+      // Xóa đuôi ' USD' để chỉ lấy số
+      const numberPart = salaryText.replace(" USD", "");
+
+      // Nếu giá trị chứa dấu '-' thì chuyển đổi thành dạng 'X-Y thousand USD'
+      if (numberPart.includes("-")) {
+        const [start, end] = numberPart.split("-");
+        return `${start / 1000}-${end / 1000} thousand USD`;
+      } else {
+        // Nếu không, chuyển đổi thành dạng 'X thousand USD'
+        return `${numberPart / 1000} thousand USD`;
+      }
+    }
+    // Kiểm tra nếu salaryText có dạng '5000000-7000000 VND'
+    if (salaryText.includes("-")) {
+      const [min, max] = salaryText.split("-");
+      const formattedMin = formatNumber(min);
+      const formattedMax = formatNumber(max);
+      return `${formattedMin} - ${formattedMax} VND`;
+    }
+    // Kiểm tra nếu salaryText có dạng '7000000 VND'
+    if (!isNaN(parseInt(salaryText))) {
+      const formattedSalary = formatNumber(salaryText);
+      return `${formattedSalary} VND`;
+    }
+    // Trả về salaryText không thay đổi nếu không áp dụng được quy tắc
+    return salaryText;
+  }
+
+  function formatNumber(number) {
+    let formattedNumber = "";
+    formattedNumber = (parseFloat(number) / 1000000).toFixed(1);
+    formattedNumber += " million";
+    return formattedNumber;
+  }
+
   return (
     <div className="listJobApplicant">
       <div className="list">
-        <p className="topic">Job postings have applied</p>
+        <p className="topic">Applied Jobs</p>
         <div className="content">
           <div className="Job">
             <div className="jobIcon">
@@ -48,21 +86,33 @@ const ListJobHaveApplied = () => {
                   />
                   <div>
                     <div>
-                      <h5>{value.item}</h5>
+                      <h4>{value.item}</h4>
                       <button onClick={() => DeleteRequest(value._id)}>
                         <XCircle /> Cancel request
                       </button>
                     </div>
-                    <h6>Công ty cổ phần BALA BALA</h6>
+                    <h6>
+                      Position: <span>Full time</span>
+                    </h6>
                     <div className="informationJob">
-                      <p>Mức Lương : 10 - 15 triệu</p>
+                      <p>
+                        Salary:
+                        <span>
+                          {(() => {
+                            const salaryText1 = "10000000 VND";
+                            console.log(convertSalaryText(salaryText1));
+                            return convertSalaryText(salaryText1);
+                          })()}
+                          {/* {value.salary} */}
+                        </span>
+                      </p>
                       <p>
                         <MapPin />
-                        Thành phố HCM
+                        <span>Thành phố HCM</span>
                       </p>
                       <p>
                         <CalendarCheck />
-                        Hạn Nộp: 30/12/2023
+                        Deadline: <span>30/12/2023</span>
                       </p>
                     </div>
                   </div>

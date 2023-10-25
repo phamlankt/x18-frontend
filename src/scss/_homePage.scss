@@ -43,12 +43,21 @@
         align-items: center;
         gap: 20px;
         font-size: 15px;
-            img{
-                padding: 10px;
-                width: 70px;
-                height: 70px;
-                border-radius: 999px;
+        div{
+            div{
+                cursor: pointer;
+                width: 300px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                img{
+                    padding: 10px;
+                    width: 70px;
+                    height: 70px;
+                    border-radius: 999px;
+                }
             }
+        }
             h4{
                 color: white;
                 text-decoration: underline;
@@ -85,6 +94,33 @@
             border: none;
             padding: 10px;
             border-radius: 5px;
+        }
+    }
+}
+div{
+    div{
+        ul{
+          .settings{
+            background-color: black;
+            color: white;
+            font-weight: 600;   
+            border: none;
+            border-radius: 5px; 
+         }
+         .logout{
+            background-color: rgb(27, 27, 137);
+            color: white;
+            font-weight: 600;   
+            border: none;
+            border-radius: 5px; 
+         }
+         .profile{
+            background-color: rgb(194, 50, 103);
+            color: white;
+            font-weight: 600;   
+            border: none;
+            border-radius: 5px; 
+         }
         }
     }
 }
@@ -189,6 +225,7 @@
                 padding: 10px;
                 border-radius: 20px;
                 border: 1px solid #d7977a;
+                background-color: white;
                 img{
                     width: 200px;
                     height: 100px;
@@ -201,16 +238,23 @@
                     div{
                         display: flex;
                         gap: 20px;
+                        p{
+                            height: fit-content;
+                            display: flex;
+                            gap: 2px;
+                            align-items: center;
+                            background-color: rgb(245, 226, 226);
+                            padding: 5px;
+                            border-radius: 5px;
+                            span{
+                                font-size: 15px;
+                                font-weight: 600;
+                                color: rgb(72, 34, 153);
+                            }
+                        }
                     }
                 }
             }
         }
     }
-}
-.footer{
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
 }

@@ -1,11 +1,16 @@
 import React, { useContext, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
+import Recoil from "../../recoilContextProvider";
 import userAPI from "../../apis/userAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 
 function Avatar() {
   const { auth, handleLogin } = useContext(AuthContext);
   const { handleAlertStatus } = useContext(AlertContext);
+  const [checkDataUpdate, setCheckDataUpdate] = useRecoilState(
+    Recoil.AtomCheckDataUser
+  );
   const [loading, setLoading] = useState(false);
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -20,6 +25,7 @@ function Avatar() {
         type: "success",
         message: "Upload avatar image sucessfully!",
       });
+      setCheckDataUpdate(false);
     } catch (error) {
       handleAlertStatus({
         type: "error",

@@ -43,6 +43,8 @@
                        padding: 10px;
                        border-radius: 20px;
                        border: 1px solid #d7977a;
+                       background-color: white;
+                     
                        img{
                            width: 200px;
                            height: 100px;
@@ -73,8 +75,20 @@
                                display: flex;
                                gap: 10px;
                                p{
-                                width: 200px;
-                               }
+                                width: 180px;
+                                height: fit-content;
+                                display: flex;
+                                gap: 2px;
+                                align-items: center;
+                                background-color: rgb(245, 226, 226);
+                                padding: 5px;
+                                border-radius: 5px;
+                                span{
+                                    font-size: 15px;
+                                    font-weight: 600;
+                                    color: rgb(72, 34, 153);
+                                }
+                            }
                            }
                        }
                    }

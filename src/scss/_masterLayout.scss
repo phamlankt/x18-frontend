@@ -1,6 +1,6 @@
 .master-layout {
   min-height: 100vh;
-  max-height: 100vh;
+  height: 100%;
   .master-layout-header {
     background-image: url(../images/backgrounds/headerbg.png);
     background-position: center;
@@ -36,17 +36,24 @@
       }
     }
   }
-
-  .master-layout-footer {
-    position: relative;
-    bottom: 0;
-    z-index: 9;
-    width: 100%;
-    background-image: url(../images/backgrounds/headerbg.png);
-    background-position: center;
-    background-size: cover;
-    padding: 0;
-  }
+  // .master-layout-footer{
+  //     position: relative;
+  //     bottom: 0;
+  //     z-index: 9;
+  //     width: 100%;
+  //     background-image: url(../images/backgrounds/headerbg.png);
+  //     background-position: center;
+  //     background-size: cover;
+  //     padding: 0;
+  // }
+}
+.footer {
+  position: relative;
+  bottom: 0;
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: space-around;
 }
 body {
   &::-webkit-scrollbar {
