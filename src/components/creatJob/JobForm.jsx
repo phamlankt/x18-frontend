@@ -42,7 +42,7 @@ const JobForm = (props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [sectors, setSectors] = useState("");
-  const [logoReview, setLogoReview] = useState("");
+  const [logoReview, setLogoReview] = useState(job ? job.companyLogo : "");
 
   useEffect(() => {
     const handleGetSectors = async () => {
@@ -182,7 +182,7 @@ const JobForm = (props) => {
 
   return (
     <div className="job-form-container container-sm">
-      <h3>{type === "create" ? "Create Job" : "Edit Job"}</h3>
+      <h3>{type === "create" ? "Create Job" : "Update Job"}</h3>
       <form onSubmit={formik.handleSubmit} className="job-form p-5">
         <div className="form-group row">
           <p>Job Title:</p>
@@ -411,7 +411,7 @@ const JobForm = (props) => {
                 onChange={(value) => {
                   formik.setFieldValue("sectors", value);
                 }}
-                onSelect={() => {
+                onInputKeyDown={() => {
                   formik.setFieldTouched("sectors", true);
                 }}
               />

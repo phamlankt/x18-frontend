@@ -14,6 +14,7 @@
     background-image: url(../images/backgrounds/layoutbg.png);
     background-position: center;
     background-size: cover;
+    min-height: 100vh;
     .master-layout-leftside {
       background-color: rgba(0, 0, 0, 0.1);
       z-index: 9;
