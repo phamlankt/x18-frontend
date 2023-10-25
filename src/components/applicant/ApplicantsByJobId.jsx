@@ -200,8 +200,9 @@ function ApplicantsByJobId() {
               record.status === "rejected"
                 ? "pink"
                 : record.status === "confirmed"
-                ? "yellow"
-                : "default",
+                ? "#add8e6"
+                :  record.status === "cancelled"
+                ? "yellow":"default",
           },
         })}
         dataSource={data}
