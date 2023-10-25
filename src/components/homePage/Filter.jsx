@@ -124,7 +124,6 @@ const Filter = () => {
             borderRadius: "4px",
           }}
           placeholder="Sort feilds"
-          optionFilterProp="children"
           allowClear={true}
           onClear={() => {
             setSortField("");

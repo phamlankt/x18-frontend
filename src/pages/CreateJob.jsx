@@ -5,7 +5,7 @@ import CreateJobForm from "../components/creatJob/CreateJobForm";
 function CreateJobPage() {
   return (
     <MasterLayout
-      ContentComponent={<CreateJobForm />}
+      ContentComponent={<CreateJobForm type="create" />}
       hasSideBar={false}
       hasFooter={false}
     />

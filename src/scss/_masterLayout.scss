@@ -1,50 +1,64 @@
-.master-layout{
-    min-height: 100vh;
-    max-height: 100vh;
-    .master-layout-header{
-        background-image: url(../images/backgrounds/headerbg.png);
-        background-position: center;
-        background-size: cover;
-        position: sticky;
-        top: 0;
-        z-index: 9;
-        padding: 0;
+.master-layout {
+  min-height: 100vh;
+  max-height: 100vh;
+  .master-layout-header {
+    background-image: url(../images/backgrounds/headerbg.png);
+    background-position: center;
+    background-size: cover;
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    padding: 0;
+  }
+  .master-layout-main-content-container {
+    background-image: url(../images/backgrounds/layoutbg.png);
+    background-position: center;
+    background-size: cover;
+    .master-layout-leftside {
+      background-color: rgba(0, 0, 0, 0.1);
+      z-index: 9;
     }
-    .master-layout-main-content-container{
-        background-image: url(../images/backgrounds/layoutbg.png);
-        background-position: center;
-        background-size: cover;
-        .master-layout-leftside{
-            background-color: rgba(0, 0, 0, 0.1);
-            z-index: 9;
-        }
-        .master-layout-main-content{
-            z-index: 1;
-            overflow-y: scroll;
-            overflow-x: hidden;
-            &::-webkit-scrollbar {
-                width: 0px;
-              }
-            
-            &::-webkit-scrollbar-thumb {
-                background-color: rgba(136, 136, 136, 0.8);
-                border-radius: 5px;
-              }
-            
-            &::-webkit-scrollbar-track {
-                background-color: #f0f0f0;
-              }
-            }
-        }
-    
-    .master-layout-footer{
-        position: relative;
-        bottom: 0;
-        z-index: 9;
-        width: 100%;
-        background-image: url(../images/backgrounds/headerbg.png);
-        background-position: center;
-        background-size: cover;
-        padding: 0;
+    .master-layout-main-content {
+      z-index: 1;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      &::-webkit-scrollbar {
+        width: 0px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(136, 136, 136, 0.8);
+        border-radius: 5px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: #f0f0f0;
+      }
     }
+  }
+
+  .master-layout-footer {
+    position: relative;
+    bottom: 0;
+    z-index: 9;
+    width: 100%;
+    background-image: url(../images/backgrounds/headerbg.png);
+    background-position: center;
+    background-size: cover;
+    padding: 0;
+  }
+}
+body {
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(136, 136, 136, 0.8);
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+  }
 }
