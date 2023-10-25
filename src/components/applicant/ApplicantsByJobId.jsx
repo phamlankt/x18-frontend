@@ -9,7 +9,7 @@ function ApplicantsByJobId() {
   const [loading, setLoading] = useState(false);
   const { handleAlertStatus } = useContext(AlertContext);
   const jobId = useParams().jobId;
- 
+
   const columns = [
     {
       title: "No.",
@@ -35,7 +35,23 @@ function ApplicantsByJobId() {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (_, { status }) => <span>{capitalizeFirstLetter(status)}</span>,
+      render: (_, { status }) => (
+        <Tag
+          bordered={false}
+          
+          color={
+            status === "rejected"
+              ? "error"
+              : status === "cancelled"
+              ? "warning"
+              : status === "confirmed"
+              ? "cyan"
+              : "processing"
+          }
+        >
+          <span className="fw-bold">{capitalizeFirstLetter(status)}</span>
+        </Tag>
+      ),
     },
     {
       title: "Attachments",
@@ -121,13 +137,16 @@ function ApplicantsByJobId() {
 
   const confirmApplicant = async (applicationId) => {
     setLoading(true);
-    await applicationAPI.confirm({jobId,applicationId}).then(()=>{
+    await applicationAPI
+      .confirm({ jobId, applicationId })
+      .then(() => {
         handleAlertStatus({
-            type: "success",
-            message: "Confirm application sucessfully!",
-          });
-          fetchRecords()
-    }).catch((error) => {
+          type: "success",
+          message: "Confirm application sucessfully!",
+        });
+        fetchRecords();
+      })
+      .catch((error) => {
         handleAlertStatus({
           type: "error",
           message: error.response.data.message,
@@ -141,13 +160,16 @@ function ApplicantsByJobId() {
 
   const rejectApplicant = async (applicationId) => {
     setLoading(true);
-    await applicationAPI.reject({jobId,applicationId}).then(()=>{
+    await applicationAPI
+      .reject({ jobId, applicationId })
+      .then(() => {
         handleAlertStatus({
-            type: "success",
-            message: "Reject application sucessfully!",
-          });
-          fetchRecords()
-    }).catch((error) => {
+          type: "success",
+          message: "Reject application sucessfully!",
+        });
+        fetchRecords();
+      })
+      .catch((error) => {
         handleAlertStatus({
           type: "error",
           message: error.response.data.message,
@@ -162,20 +184,19 @@ function ApplicantsByJobId() {
   return (
     <div className="m-4">
       <Table
-    
         loading={loading}
-        onRow={(record, index) => ({
-          style: {
-           
-            background:
-              record.status === "rejected"
-                ? "pink"
-                : record.status === "confirmed"
-                ? "#add8e6"
-                :  record.status === "cancelled"
-                ? "yellow":"default",
-          },
-        })}
+        // onRow={(record, index) => ({
+        //   style: {
+
+        //     background:
+        //       record.status === "rejected"
+        //         ? "pink"
+        //         : record.status === "confirmed"
+        //         ? "#add8e6"
+        //         :  record.status === "cancelled"
+        //         ? "yellow":"default",
+        //   },
+        // })}
         dataSource={data}
         columns={columns}
         pagination={{
