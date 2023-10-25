@@ -3,6 +3,7 @@ import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import cities from "../../global/constants/VNLocaion.json";
+import jobAPI from "../../apis/jobAPI";
 import { useSearchParams } from "react-router-dom";
 import { Select } from "antd";
 
@@ -10,6 +11,21 @@ const SearchBar = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [locations, setLocations] = useState([]);
+
+  const [dataJob, setDataJob] = useState([]);
+  const [checkDataJob, setCheckDataJob] = useState(true);
+  if (checkDataJob) {
+    jobAPI
+      .getAll()
+      .then((response) => {
+        console.log(response, 15);
+        setDataJob(response.data.data);
+        setCheckDataJob(false);
+      })
+      .catch((error) => {
+        console.log(error, 15);
+      });
+  }
 
   const handleChangeSearch = (e) => {
     setSearch(e.target.value);
@@ -74,7 +90,9 @@ const SearchBar = () => {
         </div>
         <button className="search-bar-submit-button">Search</button>
       </form>
-      <h5 className="job-quantity">There are 1000 opportunities for you</h5>
+      <h5 className="job-quantity">
+        There are {dataJob.length} opportunities for you
+      </h5>
     </div>
   );
 };

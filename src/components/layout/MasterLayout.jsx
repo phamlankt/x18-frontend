@@ -16,33 +16,36 @@ const MasterLayout = (props) => {
   const hasSideBar = props.hasSideBar === false ? false : true;
 
   return (
-    <Layout className="master-layout">
-      {hasHeader && (
-        <Header className="master-layout-header">{HeaderComponent}</Header>
-      )}
-
-      <Layout hasSider className="master-layout-main-content-container">
-        {hasSideBar && (
-          <Sider
-            width="350px"
-            className="master-layout-leftside"
-            breakpoint="lg"
-            collapsedWidth={0}
-            zeroWidthTriggerStyle={{ backgroundColor: "transparent" }}
-            trigger={<AiOutlineDoubleRight />}
-          >
-            {SideBarComponent}
-          </Sider>
+    <div>
+      <div className="master-layout">
+        {hasHeader && (
+          <Header className="master-layout-header">{HeaderComponent}</Header>
         )}
+        <Layout hasSider className="master-layout-main-content-container">
+          {hasSideBar && (
+            <Sider
+              width="350px"
+              className="master-layout-leftside"
+              breakpoint="lg"
+              collapsedWidth={0}
+              zeroWidthTriggerStyle={{ backgroundColor: "transparent" }}
+              trigger={<AiOutlineDoubleRight />}
+            >
+              {SideBarComponent}
+            </Sider>
+          )}
 
-        <Content className="master-layout-main-content">
-          {ContentComponent}
-        </Content>
-      </Layout>
-      {hasFooter && (
-        <Footer className="master-layout-footer">{FooterComponent}</Footer>
-      )}
-    </Layout>
+          <Content className="master-layout-main-content">
+            {ContentComponent}
+          </Content>
+        </Layout>
+        {/* {hasFooter && ( */}
+        {/* <Footer className="master-layout-footer">{FooterComponent}</Footer> */}
+
+        {/* )} */}
+      </div>
+      <DefaultFooter />
+    </div>
   );
 };
 
