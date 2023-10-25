@@ -180,7 +180,7 @@ function ApplicantsByJobId() {
         columns={columns}
         pagination={{
           pageSize: 10,
-          position: ["topCenter", "bottomCenter"],
+          position: ["bottomCenter"],
           total: { total },
           onChange: (page, pageSize) => {
             fetchRecords(page, pageSize);
