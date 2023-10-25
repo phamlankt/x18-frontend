@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Space, Table, Tag } from "antd";
-import { capitalizeFirstLetter } from "../../global/common";
+import { capitalizeFirstLetter, formatDate } from "../../global/common";
 import applicationAPI from "../../apis/applicationAPI";
 import { useParams } from "react-router-dom";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
@@ -61,6 +61,7 @@ function ApplicantsByJobId() {
       title: "Applied Date",
       dataIndex: "appliedDate",
       key: "appliedDate",
+      render: (_, { appliedDate }) => <span>{formatDate(appliedDate)}</span>,
     },
     {
       title: "Status",
