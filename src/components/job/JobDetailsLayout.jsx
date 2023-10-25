@@ -8,9 +8,9 @@ import ApplicationByJobId from "../application/ApplicationByJobId";
 function JobDetailsLayout() {
   const { auth } = useContext(AuthContext);
   const roleName = auth.user.roleName;
-  //   const onChange = (key) => {
-  //     console.log(key);
-  //   };
+    const onChange = (key) => {
+      console.log(key);
+    };
   const items = [
     {
       key: "1",
@@ -31,7 +31,7 @@ function JobDetailsLayout() {
         ),
     },
   ];
-  return <Tabs defaultActiveKey="1" items={items} />;
+  return <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
 }
 
 export default JobDetailsLayout;

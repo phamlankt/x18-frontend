@@ -81,9 +81,9 @@ function JobDescription() {
           </div>
           {/* {auth.user.roleName === "applicant" && ( */}
             <div className="text-center mt-5">
-              <button className="btn btn-primary fw-bold w-50 me-4">
+              {/* <button className="btn btn-primary fw-bold w-50 me-4">
                 Apply Now
-              </button>
+              </button> */}
               {/* <button className="btn btn-info btn-gradient ms-4" ><Share2 className="me-1" /></button> */}
             </div>
           {/* )} */}

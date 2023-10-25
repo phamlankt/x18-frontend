@@ -33,10 +33,11 @@ const ListJobHaveApplied = () => {
       return;
     }
   };
+  console.log("dataJob",dataJob)
   return (
     <div className="listJobApplicant">
       <div className="list">
-        <p className="topic">Job postings have applied</p>
+        <p className="topic">Applied Jobs</p>
         <div className="content">
           <div className="Job">
             <div className="jobIcon">
