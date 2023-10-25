@@ -194,9 +194,11 @@ function ApplicantsByJobId() {
   return (
     <div className="m-4">
       <Table
+    
         loading={loading}
         onRow={(record, index) => ({
           style: {
+           
             background:
               record.status === "rejected"
                 ? "pink"
