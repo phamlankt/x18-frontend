@@ -70,10 +70,11 @@ const ListJobHaveApplied = () => {
     formattedNumber += " million";
     return formattedNumber;
   }
+
   return (
     <div className="listJobApplicant">
       <div className="list">
-        <p className="topic">Job postings apply</p>
+        <p className="topic">Job postings have applied</p>
         <div className="content">
           <div className="Job">
             <div className="jobIcon">
