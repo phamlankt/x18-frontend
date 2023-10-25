@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { CalendarCheck } from "lucide-react";
 import { MapPin } from "lucide-react";
 import { Pagination } from "antd";
 import { List } from "antd";
@@ -12,7 +13,7 @@ export default function HomePage() {
     jobAPI
       .getAll()
       .then((response) => {
-        console.log(response, 15);
+        console.log(response.data.data);
         setDataJob(response.data.data);
         setCheckDataJob(false);
       })
@@ -30,6 +31,42 @@ export default function HomePage() {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+  function convertSalaryText(salaryText) {
+    if (salaryText.endsWith(" USD")) {
+      // Xóa đuôi ' USD' để chỉ lấy số
+      const numberPart = salaryText.replace(" USD", "");
+
+      // Nếu giá trị chứa dấu '-' thì chuyển đổi thành dạng 'X-Y thousand USD'
+      if (numberPart.includes("-")) {
+        const [start, end] = numberPart.split("-");
+        return `${start / 1000}-${end / 1000} thousand USD`;
+      } else {
+        // Nếu không, chuyển đổi thành dạng 'X thousand USD'
+        return `${numberPart / 1000} thousand USD`;
+      }
+    }
+    // Kiểm tra nếu salaryText có dạng '5000000-7000000 VND'
+    if (salaryText.includes("-")) {
+      const [min, max] = salaryText.split("-");
+      const formattedMin = formatNumber(min);
+      const formattedMax = formatNumber(max);
+      return `${formattedMin} - ${formattedMax} VND`;
+    }
+    // Kiểm tra nếu salaryText có dạng '7000000 VND'
+    if (!isNaN(parseInt(salaryText))) {
+      const formattedSalary = formatNumber(salaryText);
+      return `${formattedSalary} VND`;
+    }
+    // Trả về salaryText không thay đổi nếu không áp dụng được quy tắc
+    return salaryText;
+  }
+
+  function formatNumber(number) {
+    let formattedNumber = "";
+    formattedNumber = (parseFloat(number) / 1000000).toFixed(1);
+    formattedNumber += " million";
+    return formattedNumber;
+  }
 
   return (
     <div className="homePage">
@@ -51,22 +88,45 @@ export default function HomePage() {
                         alt=""
                       />
                       <div>
-                        <h5>{value.title}</h5>
+                        <h4>{value.title}</h4>
                         <h6>Position: {value.position}</h6>
                         <div>
-                          <p>Salary: {value.salary}</p>
+                          <p>
+                            Salary:
+                            <span>
+                              {(() => {
+                                const salaryText1 = value.salary;
+                                console.log(convertSalaryText(salaryText1));
+                                return convertSalaryText(salaryText1);
+                              })()}
+                              {/* {value.salary} */}
+                            </span>
+                          </p>
                           <p>
                             <MapPin />
-                            {value.city}
+                            <span>{value.city}</span>
                           </p>
-                          <p>Deadline: {value.deadline}</p>
+                          <p>
+                            <CalendarCheck />
+                            Deadline:
+                            <span>
+                              {(() => {
+                                const dateString = value.deadline;
+                                const date = new Date(dateString);
+                                const year = date.getFullYear();
+                                const month = date.getMonth() + 1;
+                                const day = date.getDate();
+                                return `${day}/${month}/${year}`;
+                              })()}
+                            </span>
+                          </p>
                         </div>
                       </div>
                     </div>
                   )}
                 />
                 <Pagination
-                  style={{ marginTop: "10px" }}
+                  style={{ marginTop: "10px", display: "flex" }}
                   current={currentPage}
                   pageSize={pageSize}
                   total={totalItems}
