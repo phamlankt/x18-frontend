@@ -9,42 +9,10 @@ function ApplicantsByJobId() {
   const [loading, setLoading] = useState(false);
   const { handleAlertStatus } = useContext(AlertContext);
   const jobId = useParams().jobId;
-  //   const dataSource = [
-  //     {
-  //       key: "1",
-  //       name: "Lan Pham",
-  //       appliedDate: "15-10-2023",
-  //       status: "sent",
-  //       attachments: [
-  //         { type: "CV", url: "http://localhost/cv.pdf" },
-  //         { type: "cover_letter", url: "http://localhost/cover_letter.pdf" },
-  //       ],
-  //     },
-  //     {
-  //       key: "2",
-  //       name: "Nhan Nguyen",
-  //       appliedDate: "16-10-2023",
-  //       status: "confirmed",
-  //       attachments: [
-  //         { type: "CV", url: "" },
-  //         { type: "cover_letter", url: "" },
-  //       ],
-  //     },
-  //     {
-  //       key: "3",
-  //       name: "An Trang Nguyen",
-  //       appliedDate: "15-10-2023",
-  //       status: "rejected",
-  //       attachments: [
-  //         { type: "CV", url: "" },
-  //         { type: "cover_letter", url: "" },
-  //       ],
-  //     },
-  //   ];
-
+ 
   const columns = [
     {
-      title: "ID",
+      title: "No.",
       dataIndex: "id",
       key: "id",
       render: (id, record, index) => {
@@ -194,9 +162,11 @@ function ApplicantsByJobId() {
   return (
     <div className="m-4">
       <Table
+    
         loading={loading}
         onRow={(record, index) => ({
           style: {
+           
             background:
               record.status === "rejected"
                 ? "pink"

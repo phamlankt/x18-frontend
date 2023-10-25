@@ -31,7 +31,7 @@ function JobDetailsLayout() {
         ),
     },
   ];
-  return <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
+  return<div className="p-2">  <Tabs defaultActiveKey="1" items={items} onChange={onChange} /></div>;
 }
 
 export default JobDetailsLayout;

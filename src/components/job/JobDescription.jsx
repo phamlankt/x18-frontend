@@ -27,7 +27,7 @@ function JobDescription() {
   };
 
   return (
-    <div className="m-4">
+    <div className="m-4 p-4">
       {jobInfo && (
         <>
           <div className="general_info">
