@@ -2,9 +2,10 @@ import axiosInstance from "./axiosInstance";
 
 const jobAPI = {
   getAll: () => axiosInstance.get("/jobs/active"),
-  getById: () => axiosInstance.get("/job/getById"),
-  create: (values) => axiosInstance.post("/job/create", values),
-  update: (values) => axiosInstance.post("/job/update", values),
+  getById: (jobId) => axiosInstance.get(`/jobs/details/${jobId}`),
+  create: (values) => axiosInstance.post("/jobs/create", values),
+  update: (values) => axiosInstance.post("/jobs/update", values),
+  remove: (jobId) => axiosInstance.post("/jobs/remove", jobId),
 };
 
 export default jobAPI;

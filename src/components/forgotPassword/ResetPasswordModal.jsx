@@ -5,7 +5,6 @@ import * as Yup from "yup";
 import ModalFormItem from "../../global/ModalFormItem";
 import { passwordProfileModal } from "../../global/profileModalFormItems";
 import userAPI from "../../apis/userAPI";
-import AuthContext from "../../contexts/AuthContext/AuthContext";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import { useNavigate, useParams } from "react-router-dom";
 
