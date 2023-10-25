@@ -12,7 +12,7 @@ function ApplicantsByJobId() {
  
   const columns = [
     {
-      title: "ID",
+      title: "No.",
       dataIndex: "id",
       key: "id",
       render: (id, record, index) => {
