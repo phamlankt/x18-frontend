@@ -73,11 +73,11 @@ const ListJobHaveApplied = () => {
   return (
     <div className="listJobApplicant">
       <div className="list">
-        <p className="topic">Job postings have applied</p>
+        <p className="topic">Job postings apply</p>
         <div className="content">
           <div className="Job">
             <div className="jobIcon">
-              {[{ item: 123131 }].map((value) => (
+              {dataJob.map((value) => (
                 <div className="job">
                   <img
                     src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
@@ -98,11 +98,11 @@ const ListJobHaveApplied = () => {
                         Salary:
                         <span>
                           {(() => {
-                            const salaryText1 = "10000000 VND";
-                            console.log(convertSalaryText(salaryText1));
-                            return convertSalaryText(salaryText1);
+                            if (value.salary == "Negotiable") {
+                              return "Negotiable";
+                            }
+                            return `${value.salary} USD`;
                           })()}
-                          {/* {value.salary} */}
                         </span>
                       </p>
                       <p>

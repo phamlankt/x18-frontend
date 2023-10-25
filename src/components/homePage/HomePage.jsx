@@ -95,11 +95,11 @@ export default function HomePage() {
                             Salary:
                             <span>
                               {(() => {
-                                const salaryText1 = value.salary;
-                                console.log(convertSalaryText(salaryText1));
-                                return convertSalaryText(salaryText1);
+                                if (value.salary == "Negotiable") {
+                                  return "Negotiable";
+                                }
+                                return `${value.salary} USD`;
                               })()}
-                              {/* {value.salary} */}
                             </span>
                           </p>
                           <p>

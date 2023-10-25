@@ -83,12 +83,11 @@ function Header() {
       <div className="navbar">
         {auth.isAuthenticated ? (
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <BellRing size={35} color="white" />
+            <BellRing size={30} color="white" />
 
             <Dropdown overlay={menu}>
               <div>
                 <img src={myInfor.avatarUrl} alt="" />
-                {/* <h4>{myInfor.fullName}</h4> */}
                 <h4>
                   {myInfor.roleName === "applicant"
                     ? `${myInfor.fullName}`
