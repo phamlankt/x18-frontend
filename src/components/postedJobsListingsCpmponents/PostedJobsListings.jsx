@@ -5,13 +5,20 @@ import { XCircle } from "lucide-react";
 import { History } from "lucide-react";
 import { CalendarCheck } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Button, Modal } from "antd";
 import applicationAPI from "../../apis/applicationAPI";
 import jobAPI from "../../apis/jobAPI";
-import { Dropdown, Button, Menu } from "antd";
+import { Dropdown, Menu } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 
 const PostedJobsListings = () => {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [modalText, setModalText] = useState("Do you want to delete this job?");
   const [dataJob, setDataJob] = useState([]);
+  const [idToUpdate, setIdToUpdate] = useState("");
   const [checkDataJob, setCheckDataJob] = useState(true);
   if (checkDataJob) {
     jobAPI
@@ -42,53 +49,48 @@ const PostedJobsListings = () => {
     console.log("Clicked: ", e.key);
   };
 
+  const toUpdate = () => {
+    navigate(`/updateJob/${idToUpdate}`);
+  };
+
+  const showModal = () => {
+    setOpen(true);
+  };
+  const handleOk = () => {
+    jobAPI
+      .remove(idToUpdate)
+      .then((response) => {
+        console.log(response.data);
+        setOpen(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleCancel = () => {
+    console.log("Clicked cancel button");
+    setOpen(false);
+  };
+
   const menu = (
     <Menu onClick={handleMenuClick} className="menu">
-      <button className="update">
+      <button className="update" onClick={() => toUpdate()}>
         <History /> Update
       </button>
-      <button className="delete" onClick={() => DeleteRequest(11)}>
+      <button onClick={showModal} className="delete">
         <XCircle /> Delete
       </button>
+      <Modal
+        title="Notification"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      >
+        <p>{modalText}</p>
+      </Modal>
     </Menu>
   );
-
-  function convertSalaryText(salaryText) {
-    if (salaryText.endsWith(" USD")) {
-      // Xóa đuôi ' USD' để chỉ lấy số
-      const numberPart = salaryText.replace(" USD", "");
-
-      // Nếu giá trị chứa dấu '-' thì chuyển đổi thành dạng 'X-Y thousand USD'
-      if (numberPart.includes("-")) {
-        const [start, end] = numberPart.split("-");
-        return `${start / 1000}-${end / 1000} thousand USD`;
-      } else {
-        // Nếu không, chuyển đổi thành dạng 'X thousand USD'
-        return `${numberPart / 1000} thousand USD`;
-      }
-    }
-    // Kiểm tra nếu salaryText có dạng '5000000-7000000 VND'
-    if (salaryText.includes("-")) {
-      const [min, max] = salaryText.split("-");
-      const formattedMin = formatNumber(min);
-      const formattedMax = formatNumber(max);
-      return `${formattedMin} - ${formattedMax} VND`;
-    }
-    // Kiểm tra nếu salaryText có dạng '7000000 VND'
-    if (!isNaN(parseInt(salaryText))) {
-      const formattedSalary = formatNumber(salaryText);
-      return `${formattedSalary} VND`;
-    }
-    // Trả về salaryText không thay đổi nếu không áp dụng được quy tắc
-    return salaryText;
-  }
-
-  function formatNumber(number) {
-    let formattedNumber = "";
-    formattedNumber = (parseFloat(number) / 1000000).toFixed(1);
-    formattedNumber += " million";
-    return formattedNumber;
-  }
 
   return (
     <div className="listJobRecruiter">
@@ -108,10 +110,10 @@ const PostedJobsListings = () => {
                   />
                   <div>
                     <div>
-                      <h5>{value.item}</h5>
-                      <div>
+                      <h5>{value.title}</h5>
+                      <div style={{ zIndex: "10" }}>
                         <Dropdown overlay={menu}>
-                          <Button>
+                          <Button onMouseEnter={() => setIdToUpdate(value._id)}>
                             <Settings />
                           </Button>
                         </Dropdown>
