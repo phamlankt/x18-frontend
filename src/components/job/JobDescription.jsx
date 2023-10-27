@@ -13,6 +13,7 @@ import {
   User,
 } from "lucide-react";
 import { capitalizeFirstLetter, formatDate } from "../../global/common";
+import { Tag } from "antd";
 
 function JobDescription() {
   const jobId = useParams().jobId;
@@ -28,7 +29,9 @@ function JobDescription() {
 
   return (
     <div className="m-4 p-4">
-      {jobInfo && (
+      {!jobInfo ? (
+        <p className="text-danger">Job Not Found</p>
+      ) : (
         <>
           <div className="general_info">
             <h5 className="fw-600">{jobInfo.title.toUpperCase()}</h5>
@@ -94,13 +97,6 @@ function JobDescription() {
           </div>
         </>
       )}
-
-      {/* {jobInfo &&
-        Object.keys(jobInfo).map((key) => (
-          <p key={key}>
-            {key}:{jobInfo[key]}
-          </p>
-        ))} */}
     </div>
   );
 }

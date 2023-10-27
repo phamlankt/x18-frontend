@@ -9,6 +9,7 @@ function ApplicantsByJobId() {
   const [loading, setLoading] = useState(false);
   const { handleAlertStatus } = useContext(AlertContext);
   const jobId = useParams().jobId;
+  const [errorMessage, setErrorMessage] = useState("");
 
   const columns = [
     {
@@ -113,27 +114,36 @@ function ApplicantsByJobId() {
   }, []);
 
   const fetchRecords = async (page, pageSize) => {
-    setLoading(true);
-    const response = await applicationAPI.getApplicationsAndApplicants(
-      jobId,
-      page,
-      pageSize
-    );
-    const result = response.data.data.data;
-    if (result.length > 0) {
-      const applicantList = result.map((applicant, index) => {
-        return {
-          key: index + 1,
-          name: applicant.applicant.fullName
-            ? applicant.applicant.fullName
-            : "No name",
-          applicationId: applicant.application._id,
-          appliedDate: applicant.application.createdAt,
-          status: applicant.application.status,
-          attachments: applicant.application.documents,
-        };
-      });
-      setData(applicantList);
+    try {
+      setLoading(true);
+      const response = await applicationAPI.getApplicationsAndApplicants(
+        jobId,
+        page,
+        pageSize
+      );
+      if (response.status !== 200) setData([]);
+      else {
+        const result = response.data.data.data;
+        if (result.length > 0) {
+          const applicantList = result.map((applicant, index) => {
+            return {
+              key: index + 1,
+              name: applicant.applicant.fullName
+                ? applicant.applicant.fullName
+                : "No name",
+              applicationId: applicant.application._id,
+              appliedDate: applicant.application.createdAt,
+              status: applicant.application.status,
+              attachments: applicant.application.documents,
+            };
+          });
+          setData(applicantList);
+          setLoading(false);
+        }
+      }
+    } catch (error) {
+      console.log(error.response.data.error);
+      setErrorMessage(error.response.data.error);
       setLoading(false);
     }
   };
@@ -163,19 +173,23 @@ function ApplicantsByJobId() {
 
   return (
     <div className="m-4">
-      <Table
-        loading={loading}
-        dataSource={data}
-        columns={columns}
-        pagination={{
-          pageSize: 10,
-          position: ["bottomCenter"],
-          total: { total },
-          onChange: (page, pageSize) => {
-            fetchRecords(page, pageSize);
-          },
-        }}
-      />
+      {errorMessage ? (
+        <p className="text-danger">{capitalizeFirstLetter(errorMessage)}</p>
+      ) : (
+        <Table
+          loading={loading}
+          dataSource={data}
+          columns={columns}
+          pagination={{
+            pageSize: 10,
+            position: ["bottomCenter"],
+            total: { total },
+            onChange: (page, pageSize) => {
+              fetchRecords(page, pageSize);
+            },
+          }}
+        />
+      )}
     </div>
   );
 }

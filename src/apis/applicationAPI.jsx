@@ -8,8 +8,6 @@ const applicationAPI = {
     ),
   create: (values) => axiosInstance.post("/applications/create", values),
   cancel: (values) => axiosInstance.post("/applications/cancel", values),
-  // confirm: (values) => axiosInstance.post("/applications/confirm", values),
-  // reject: (values) => axiosInstance.post("/applications/reject", values),
   updatStatusByRecruiter: (values) =>
     axiosInstance.post("/applications/updatStatusByRecruiter", values),
   getById: () => {},
