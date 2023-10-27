@@ -38,7 +38,6 @@ function ApplicantsByJobId() {
       render: (_, { status }) => (
         <Tag
           bordered={false}
-          
           color={
             status === "rejected"
               ? "error"
@@ -84,14 +83,18 @@ function ApplicantsByJobId() {
               <button
                 className="btn btn-primary fw-bold"
                 style={{ fontSize: "0.5vw" }}
-                onClick={() => confirmApplicant(record.applicationId)}
+                onClick={() =>
+                  ConfirmOrRejectApplication(record.applicationId, "confirmed")
+                }
               >
                 Confirm
               </button>
               <button
                 className="btn btn-danger fw-bold"
                 style={{ fontSize: "0.5vw" }}
-                onClick={() => rejectApplicant(record.applicationId)}
+                onClick={() =>
+                  ConfirmOrRejectApplication(record.applicationId, "rejected")
+                }
               >
                 Reject
               </button>
@@ -135,37 +138,14 @@ function ApplicantsByJobId() {
     }
   };
 
-  const confirmApplicant = async (applicationId) => {
+  const ConfirmOrRejectApplication = async (applicationId, status) => {
     setLoading(true);
     await applicationAPI
-      .confirm({ jobId, applicationId })
+      .updatStatusByRecruiter({ jobId, applicationId, status })
       .then(() => {
         handleAlertStatus({
           type: "success",
-          message: "Confirm application sucessfully!",
-        });
-        fetchRecords();
-      })
-      .catch((error) => {
-        handleAlertStatus({
-          type: "error",
-          message: error.response.data.message,
-        });
-        console.log(error.response.data.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const rejectApplicant = async (applicationId) => {
-    setLoading(true);
-    await applicationAPI
-      .reject({ jobId, applicationId })
-      .then(() => {
-        handleAlertStatus({
-          type: "success",
-          message: "Reject application sucessfully!",
+          message: `Application is ${status} sucessfully!`,
         });
         fetchRecords();
       })
@@ -185,18 +165,6 @@ function ApplicantsByJobId() {
     <div className="m-4">
       <Table
         loading={loading}
-        // onRow={(record, index) => ({
-        //   style: {
-
-        //     background:
-        //       record.status === "rejected"
-        //         ? "pink"
-        //         : record.status === "confirmed"
-        //         ? "#add8e6"
-        //         :  record.status === "cancelled"
-        //         ? "yellow":"default",
-        //   },
-        // })}
         dataSource={data}
         columns={columns}
         pagination={{
