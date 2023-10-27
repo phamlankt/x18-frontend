@@ -13,6 +13,7 @@ import { LogOut } from "lucide-react";
 import { User2 } from "lucide-react";
 import Recoil from "../../recoilContextProvider";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
+import AuthState from "../../contexts/AuthContext/AuthState";
 import authAPI from "../../apis/authAPI";
 
 function Header() {
@@ -21,13 +22,13 @@ function Header() {
     Recoil.AtomCheckDataUser
   );
   const myInfor = useRecoilValue(Recoil.AtomDataUser);
-  const { auth } = useContext(AuthContext);
+  const { auth, handleLogout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const DeleteToken = () => {
     navigate("/login");
+    handleLogout();
     localStorage.removeItem("accessToken");
-    localStorage.removeItem("token");
   };
 
   if (!stopFecthAPI) {
@@ -51,10 +52,14 @@ function Header() {
     <Menu onClick={handleMenuClick} className="menu">
       <Link to="/profile" className="profileMenu">
         <img src={myInfor.avatarUrl} alt="" className="avatarProfileMenu" />
-        <h5 className="fullNameProfileMenu">{myInfor.fullName}</h5>
+        <h5 className="fullNameProfileMenu">
+          {myInfor.roleName === "applicant"
+            ? myInfor.fullName
+            : myInfor.companyName}
+        </h5>
       </Link>
-      <button className="settings">
-        <Settings /> Settings
+      <button className="settings" onClick={() => navigate("/profile")}>
+        <User2 /> Profile
       </button>
       <button className="logout" onClick={() => DeleteToken()}>
         <LogOut /> Log Out
@@ -78,7 +83,8 @@ function Header() {
           className="menuIcon"
           style={{ display: "flex", alignItems: "center" }}
         >
-          {myInfor.roleName === "applicant" ? "Applicant" : "Recruiter"}
+          {myInfor.roleName === "applicant" ? "Applicant" : ""}
+          {myInfor.roleName === "recruiter" ? "Recruiter" : ""}
         </Link>
       </div>
       <div className="navbar">
