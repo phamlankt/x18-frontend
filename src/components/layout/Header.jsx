@@ -49,14 +49,15 @@ function Header() {
 
   const menu = (
     <Menu onClick={handleMenuClick} className="menu">
+      <Link to="/profile" className="profileMenu">
+        <img src={myInfor.avatarUrl} alt="" className="avatarProfileMenu" />
+        <h5 className="fullNameProfileMenu">{myInfor.fullName}</h5>
+      </Link>
       <button className="settings">
         <Settings /> Settings
       </button>
       <button className="logout" onClick={() => DeleteToken()}>
         <LogOut /> Log Out
-      </button>
-      <button className="profile" onClick={() => navigate("/profile")}>
-        <User2 /> Profile Page
       </button>
     </Menu>
   );
@@ -88,12 +89,6 @@ function Header() {
             <Dropdown overlay={menu}>
               <div>
                 <img src={myInfor.avatarUrl} alt="" />
-                {/* <h4>{myInfor.fullName}</h4> */}
-                <h4>
-                  {myInfor.roleName === "applicant"
-                    ? `${myInfor.fullName}`
-                    : `${myInfor.companyName}`}
-                </h4>
               </div>
             </Dropdown>
           </div> /// add avatar dropdown

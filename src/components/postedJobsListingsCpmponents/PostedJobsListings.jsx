@@ -10,6 +10,24 @@ import { Dropdown, Button, Menu } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 
 const PostedJobsListings = () => {
+  const [dataJob, setDataJob] = useState([]);
+  const [checkDataJob, setCheckDataJob] = useState(true);
+  if (checkDataJob) {
+    applicationAPI
+      .getAll()
+      .then((response) => {
+        console.log(response.data.data, 15);
+        if (response.data.data.applicationList.data) {
+          setDataJob(response.data.data.applicationList.data);
+        } else {
+          return;
+        }
+        setCheckDataJob(false);
+      })
+      .catch((error) => {
+        console.log(error, 15);
+      });
+  }
   const DeleteRequest = (id) => {
     if (id) {
       console.log(id);
@@ -28,7 +46,7 @@ const PostedJobsListings = () => {
       <button className="update">
         <History /> Update
       </button>
-      <button className="delete">
+      <button className="delete" onClick={() => DeleteRequest(11)}>
         <XCircle /> Delete
       </button>
     </Menu>
@@ -81,7 +99,7 @@ const PostedJobsListings = () => {
         <div className="content">
           <div className="Job">
             <div className="jobIcon">
-              {[{ item: 123131 }].map((value) => (
+              {dataJob.map((value) => (
                 <div className="job" key={value.item}>
                   <img
                     src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
@@ -106,11 +124,11 @@ const PostedJobsListings = () => {
                         Salary:
                         <span>
                           {(() => {
-                            const salaryText1 = "10000000 VND";
-                            console.log(convertSalaryText(salaryText1));
-                            return convertSalaryText(salaryText1);
+                            if (value.salary == "Negotiable") {
+                              return "Negotiable";
+                            }
+                            return `${value.salary} USD`;
                           })()}
-                          {/* {value.salary} */}
                         </span>
                       </p>
                       <p>

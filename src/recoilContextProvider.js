@@ -20,9 +20,18 @@ import {
     effects_UNSTABLE: [persistAtom],
   });
 
-  const Recoil = {
+  const AtomSideBar = atom({
+    key: "AtomSideBar",
+    default: false,
+    effects_UNSTABLE: [persistAtom],
+  });
+
+const Recoil = {
     AtomCheckDataUser,
-    AtomDataUser
+    AtomDataUser,
+    AtomSideBar
 }
+
+
 
 export default Recoil;
