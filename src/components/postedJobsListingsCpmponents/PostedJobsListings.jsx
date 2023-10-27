@@ -6,6 +6,7 @@ import { History } from "lucide-react";
 import { CalendarCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import applicationAPI from "../../apis/applicationAPI";
+import jobAPI from "../../apis/jobAPI";
 import { Dropdown, Button, Menu } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 
@@ -13,12 +14,12 @@ const PostedJobsListings = () => {
   const [dataJob, setDataJob] = useState([]);
   const [checkDataJob, setCheckDataJob] = useState(true);
   if (checkDataJob) {
-    applicationAPI
-      .getAll()
+    jobAPI
+      .getListJob()
       .then((response) => {
-        console.log(response.data.data, 15);
-        if (response.data.data.applicationList.data) {
-          setDataJob(response.data.data.applicationList.data);
+        console.log(response.data.data.undefined.data, 15);
+        if (response.data.data.undefined.data) {
+          setDataJob(response.data.data.undefined.data);
         } else {
           return;
         }
