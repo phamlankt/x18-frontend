@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { CalendarCheck } from "lucide-react";
 import { MapPin } from "lucide-react";
 import { Pagination } from "antd";
 import { List } from "antd";
+import { useRecoilValue } from "recoil";
+import Recoil from "../../recoilContextProvider";
+import styled from "styled-components";
 import jobAPI from "../../apis/jobAPI";
 import SearchBar from "./SearchBar";
 
 export default function HomePage() {
+  const ul = useRef(null);
+  const job = useRef(null);
+  const changeTheFormaOfTheList = useRecoilValue(Recoil.AtomSideBar);
   const [dataJob, setDataJob] = useState([]);
   const [checkDataJob, setCheckDataJob] = useState(true);
   if (checkDataJob) {
@@ -22,7 +28,7 @@ export default function HomePage() {
       });
   }
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 4; // Số lượng mục trên mỗi trang
+  const pageSize = 8; // Số lượng mục trên mỗi trang
   const totalItems = dataJob.length; // Tổng số mục trong danh sách của bạn
   // Tính toán mục trên trang hiện tại
   const startItemIndex = (currentPage - 1) * pageSize;
@@ -31,42 +37,24 @@ export default function HomePage() {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  function convertSalaryText(salaryText) {
-    if (salaryText.endsWith(" USD")) {
-      // Xóa đuôi ' USD' để chỉ lấy số
-      const numberPart = salaryText.replace(" USD", "");
 
-      // Nếu giá trị chứa dấu '-' thì chuyển đổi thành dạng 'X-Y thousand USD'
-      if (numberPart.includes("-")) {
-        const [start, end] = numberPart.split("-");
-        return `${start / 1000}-${end / 1000} thousand USD`;
-      } else {
-        // Nếu không, chuyển đổi thành dạng 'X thousand USD'
-        return `${numberPart / 1000} thousand USD`;
-      }
+  const StyledUl = styled.ul`
+    display: grid;
+    gridtemplatecolumns: 50% 50%;
+  `;
+  useEffect(() => {
+    ul.current = document.querySelector(".ant-list-items");
+    job.current = document.querySelectorAll(".job");
+    console.log(ul.current);
+    if (ul.current && job.current) {
+      ul.current.style.gridTemplateColumns = !changeTheFormaOfTheList
+        ? "100%"
+        : "";
+      job.current.forEach((j) => {
+        j.style.transform = !changeTheFormaOfTheList ? "scale(1)" : "";
+      });
     }
-    // Kiểm tra nếu salaryText có dạng '5000000-7000000 VND'
-    if (salaryText.includes("-")) {
-      const [min, max] = salaryText.split("-");
-      const formattedMin = formatNumber(min);
-      const formattedMax = formatNumber(max);
-      return `${formattedMin} - ${formattedMax} VND`;
-    }
-    // Kiểm tra nếu salaryText có dạng '7000000 VND'
-    if (!isNaN(parseInt(salaryText))) {
-      const formattedSalary = formatNumber(salaryText);
-      return `${formattedSalary} VND`;
-    }
-    // Trả về salaryText không thay đổi nếu không áp dụng được quy tắc
-    return salaryText;
-  }
-
-  function formatNumber(number) {
-    let formattedNumber = "";
-    formattedNumber = (parseFloat(number) / 1000000).toFixed(1);
-    formattedNumber += " million";
-    return formattedNumber;
-  }
+  }, [changeTheFormaOfTheList]);
 
   return (
     <div className="homePage">
@@ -78,53 +66,68 @@ export default function HomePage() {
           <div className="main">
             <div className="Job">
               <div className="jobIcon">
-                <List
-                  pagination={{ position: "center" }}
-                  dataSource={currentItems}
-                  renderItem={(value) => (
-                    <div className="job">
-                      <img
-                        src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
-                        alt=""
-                      />
-                      <div>
-                        <h4>{value.title}</h4>
-                        <h6>Position: {value.position}</h6>
+                <StyledUl>
+                  <List
+                    className="123"
+                    itemLayout="vertical"
+                    pagination={{
+                      position: "center",
+                    }}
+                    style={{ gridTemplatecolumns: "50% 50%" }}
+                    dataSource={currentItems}
+                    component={StyledUl}
+                    renderItem={(value) => (
+                      <div
+                        className="job"
+                        style={{ gridTemplatecolumns: "50% 50%" }}
+                      >
+                        <img
+                          src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
+                          alt=""
+                        />
                         <div>
-                          <p>
-                            Salary:
-                            <span>
-                              {(() => {
-                                if (value.salary == "Negotiable") {
-                                  return "Negotiable";
-                                }
-                                return `${value.salary} USD`;
-                              })()}
-                            </span>
-                          </p>
-                          <p>
-                            <MapPin />
-                            <span>{value.city}</span>
-                          </p>
-                          <p>
-                            <CalendarCheck />
-                            Deadline:
-                            <span>
-                              {(() => {
-                                const dateString = value.deadline;
-                                const date = new Date(dateString);
-                                const year = date.getFullYear();
-                                const month = date.getMonth() + 1;
-                                const day = date.getDate();
-                                return `${day}/${month}/${year}`;
-                              })()}
-                            </span>
-                          </p>
+                          <h4>
+                            {value.title.length > 40
+                              ? value.title.substr(0, 30) + "..."
+                              : value.title}
+                          </h4>
+                          <h6>Position: {value.position}</h6>
+                          <div>
+                            <p>
+                              Salary:
+                              <span>
+                                {(() => {
+                                  if (value.salary == "Negotiable") {
+                                    return "Negotiable";
+                                  }
+                                  return `${value.salary} USD`;
+                                })()}
+                              </span>
+                            </p>
+                            <p>
+                              <MapPin />
+                              <span>{value.city}</span>
+                            </p>
+                            <p>
+                              <CalendarCheck />
+                              Deadline:
+                              <span>
+                                {(() => {
+                                  const dateString = value.deadline;
+                                  const date = new Date(dateString);
+                                  const year = date.getFullYear();
+                                  const month = date.getMonth() + 1;
+                                  const day = date.getDate();
+                                  return `${day}/${month}/${year}`;
+                                })()}
+                              </span>
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                />
+                    )}
+                  />
+                </StyledUl>
                 <Pagination
                   style={{ marginTop: "10px", display: "flex" }}
                   current={currentPage}

@@ -10,8 +10,8 @@
     justify-content: space-between;
     z-index: 99;
     line-height: 1.2;
-    padding-left: 40px;
-    padding-right: 40px;
+    // padding-left: 40px;
+    // padding-right: 40px;
     height: 100%;
     .menu{
         display: flex;
@@ -44,9 +44,9 @@
         gap: 20px;
         font-size: 15px;
         div{
+            width: 150px;
             div{
                 cursor: pointer;
-                width: 300px;
                 height: 50px;
                 display: flex;
                 align-items: center;
@@ -101,27 +101,28 @@ div{
     div{
         ul{
           .settings{
-            background-color: black;
-            color: white;
             font-weight: 600;   
             border: none;
             border-radius: 5px; 
          }
          .logout{
-            background-color: rgb(27, 27, 137);
-            color: white;
-            font-weight: 600;   
-            border: none;
-            border-radius: 5px; 
-         }
-         .profile{
-            background-color: rgb(194, 50, 103);
-            color: white;
             font-weight: 600;   
             border: none;
             border-radius: 5px; 
          }
         }
+    }
+}
+.profileMenu{
+    display: flex;
+    gap: 10px;
+    width: 200px;
+    border-bottom: 1px solid  black;
+    padding-bottom: 2px;
+    img{
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
     }
 }
 
@@ -202,7 +203,6 @@ div{
     display: flex;
     justify-content: center;
     gap: 30px;
-    // width: 1150px;
     height: fit-content;
     .Job{
         display: grid;
@@ -213,6 +213,7 @@ div{
                     div{
                         ul{
                             display: grid;
+                            grid-template-columns: 40% 40%;
                             gap: 10px;
                         }
                     }
@@ -222,10 +223,12 @@ div{
                 display: flex;
                 gap: 40px;
                 height: fit-content;
+                width: 800px;
                 padding: 10px;
                 border-radius: 20px;
                 border: 1px solid #d7977a;
                 background-color: white;
+                transform: scale(0.8);
                 img{
                     width: 200px;
                     height: 100px;
