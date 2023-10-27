@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { CalendarCheck } from "lucide-react";
 import { MapPin } from "lucide-react";
 import { Pagination } from "antd";
@@ -10,6 +11,7 @@ import jobAPI from "../../apis/jobAPI";
 import SearchBar from "./SearchBar";
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const ul = useRef(null);
   const job = useRef(null);
   const changeTheFormaOfTheList = useRecoilValue(Recoil.AtomSideBar);
@@ -56,6 +58,10 @@ export default function HomePage() {
     }
   }, [changeTheFormaOfTheList]);
 
+  const toJobDetail = (id) => {
+    navigate(`/jobs/${id}`);
+  };
+
   return (
     <div className="homePage">
       <SearchBar />
@@ -80,6 +86,7 @@ export default function HomePage() {
                       <div
                         className="job"
                         style={{ gridTemplatecolumns: "50% 50%" }}
+                        onClick={() => toJobDetail(value._id)}
                       >
                         <img
                           src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"

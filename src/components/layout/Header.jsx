@@ -21,8 +21,8 @@ function Header() {
   const [stopFecthAPI, setStopFectAPI] = useRecoilState(
     Recoil.AtomCheckDataUser
   );
-  const myInfor = useRecoilValue(Recoil.AtomDataUser);
   const { auth, handleLogout } = useContext(AuthContext);
+  const myInfor = auth.user;
   const navigate = useNavigate();
 
   const DeleteToken = () => {
@@ -30,6 +30,8 @@ function Header() {
     handleLogout();
     localStorage.removeItem("accessToken");
   };
+
+  console.log(auth);
 
   if (!stopFecthAPI) {
     setStopFectAPI(true);
