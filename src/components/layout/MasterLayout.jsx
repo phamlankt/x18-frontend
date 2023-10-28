@@ -2,12 +2,11 @@ import { Layout } from "antd";
 import DefaultHeader from "./Header";
 import DefaultFooter from "./Footer";
 import React from "react";
-import { useState } from "react";
-import { AiOutlineDoubleRight } from "react-icons/ai";
+import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
 import { useRecoilValue, useRecoilState } from "recoil";
 import Recoil from "../../recoilContextProvider";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 const MasterLayout = (props) => {
   const openFilterBar = useRecoilValue(Recoil.AtomSideBar);
   const [openFilter, setOpenFilter] = useRecoilState(Recoil.AtomSideBar);
@@ -20,41 +19,45 @@ const MasterLayout = (props) => {
   const hasSideBar = props.hasSideBar === false ? false : true;
 
   return (
-    <div>
-      <div className="master-layout">
-        {hasHeader && (
-          <Header className="master-layout-header">{HeaderComponent}</Header>
-        )}
-        <Layout hasSider className="master-layout-main-content-container">
-          {hasSideBar && (
-            <>
-              <Sider
-                style={openFilterBar ? { marginLeft: "-350px" } : null}
-                width="350px"
-                className="master-layout-leftside"
-                breakpoint="lg"
-                collapsedWidth={0}
-                zeroWidthTriggerStyle={{ backgroundColor: "transparent" }}
-                trigger={<AiOutlineDoubleRight />}
-              >
-                {SideBarComponent}
-              </Sider>
+    <Layout className="master-layout">
+      {hasHeader && (
+        <Header className="master-layout-header">{HeaderComponent}</Header>
+      )}
+      <Layout hasSider className="master-layout-main-content-container">
+        {hasSideBar && (
+          <>
+            <Sider
+              width="350px"
+              className="master-layout-leftside"
+              collapsedWidth={0}
+              collapsed={!openFilterBar}
+              defaultCollapsed={!openFilterBar}
+            >
+              {SideBarComponent}
               <button
-                style={{ height: "30px", border: "none", fontWeight: "600" }}
+                className="collapse-btn"
                 onClick={() => setOpenFilter(!openFilter)}
               >
-                {openFilterBar ? ">>" : "<<"}
+                {openFilterBar ? (
+                  <AiOutlineDoubleLeft />
+                ) : (
+                  <AiOutlineDoubleRight />
+                )}
               </button>
-            </>
-          )}
+            </Sider>
+          </>
+        )}
 
-          <Content className="master-layout-main-content">
+        <Content className="master-layout-main-content">
+          <div className="min-vh-100 w-100 position-relative mb-5">
             {ContentComponent}
-          </Content>
-        </Layout>
-      </div>
-      <DefaultFooter />
-    </div>
+          </div>
+          {hasFooter && (
+            <div className="master-layout-footer">{FooterComponent}</div>
+          )}
+        </Content>
+      </Layout>
+    </Layout>
   );
 };
 
