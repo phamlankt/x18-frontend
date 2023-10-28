@@ -8,8 +8,10 @@ import { Select } from "antd";
 
 const SearchBar = (props) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [search, setSearch] = useState("");
-  const [locations, setLocations] = useState([]);
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [locations, setLocations] = useState(
+    searchParams.get("location")?.split("%") || []
+  );
 
   const handleChangeSearch = (e) => {
     setSearch(e.target.value);
@@ -38,7 +40,7 @@ const SearchBar = (props) => {
     if (!newParams.location) {
       delete newParams.location;
     }
-    console.log(newParams);
+
     setSearchParams(newParams);
   };
   return (
@@ -65,6 +67,7 @@ const SearchBar = (props) => {
             allowClear={true}
             maxTagCount={2}
             placeholder="Choose your location"
+            value={locations}
             onChange={handleChangeLocation}
             options={cities.map((location) => ({
               label: location.name,
@@ -74,10 +77,12 @@ const SearchBar = (props) => {
         </div>
         <button className="search-bar-submit-button">Search</button>
       </form>
-      {props.jobCount && (
+      {props.jobCount ? (
         <h5 className="job-quantity">
           There are {props.jobCount} opportunities for you
         </h5>
+      ) : (
+        <></>
       )}
     </div>
   );

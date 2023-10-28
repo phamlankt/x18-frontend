@@ -1,16 +1,10 @@
 import { Radio, Select } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import businessSectorAPI from "../../apis/businessSectorAPI";
+import { useContext } from "react";
+import AlertContext from "../../contexts/AlertContext/AlertContext";
 
-const dataSectors = [
-  "IT",
-  "Marketing",
-  "Sales",
-  "Finance",
-  "HR",
-  "Engineering",
-  "Design",
-];
 const dataSorts = [
   {
     label: "Created Date",
@@ -29,13 +23,22 @@ const dataSorts = [
     value: "amount",
   },
 ];
-const Filter = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [sectors, setSectors] = useState([]);
 
-  const [sortField, setSortField] = useState("");
-  const [sortBy, setSortBy] = useState("");
-  const [disabled, setDisabled] = useState(true);
+const Filter = () => {
+  const { handleAlertStatus } = useContext(AlertContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [dataSectors, setDataSectors] = useState([]);
+
+  const [sectors, setSectors] = useState(
+    searchParams.get("sector")?.split("%") || []
+  );
+  const [sortField, setSortField] = useState(
+    searchParams.get("sortField") || ""
+  );
+  const [sortBy, setSortBy] = useState(searchParams.get("sortBy") || "");
+  const [disabled, setDisabled] = useState(
+    searchParams.get("sortField") ? false : true
+  );
   const checkDisable = (sortFieldValue) => {
     if (!sortFieldValue) {
       setSortBy("");
@@ -81,7 +84,6 @@ const Filter = () => {
     if (!newParams.sortBy) {
       delete newParams.sortBy;
     }
-    console.log(newParams);
     setSearchParams(newParams);
   };
 
@@ -92,6 +94,19 @@ const Filter = () => {
 
     return () => clearTimeout(delayDebounceFn);
   }, [sectors, sortField, sortBy]);
+
+  useEffect(() => {
+    const handleGetSectors = async () => {
+      try {
+        const res = await businessSectorAPI.getAll();
+        setDataSectors(res.data.data.businessSectorList);
+      } catch (error) {
+        handleAlertStatus({ type: "error", message: "Something went wrong" });
+      }
+    };
+
+    handleGetSectors();
+  }, []);
 
   return (
     <form className="side-filter p-2">
@@ -108,9 +123,10 @@ const Filter = () => {
         maxTagCount={1}
         placeholder="Choose your sectors"
         onChange={handleChangeSector}
+        value={sectors}
         options={dataSectors.map((sector) => ({
-          label: sector,
-          value: sector,
+          label: sector.name,
+          value: sector.name,
         }))}
       />
 
@@ -124,6 +140,7 @@ const Filter = () => {
             borderRadius: "4px",
           }}
           placeholder="Sort feilds"
+          value={sortField || undefined}
           allowClear={true}
           onClear={() => {
             setSortField("");

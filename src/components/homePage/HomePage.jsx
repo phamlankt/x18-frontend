@@ -5,36 +5,91 @@ import Recoil from "../../recoilContextProvider";
 import jobAPI from "../../apis/jobAPI";
 import SearchBar from "./SearchBar";
 import JobItem from "./JobItem";
+import AlertContext from "../../contexts/AlertContext/AlertContext";
+import { useContext } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Spinner } from "react-bootstrap";
+import Loading from "../layout/Loading";
+import Error from "../layout/Error";
+
+const pageSizeDefault = 10;
 
 export default function HomePage() {
+  const { handleAlertStatus } = useContext(AlertContext);
   const openFilterBar = useRecoilValue(Recoil.AtomSideBar);
-  const [dataJob, setDataJob] = useState([]);
-  const [checkDataJob, setCheckDataJob] = useState(true);
-  if (checkDataJob) {
-    jobAPI
-      .getAll()
-      .then((response) => {
-        setDataJob(response.data.data);
-        setCheckDataJob(false);
-      })
-      .catch((error) => {
-        console.log(error, 15);
-      });
-  }
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [dataJob, setDataJob] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 8; // Số lượng mục trên mỗi trang
-  const totalItems = dataJob.length; // Tổng số mục trong danh sách của bạn
-  // Tính toán mục trên trang hiện tại
-  const startItemIndex = (currentPage - 1) * pageSize;
-  const endItemIndex = startItemIndex + pageSize;
-  const currentItems = dataJob.slice(startItemIndex, endItemIndex);
+
+  const data = {};
+  searchParams.forEach((value, key) => {
+    data[key] = value;
+  });
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        setLoading(true);
+        const res = await jobAPI.getBySearchAndFilter({
+          search: data.search || "",
+          sectors: data.sector || "",
+          location: data.location || "",
+          sortField: data.sortField || "createdAt",
+          sortBy: data.sortBy || "desc",
+          currentPage: currentPage,
+          pageSize: pageSizeDefault,
+        });
+        setDataJob(res.data.data.jobList);
+      } catch (error) {
+        setError(error.response.data.message);
+        handleAlertStatus({ type: "error", message: "Something went wrong" });
+      } finally {
+        setLoading(false);
+      }
+    };
+    getData();
+  }, [
+    data.search,
+    data.sector,
+    data.location,
+    data.sortField,
+    data.sortBy,
+    currentPage,
+  ]);
+  ////
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
+  if (loading) {
+    return (
+      <div className="homePage">
+        <SearchBar jobCount={dataJob?.pagination?.totalJobCount} />
+        <div className="main">
+          <Loading />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="homePage">
+        <SearchBar jobCount={dataJob?.pagination?.totalJobCount} />
+        <div className="main">
+          <Error error={error} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="homePage">
-      <SearchBar jobCount={dataJob.length} />
+      <SearchBar jobCount={dataJob?.pagination?.totalJobCount} />
 
       <div className="main">
         <List
@@ -44,11 +99,12 @@ export default function HomePage() {
             align: "center",
             className: "pagination",
             onChange: handlePageChange,
-            pageSize,
-            total: totalItems,
+            current: currentPage,
+            pageSize: dataJob?.pagination?.pageSize || pageSizeDefault,
+            total: dataJob?.pagination?.totalJobCount || 0,
           }}
           grid={{ column: openFilterBar ? 1 : 2 }}
-          dataSource={currentItems}
+          dataSource={dataJob.jobs}
           renderItem={(value) => <JobItem job={value} />}
         />
       </div>

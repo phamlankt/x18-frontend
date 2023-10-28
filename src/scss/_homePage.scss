@@ -226,6 +226,7 @@ div {
 
       .logo {
         flex: 0 0 150px;
+        height: 150px;
         overflow: hidden;
         border-radius: 10px;
         display: flex;
@@ -247,10 +248,12 @@ div {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          margin: 0;
         }
         h6 {
           font-size: 16px;
           color: gray;
+          margin: 0;
           span {
             color: #d7977a;
           }
@@ -310,15 +313,16 @@ div {
           margin: 0;
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 4px;
         }
       }
       &:hover .hover-info {
-        transform: translate(-10%, -50%);
+        transform: translate(-14px, -50%);
         opacity: 1;
         transition: all 0.2s ease-in-out;
       }
       &:hover {
+        background-color: rgb(243, 245, 247);
         box-shadow: rgba(215, 151, 122, 0.5) 0px 2px 8px 0px;
         transition: all 0.2s ease-in-out;
       }
