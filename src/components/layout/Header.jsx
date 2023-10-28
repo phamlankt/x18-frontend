@@ -50,14 +50,6 @@ function Header() {
 
   const menu = (
     <Menu onClick={handleMenuClick} className="menu">
-      <Link to="/profile" className="profileMenu">
-        <img src={myInfor.avatarUrl} alt="" className="avatarProfileMenu" />
-        <h5 className="fullNameProfileMenu">
-          {myInfor.roleName === "applicant"
-            ? myInfor.fullName
-            : myInfor.companyName}
-        </h5>
-      </Link>
       <button className="settings" onClick={() => navigate("/profile")}>
         <User2 /> Profile
       </button>
