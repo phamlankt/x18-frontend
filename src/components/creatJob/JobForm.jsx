@@ -13,6 +13,8 @@ import { Spinner } from "react-bootstrap";
 import jobAPI from "../../apis/jobAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import { useContext } from "react";
+import Loading from "../layout/Loading";
+import Error from "../layout/Error";
 
 const positions = [
   "Intern",
@@ -153,31 +155,11 @@ const JobForm = (props) => {
   };
 
   if (loading) {
-    return (
-      <div
-        className="job-form-container container-sm d-flex justify-content-center align-items-center"
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.5)",
-        }}
-      >
-        <Spinner animation="border" variant="info" />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
-    return (
-      <div
-        className="job-form-container container-sm d-flex justify-content-center align-items-center"
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.5)",
-        }}
-      >
-        <h5 className="text-danger text-center">
-          {error || "Something went wrong"}
-        </h5>
-      </div>
-    );
+    return <Error error={error} />;
   }
 
   return (
