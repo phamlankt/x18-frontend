@@ -8,7 +8,6 @@ import JobItem from "./JobItem";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import { useContext } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Spinner } from "react-bootstrap";
 import Loading from "../layout/Loading";
 import Error from "../layout/Error";
 
@@ -59,7 +58,6 @@ export default function HomePage() {
     data.sortBy,
     currentPage,
   ]);
-  ////
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
