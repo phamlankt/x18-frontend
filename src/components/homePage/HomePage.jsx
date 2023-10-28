@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect,useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CalendarCheck } from "lucide-react";
 import { MapPin } from "lucide-react";
@@ -9,6 +9,7 @@ import Recoil from "../../recoilContextProvider";
 import styled from "styled-components";
 import jobAPI from "../../apis/jobAPI";
 import SearchBar from "./SearchBar";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 
 export default function HomePage() {
   const navigate = useNavigate();

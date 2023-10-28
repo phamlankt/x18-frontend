@@ -4,7 +4,6 @@ export const capitalizeFirstLetter = (str) => {
 
 export const formatDate = (inputDate) => {
   {
-    console.log("inputDate", inputDate);
     return new Date(inputDate).toLocaleDateString("vn-VN", {
       //   minute: "2-digit",
       //   hour: "2-digit",
