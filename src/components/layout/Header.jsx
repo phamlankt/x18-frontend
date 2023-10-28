@@ -31,8 +31,6 @@ function Header() {
     localStorage.removeItem("accessToken");
   };
 
-  console.log(auth);
-
   if (!stopFecthAPI) {
     setStopFectAPI(true);
     authAPI

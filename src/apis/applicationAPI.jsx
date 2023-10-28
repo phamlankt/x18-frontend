@@ -6,6 +6,8 @@ const applicationAPI = {
     axiosInstance.get(
       `/applications/applicants/${jobId}?currentPage=${currentPage}&pageSize=${pageSize}`
     ),
+  getApplicationByJobIdForApplicant: (jobId) =>
+    axiosInstance.get(`/applications/applicant/${jobId}`),
   create: (values) => axiosInstance.post("/applications/create", values),
   cancel: (values) => axiosInstance.post("/applications/cancel", values),
   updatStatusByRecruiter: (values) =>
