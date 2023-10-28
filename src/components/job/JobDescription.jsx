@@ -13,9 +13,11 @@ import {
   User,
 } from "lucide-react";
 import { capitalizeFirstLetter, formatDate } from "../../global/common";
-import { Tag } from "antd";
+import { Spin, Tag } from "antd";
 
 function JobDescription() {
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const jobId = useParams().jobId;
   const [jobInfo, setJobInfo] = useState();
   //   const { auth } = useContext(AuthContext);
@@ -23,11 +25,22 @@ function JobDescription() {
     getJobById();
   }, []);
   const getJobById = async () => {
-    const response = await jobAPI.getById(jobId);
-    setJobInfo(response.data.data.jobInfo);
+    try {
+      setLoading(true);
+      const response = await jobAPI.getById(jobId);
+      if (response.data.data.jobInfo) {
+        setJobInfo(response.data.data.jobInfo);
+      }
+      setLoading(false);
+    } catch (error) {
+      setErrorMessage(error.response.data.error);
+      setLoading(false);
+    }
   };
 
-  return (
+  return loading ? (
+    <Spin />
+  ) : (
     <div className="m-4 p-4">
       {!jobInfo ? (
         <p className="text-danger">Job Not Found</p>

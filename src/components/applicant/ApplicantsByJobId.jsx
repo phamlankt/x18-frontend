@@ -142,7 +142,7 @@ function ApplicantsByJobId() {
         }
       }
     } catch (error) {
-      console.log(error.response.data.error);
+      // console.log(error.response.data.error);
       setErrorMessage(error.response.data.error);
       setLoading(false);
     }
