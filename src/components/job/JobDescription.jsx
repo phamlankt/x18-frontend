@@ -12,7 +12,7 @@ import {
   Share2,
   User,
 } from "lucide-react";
-import { capitalizeFirstLetter, formatDate } from "../../global/common";
+import { capitalizeFirstLetter, formatDate, getCityNameFromSlug } from "../../global/common";
 import { Spin, Tag } from "antd";
 
 function JobDescription() {
@@ -51,7 +51,7 @@ function JobDescription() {
             <div className="d-flex w-75 mt-4">
               <span className="w-25">
                 <MapPin className="me-1" style={{ color: "orange" }} />
-                <a>{jobInfo.city}</a>
+                <a>{getCityNameFromSlug(jobInfo.city)}</a>
               </span>
               <span className="w-25">
                 <Briefcase className="me-1" style={{ color: "orange" }} />

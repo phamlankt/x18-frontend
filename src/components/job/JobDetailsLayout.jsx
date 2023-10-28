@@ -21,7 +21,6 @@ function JobDetailsLayout() {
     getJobById();
   }, []);
 
-  console.log("jobInfo",jobInfo)
   const items = [
     {
       key: "1",
