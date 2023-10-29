@@ -14,10 +14,14 @@ import businessSectorAPI from "../../apis/businessSectorAPI";
 import userAPI from "../../apis/userAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 
-
 function ProfileComponent({ onOpenResetPasswordModal }) {
-  const { handleAlertStatus } = useContext(AlertContext);
+  // console.log("auth.user",auth.user&&auth.user)
   const { auth, handleLogin } = useContext(AuthContext);
+  const [logoFile, setLogoFile] = useState();
+  const [logoReview, setLogoReview] = useState(
+    auth.user.companyLogoUrl && auth.user.companyLogoUrl
+  );
+  const { handleAlertStatus } = useContext(AlertContext);
   const [isLoading, setLoading] = useState(false);
   const roleName = auth.user.roleName;
 
@@ -28,7 +32,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     address: auth.user.address,
     businessSector: auth.user.sectors,
     description: auth.user.description,
-    companyLogoUrl: auth.user.companyLogoUrl,
+    // companyLogo: auth.user.companyLogoUrl,
   };
   const initialValues_applicant = {
     fullName: auth.user.fullName,
@@ -58,6 +62,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     phoneNumber: Yup.string().required("Phone Number is required"),
     address: Yup.string().required("Address is required"),
     businessSector: Yup.array().required("Business sector is required"),
+    companyLogo: Yup.mixed().required("Company logo is required"),
     description: Yup.string().required("Company description is required"),
     password: Yup.string()
       .concat(false ? Yup.string().required("Password is required") : null)
@@ -102,6 +107,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
 
   function onSubmit(fields, { setStatus, setSubmitting, resetForm }) {
     setStatus();
+    console.log("fields", fields);
     const userInfo_recruiter = {
       id: auth.user._id,
       userId: auth.user._id,
@@ -112,6 +118,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
       address: fields.address,
       sectors: fields.businessSector,
       description: fields.description,
+      companyLogo: logoReview,
     };
     const userInfo_applicant = {
       id: auth.user._id,
@@ -140,6 +147,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
         : auth.user.roleName === "applicant"
         ? userInfo_applicant
         : userInfo_admin;
+    console.log("userInfo", userInfo);
     updateUser(userInfo);
   }
 
@@ -148,6 +156,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     await userAPI
       .update(fields)
       .then(() => {
+        handleFileUpload(logoFile);
         handleAlertStatus({
           type: "success",
           message: "Update user sucessfully!",
@@ -206,6 +215,30 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     },
   ];
 
+  const handleFileUpload = async (file) => {
+    console.log("file", file);
+    if (!file) return;
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("avatar", file);
+      await userAPI.uploadLogo(formData);
+      handleLogin();
+      // handleAlertStatus({
+      //   type: "success",
+      //   message: "Upload logo image sucessfully!",
+      // });
+      // setCheckDataUpdate(false);
+    } catch (error) {
+      handleAlertStatus({
+        type: "error",
+        message: error.response.data.message,
+      });
+      console.error(error.response.data.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <Formik
       enableReinitialize
@@ -258,27 +291,72 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                   {auth.user.roleName === "recruiter" && (
                     <div className="form-row">
                       <div className="form-group col">
-                        <label htmlFor="companyLogo"> Company Logo</label>
-                        {/* <div className="text-center">
-                          <UploadCompanyLogo />
-                        </div> */}
+                        {/* <label htmlFor="companyLogo"> Company Logo</label> */}
+                        <div className="form-group row">
+                          <p>
+                            Company Logo:{" "}
+                            <i style={{ fontSize: "12px" }}>
+                              (Recommended scale: 1:1)
+                            </i>
+                          </p>
 
-                        <Field
-                          name="file"
-                          // component={CustomImageInput}
-                          title="Select a file"
-                          setFieldValue={setFieldValue}
-                          style={{ display: "flex" }}
-                          className={
-                            "form-control" +
-                            (errors["name"] && touched["name"]
-                              ? " is-invalid "
-                              : "")
-                          }
-                        />
+                          <div className="d-grid justify-content-center">
+                            <label
+                              htmlFor="companyLogo"
+                              // onClick={() =>
+                              //   setFieldTouched("companyLogo", true)
+                              // }
+                            >
+                              {logoReview ? (
+                                <img
+                                  src={logoReview}
+                                  alt="logo review"
+                                  style={{
+                                    width: 150,
+                                    height: 150,
+                                    padding: 0,
+                                  }}
+                                />
+                              ) : (
+                                <div className="form-upload">
+                                  <p>click to upload</p>
+                                </div>
+                              )}
+                              {errors.companyLogo && touched.companyLogo && (
+                                <p className="text-danger form-error">
+                                  {errors.companyLogo}
+                                </p>
+                              )}
+                            </label>
+                          </div>
+
+                          <input
+                            placeholder="logo"
+                            type="file"
+                            accept="image/*"
+                            id="companyLogo"
+                            name="companyLogo"
+                            style={{ display: "none" }}
+                            className={
+                              "form-control" +
+                              (errors["companyLogo"] && touched["companyLogo"]
+                                ? " is-invalid "
+                                : "")
+                            }
+                            onChange={(e) => {
+                              // setFieldValue("companyLogo", e.target.files[0]);
+                              setLogoFile(e.target.files[0]);
+                              e.target.files[0]
+                                ? setLogoReview(
+                                    URL.createObjectURL(e.target.files[0])
+                                  )
+                                : setLogoReview("");
+                            }}
+                          />
+                        </div>
 
                         <ErrorMessage
-                          name="file"
+                          name="companyLogo"
                           component="div"
                           className="invalid-feedback"
                         />
