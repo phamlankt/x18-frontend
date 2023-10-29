@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { XCircle } from "lucide-react";
 import applicationAPI from "../../apis/applicationAPI";
 import { CalendarCheck } from "lucide-react";
+import SearchBar from "../homePage/SearchBar";
 
 const ListJobHaveApplied = () => {
   const navigate = useNavigate();
@@ -33,8 +34,7 @@ const ListJobHaveApplied = () => {
     applicationAPI
       .getAll()
       .then((response) => {
-        console.log(response.data.data, 15);
-        if (response.data.data.applicationList.data) {
+        if (response.data.applicationList.data) {
           setDataJob(response.data.data.applicationList.data);
         } else {
           return;
@@ -65,10 +65,10 @@ const ListJobHaveApplied = () => {
       })
       .catch((error) => {
         console.log(error);
+        setSpinConnect(false);
       });
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
   };
 
@@ -84,114 +84,129 @@ const ListJobHaveApplied = () => {
   };
 
   return (
-    <div className="listJobApplicant">
-      {spinConnect ? (
-        <div
-          style={{
-            zIndex: "999",
-            width: "100%",
-            height: "100vh",
-            justifyContent: "center",
-            zIndex: 50,
-            marginTop: "20px",
-            alignItems: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            zIndex: 2,
-            position: "absolute",
-            right: "0px",
-            top: 0,
-          }}
+    <>
+      <SearchBar jobCount={dataJob?.pagination?.totalJobCount} />
+      <div className="listJobApplicant">
+        {spinConnect ? (
+          <div
+            style={{
+              zIndex: "999",
+              width: "100%",
+              height: "100vh",
+              justifyContent: "center",
+              zIndex: 50,
+              marginTop: "20px",
+              alignItems: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              zIndex: 2,
+              position: "absolute",
+              right: "0px",
+              top: 0,
+            }}
+          >
+            <Spin indicator={antIcon} className="relative" />
+          </div>
+        ) : null}
+        <Modal
+          title="Notification"
+          open={open}
+          onOk={handleOk}
+          confirmLoading={confirmLoading}
+          onCancel={handleCancel}
         >
-          <Spin indicator={antIcon} className="relative" />
-        </div>
-      ) : null}
-      <Modal
-        title="Notification"
-        open={open}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-      >
-        <p>{modalText}</p>
-      </Modal>
-      <div className="list">
-        <p className="topic">Job postings have applied</p>
-        <div className="content">
-          <div className="Job">
-            <div className="jobIcon">
-              <List
-                className="123"
-                itemLayout="vertical"
-                pagination={{
-                  position: "center",
-                }}
-                style={{ gridTemplatecolumns: "50% 50%" }}
-                dataSource={[{ title: "Developer" }]}
-                renderItem={(value) => (
-                  <div className="job">
-                    <img
-                      src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
-                      alt=""
-                    />
-                    <div>
+          <p>{modalText}</p>
+        </Modal>
+        <div className="list">
+          <p className="topic">
+            Has {dataJob.length} job postings have applied
+          </p>
+          <div className="content">
+            <div className="Job">
+              <div className="jobIcon">
+                <List
+                  className="123"
+                  itemLayout="vertical"
+                  pagination={{
+                    position: "center",
+                  }}
+                  style={{ gridTemplatecolumns: "50% 50%" }}
+                  dataSource={currentItems}
+                  renderItem={(value) => (
+                    <div className="job">
+                      <img
+                        src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
+                        alt=""
+                      />
                       <div>
-                        <h4 onClick={() => navigate(`/jobs/${value._id}`)}>
-                          {value.title.length > 40
-                            ? value.title.substr(0, 30) + "..."
-                            : value.title}
-                        </h4>
-                        <button
-                          onClick={() => showModal()}
-                          onMouseEnter={() => setIdToUpdate(value._id)}
-                        >
-                          <XCircle /> Delete
-                        </button>
-                      </div>
-                      <h6>
-                        Position: <span>Full time</span>
-                      </h6>
-                      <div className="informationJob">
-                        <p>
-                          Salary:
-                          <span>
-                            {(() => {
-                              if (value.salary == "Negotiable") {
-                                return "Negotiable";
-                              }
-                              return `${value.salary} USD`;
-                            })()}
-                          </span>
-                        </p>
-                        <p>
-                          <MapPin />
-                          <span>Thành phố HCM</span>
-                        </p>
-                        <p>
-                          <CalendarCheck />
-                          Deadline: <span>30/12/2023</span>
-                        </p>
-                        <p style={{ width: "fit-content" }}>
-                          Status: <span>{value.status}</span>
-                        </p>
+                        <div>
+                          <h4
+                            onClick={() => navigate(`/jobs/${value._id}`)}
+                            style={{ cursor: "pointer" }}
+                            onMouseEnter={(event) => {
+                              event.target.style.color = "blue";
+                            }}
+                            onMouseLeave={(event) => {
+                              event.target.style.color = "black";
+                            }}
+                          >
+                            {value.title.length > 40
+                              ? value.title.substr(0, 30) + "..."
+                              : value.title}
+                          </h4>
+                          <button
+                            onClick={() => showModal()}
+                            onMouseEnter={() => setIdToUpdate(value._id)}
+                          >
+                            <XCircle /> Delete
+                          </button>
+                        </div>
+                        <h6>
+                          Position: <span>Full time</span>
+                        </h6>
+                        <div className="informationJob">
+                          <p>
+                            Salary:
+                            <span>
+                              {(() => {
+                                if (value.salary == "Negotiable") {
+                                  return "Negotiable";
+                                }
+                                return `${value.salary} USD`;
+                              })()}
+                            </span>
+                          </p>
+                          <p>
+                            <MapPin />
+                            <span>Thành phố HCM</span>
+                          </p>
+                          <p>
+                            <CalendarCheck />
+                            Deadline: <span>30/12/2023</span>
+                          </p>
+                          <p style={{ width: "fit-content" }}>
+                            Status:{" "}
+                            <span style={{ color: "red" }}>{value.status}</span>
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              />
-              <Pagination
-                style={{ marginTop: "10px", display: "flex" }}
-                current={currentPage}
-                pageSize={pageSize}
-                total={totalItems}
-                onChange={handlePageChange}
-                position="center"
-              />
+                  )}
+                />
+                <Pagination
+                  style={{ marginTop: "10px", display: "flex" }}
+                  current={currentPage}
+                  pageSize={pageSize}
+                  total={totalItems}
+                  onChange={handlePageChange}
+                  position="center"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -8,6 +8,7 @@
     display: grid;
     gap: 10px;
     width: 700px;
+    margin-left: -180px;
     .topic{
         display: flex;
         border-bottom: 1px solid #d25e27;
@@ -43,6 +44,7 @@
                 display: grid;
                 gap: 10px;
                 margin-bottom: 20px;
+               
                    div{
                        div{
                            div{
@@ -62,13 +64,13 @@
                        border: 1px solid #d7977a;
                        background-color: white;
                        img{
-                           width: 200px;
-                           height: 100px;
+                           width: 150px;
+                           height: 150px;
                            border-radius: 10px;
                        }
                        div{
                            display: grid;
-                           gap: 10px;
+                           gap: 20px;
                            height: 120px;
                            div{
                             height: fit-content;
