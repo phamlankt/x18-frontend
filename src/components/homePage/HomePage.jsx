@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { List } from "antd";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
 import Recoil from "../../recoilContextProvider";
 import jobAPI from "../../apis/jobAPI";
 import SearchBar from "./SearchBar";
@@ -19,8 +19,8 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const [dataJob, setDataJob] = useState({});
+  const [dataJob, setDataJob] = useRecoilState(Recoil.AtomDataJobs);
+  const dataJobs = useRecoilValue(Recoil.AtomDataJobs);
   const [currentPage, setCurrentPage] = useState(1);
 
   const data = {};
@@ -66,7 +66,7 @@ export default function HomePage() {
   if (loading) {
     return (
       <div className="homePage">
-        <SearchBar jobCount={dataJob?.pagination?.totalJobCount} />
+        <SearchBar jobCount={dataJobs?.pagination?.totalJobCount} />
         <div className="main">
           <Loading />
         </div>
@@ -77,7 +77,7 @@ export default function HomePage() {
   if (error) {
     return (
       <div className="homePage">
-        <SearchBar jobCount={dataJob?.pagination?.totalJobCount} />
+        <SearchBar jobCount={dataJobs?.pagination?.totalJobCount} />
         <div className="main">
           <Error error={error} />
         </div>
@@ -87,7 +87,7 @@ export default function HomePage() {
 
   return (
     <div className="homePage">
-      <SearchBar jobCount={dataJob?.pagination?.totalJobCount} />
+      <SearchBar jobCount={dataJobs?.pagination?.totalJobCount} />
 
       <div className="main">
         <List
@@ -98,11 +98,11 @@ export default function HomePage() {
             className: "pagination",
             onChange: handlePageChange,
             current: currentPage,
-            pageSize: dataJob?.pagination?.pageSize || pageSizeDefault,
-            total: dataJob?.pagination?.totalJobCount || 0,
+            pageSize: dataJobs?.pagination?.pageSize || pageSizeDefault,
+            total: dataJobs?.pagination?.totalJobCount || 0,
           }}
           grid={{ column: openFilterBar ? 1 : 2 }}
-          dataSource={dataJob.jobs}
+          dataSource={dataJobs.jobs}
           renderItem={(value) => <JobItem job={value} />}
         />
       </div>

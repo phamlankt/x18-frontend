@@ -1,12 +1,16 @@
 import React from "react";
 import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
+import { useRecoilValue, useRecoilState } from "recoil";
+import Recoil from "../../recoilContextProvider";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import cities from "../../global/data/VNLocaion.json";
 import { useSearchParams } from "react-router-dom";
 import { Select } from "antd";
+import jobAPI from "../../apis/jobAPI";
 
 const SearchBar = (props) => {
+  const [dataJob, setDataJob] = useRecoilState(Recoil.AtomDataJobs);
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [locations, setLocations] = useState(
@@ -40,9 +44,23 @@ const SearchBar = (props) => {
     if (!newParams.location) {
       delete newParams.location;
     }
+    // try {
+    //   jobAPI
+    //     .remove(newParams)
+    //     .then((response) => {
+    //       console.log(response.data);
+    //       setDataJob(response.data.jobs);
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // } catch (e) {
+    //   console.log(e);
+    // }
 
     setSearchParams(newParams);
   };
+
   return (
     <div className="search-bar">
       <form className="search-bar-form" action="submit" onSubmit={handleSubmit}>

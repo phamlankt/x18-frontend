@@ -26,7 +26,14 @@ import {
     effects_UNSTABLE: [persistAtom],
   });
 
+  const AtomDataJobs = atom({
+    key: "AtomDataJobs",
+    default: [],
+    effects_UNSTABLE: [persistAtom],
+  });
+
 const Recoil = {
+    AtomDataJobs,
     AtomCheckDataUser,
     AtomDataUser,
     AtomSideBar
