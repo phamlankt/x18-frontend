@@ -1,4 +1,4 @@
-import { Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
@@ -14,6 +14,7 @@ import businessSectorAPI from "../../apis/businessSectorAPI";
 import userAPI from "../../apis/userAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 
+
 function ProfileComponent({ onOpenResetPasswordModal }) {
   const { handleAlertStatus } = useContext(AlertContext);
   const { auth, handleLogin } = useContext(AuthContext);
@@ -27,6 +28,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     address: auth.user.address,
     businessSector: auth.user.sectors,
     description: auth.user.description,
+    companyLogoUrl: auth.user.companyLogoUrl,
   };
   const initialValues_applicant = {
     fullName: auth.user.fullName,
@@ -252,6 +254,37 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                       isEditMode={true}
                     />
                   ))}
+
+                  {auth.user.roleName === "recruiter" && (
+                    <div className="form-row">
+                      <div className="form-group col">
+                        <label htmlFor="companyLogo"> Company Logo</label>
+                        {/* <div className="text-center">
+                          <UploadCompanyLogo />
+                        </div> */}
+
+                        <Field
+                          name="file"
+                          // component={CustomImageInput}
+                          title="Select a file"
+                          setFieldValue={setFieldValue}
+                          style={{ display: "flex" }}
+                          className={
+                            "form-control" +
+                            (errors["name"] && touched["name"]
+                              ? " is-invalid "
+                              : "")
+                          }
+                        />
+
+                        <ErrorMessage
+                          name="file"
+                          component="div"
+                          className="invalid-feedback"
+                        />
+                      </div>
+                    </div>
+                  )}
 
                   <div className="mt-5 d-flex justify-content-evenly">
                     <button

@@ -9,23 +9,20 @@ const getBase64 = (img, callback) => {
 };
 const beforeUpload = (file) => {
   const isFileTypeValid =
-    file.type === "image/jpeg" ||
-    file.type === "image/png" ||
-    file.type === "application/pdf";
+    file.type === "image/jpeg" || file.type === "image/png";
   if (!isFileTypeValid) {
-    message.error("You can only upload JPG/PNG/PDF file!");
+    message.error("You can only upload JPG/PNG file!");
   }
-  const isLt100M = file.size / 1024 / 1024 < 100;
-  if (!isLt100M) {
-    message.error("Image must smaller than 2MB!");
+  const isLt20M = file.size / 1024 / 1024 < 20;
+  if (!isLt20M) {
+    message.error("Image must smaller than 20MB!");
   }
-  return isFileTypeValid && isLt100M;
+  return isFileTypeValid && isLt20M;
 };
 
-function UploadButton({ documentName }) {
+function UploadCompanyLogo() {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
-  const [uploadedDocument, setUploadedDocument] = useState({});
   const handleChange = (info) => {
     if (info.file.status === "uploading") {
       setLoading(true);
@@ -37,12 +34,10 @@ function UploadButton({ documentName }) {
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
-        // onUpLoadDocument({ name: info.file.name, path: url });
-        // setUploadedDocument({ name: info.file.name, path: url });
       });
     }
   };
-  const uploadButton = (documentName) => (
+  const uploadButton = () => (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div
@@ -50,7 +45,7 @@ function UploadButton({ documentName }) {
           marginTop: 8,
         }}
       >
-        {documentName}
+        Upload
       </div>
     </div>
   );
@@ -64,11 +59,20 @@ function UploadButton({ documentName }) {
       beforeUpload={beforeUpload}
       onChange={handleChange}
     >
-      {imageUrl
-        ? uploadButton(`${documentName} Uploaded`)
-        : uploadButton(documentName)}
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt="Company Logo"
+          style={{
+            width: "100%",
+            // height:"100%"
+          }}
+        />
+      ) : (
+        uploadButton
+      )}
     </Upload>
   );
 }
 
-export default UploadButton;
+export default UploadCompanyLogo;
