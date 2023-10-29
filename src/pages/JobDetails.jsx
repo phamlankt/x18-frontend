@@ -6,6 +6,7 @@ function JobDetails() {
   return (
     <MasterLayout
       ContentComponent={<JobDetailsLayout />}
+      hasSideBar={false}
     />
   );
 }
