@@ -74,12 +74,12 @@ export const routes = [
   {
     path: "/createJods",
     component: <CreateJobPage />,
-    isPrivate: true,
+    isPrivate: false,
   },
   {
     path: "/updateJob/:jobId",
     component: <UpdateJob />,
-    isPrivate: true,
+    isPrivate: false,
   },
 ];
 export default routes;

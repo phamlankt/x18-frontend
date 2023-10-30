@@ -9,12 +9,13 @@ import { Select } from "antd";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import businessSectorAPI from "../../apis/businessSectorAPI";
-import { Spinner } from "react-bootstrap";
 import jobAPI from "../../apis/jobAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import { useContext } from "react";
 import Loading from "../layout/Loading";
 import Error from "../layout/Error";
+import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 const positions = [
   "Intern",
@@ -38,13 +39,15 @@ const salaries = [
   "3000+",
 ];
 
+const statuses = ["open", "closed", "expired", "extended", "removed"];
+
 const JobForm = (props) => {
   const { job, type } = props;
   const { handleAlertStatus } = useContext(AlertContext);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [sectors, setSectors] = useState("");
-  const [logoReview, setLogoReview] = useState(job ? job.companyLogo : "");
 
   useEffect(() => {
     const handleGetSectors = async () => {
@@ -70,7 +73,6 @@ const JobForm = (props) => {
   const formik = useFormik({
     initialValues: {
       title: job ? job.title : "",
-      companyLogo: job ? job.companyLogo : "",
       deadline: job ? job.deadline : "",
       salary: job ? job.salary : "",
       location: job ? job.location : "",
@@ -78,18 +80,19 @@ const JobForm = (props) => {
       position: job ? job.position : "",
       description: job ? job.description : "",
       sectors: job ? job.sectors : [],
+      amount: job ? job.amount : "",
+      status: job ? job.status : "",
     },
     validationSchema: Yup.object({
       title: Yup.string()
         .required("Title is required")
         .min(6, "Title must be at least 6 characters")
         .max(100, "Title must be at most 100 characters"),
-      companyLogo: Yup.mixed().required("Company logo is required"),
       deadline: Yup.string()
-        .required("Deadline is required")
+        .required("Closing date is required")
         .test(
           "is-future-date",
-          "Deadline must be in the future",
+          "Closing date  must be in the future",
           (value) => Date.parse(value) > Date.now()
         ),
       salary: Yup.string().required("Salary is required"),
@@ -109,40 +112,37 @@ const JobForm = (props) => {
       sectors: Yup.array()
         .required("Sectors is required")
         .test("is-valid", "Sectors is required", (value) => value.length > 0),
+      amount: Yup.number()
+        .required("Amount is required")
+        .min(1, "Amount is invalid")
+        .max(100, "Amount is too large"),
+      status: job ? Yup.string().required("Status is required") : Yup.string(),
     }),
 
     onSubmit: async (values) => {
       await handleSubmitForm(values);
-      formik.resetForm();
     },
   });
 
   const handleSubmitForm = async (values) => {
     try {
       setLoading(true);
-      const formData = new FormData();
-      for (let key in values) {
-        if (values.hasOwnProperty(key)) {
-          formData.append(key, values[key]);
-        }
-      }
 
       if (type === "create") {
-        const res = await jobAPI.create(formData);
+        const res = await jobAPI.create(values);
         handleAlertStatus({
           type: "success",
           message: res.data.message,
         });
+        formik.resetForm();
+        navigate("/myPost");
       } else {
-        const res = await jobAPI.update(job.id, formData);
+        const res = await jobAPI.update(job._id, values);
         handleAlertStatus({
           type: "success",
           message: res.data.message,
         });
       }
-
-      formik.resetForm();
-      setLogoReview("");
     } catch (error) {
       handleAlertStatus({
         type: "error",
@@ -153,14 +153,6 @@ const JobForm = (props) => {
       setLoading(false);
     }
   };
-
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return <Error error={error} />;
-  }
 
   return (
     <div className="job-form-container container-sm">
@@ -191,54 +183,67 @@ const JobForm = (props) => {
         </div>
         {/*  */}
         <div className="form-group row">
-          <p>
-            Company Logo:{" "}
-            <i style={{ fontSize: "12px" }}>(Recommended scale: 1:1)</i>
-          </p>
-
-          <div className="d-grid justify-content-center">
-            <label
-              htmlFor="companyLogo"
-              onClick={() => formik.setFieldTouched("companyLogo", true)}
-            >
-              {logoReview ? (
-                <img
-                  src={logoReview}
-                  alt="logo review"
-                  style={{ width: 150, height: 150, padding: 0 }}
-                />
-              ) : (
-                <div className="form-upload">
-                  <p>click to upload</p>
-                </div>
-              )}
-              {formik.errors.companyLogo && formik.touched.companyLogo && (
-                <p className="text-danger form-error">
-                  {formik.errors.companyLogo}
-                </p>
+          <div className="col-4">
+            <p>Amount:</p>
+            <label htmlFor="amount">
+              <input
+                placeholder="Enter amount.."
+                type="number"
+                id="amount"
+                name="amount"
+                style={{
+                  border:
+                    formik.errors.amount &&
+                    formik.touched.amount &&
+                    "1px solid red",
+                }}
+                value={formik.values.amount}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.errors.amount && formik.touched.amount && (
+                <p className="text-danger form-error">{formik.errors.amount}</p>
               )}
             </label>
           </div>
 
-          <input
-            placeholder="logo"
-            type="file"
-            accept="image/*"
-            id="companyLogo"
-            name="companyLogo"
-            style={{ display: "none" }}
-            onChange={(e) => {
-              formik.setFieldValue("companyLogo", e.target.files[0]);
-              e.target.files[0]
-                ? setLogoReview(URL.createObjectURL(e.target.files[0]))
-                : setLogoReview("");
-            }}
-          />
+          {job ? (
+            <div className="col-4">
+              <label htmlFor="status">
+                <p>Status:</p>
+                <Select
+                  mode="tag"
+                  showSearch={true}
+                  placeholder="Select status"
+                  style={{
+                    border:
+                      formik.errors.status &&
+                      formik.touched.status &&
+                      "1px solid red",
+                  }}
+                  value={formik.values.status || undefined}
+                  onChange={(value) => {
+                    formik.setFieldValue("status", value);
+                  }}
+                  options={statuses.map((status) => ({
+                    label: status[0].toUpperCase() + status.slice(1),
+                    value: status,
+                  }))}
+                />
+                {formik.errors.status && formik.touched.status && (
+                  <p className="text-danger form-error">
+                    {formik.errors.status}
+                  </p>
+                )}
+              </label>
+            </div>
+          ) : null}
         </div>
+
         {/*  */}
         <div className="form-group row">
           <div className="col-4">
-            <p>Deadline:</p>
+            <p>Closing date:</p>
             {formik.errors.deadline && formik.touched.deadline && (
               <p className="text-danger form-error">{formik.errors.deadline}</p>
             )}
@@ -422,10 +427,17 @@ const JobForm = (props) => {
             </p>
           )}
         </div>
-        <div className="form-group row d-grid justify-content-center">
-          <button type="submit" className="btn btn-primary">
-            Submit
+        <div className="form-group row form-btn">
+          <button
+            className="btn btn-danger"
+            onClick={() => navigate("/myPost")}
+          >
+            Cancel
           </button>
+
+          <Button variant="primary" disabled={loading} type="submit">
+            {loading ? "Loading…" : type === "update" ? "Update" : "Create"}
+          </Button>
         </div>
       </form>
     </div>

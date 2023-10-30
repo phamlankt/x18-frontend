@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useRecoilValue, useRecoilState } from "recoil";
@@ -44,22 +44,18 @@ const SearchBar = (props) => {
     if (!newParams.location) {
       delete newParams.location;
     }
-    // try {
-    //   jobAPI
-    //     .remove(newParams)
-    //     .then((response) => {
-    //       console.log(response.data);
-    //       setDataJob(response.data.jobs);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // } catch (e) {
-    //   console.log(e);
-    // }
 
     setSearchParams(newParams);
   };
+
+  const data = {};
+  searchParams.forEach((value, key) => {
+    data[key] = value;
+  });
+  useEffect(() => {
+    setSearch(data?.search || "");
+    setLocations(data?.location?.split("%") || []);
+  }, [data.search, data.location]);
 
   return (
     <div className="search-bar">
@@ -95,13 +91,15 @@ const SearchBar = (props) => {
         </div>
         <button className="search-bar-submit-button">Search</button>
       </form>
-      {props.jobCount ? (
-        <h5 className="job-quantity">
+
+      <div className="d-flex justify-content-between">
+        <h5
+          className="job-quantity"
+          style={{ opacity: props.jobCount ? "1" : "0" }}
+        >
           There are {props.jobCount} opportunities for you
         </h5>
-      ) : (
-        <></>
-      )}
+      </div>
     </div>
   );
 };
