@@ -14,6 +14,8 @@ import AlertContext from "../../contexts/AlertContext/AlertContext";
 import { useContext } from "react";
 import Loading from "../layout/Loading";
 import Error from "../layout/Error";
+import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 const positions = [
   "Intern",
@@ -42,6 +44,7 @@ const statuses = ["open", "closed", "expired", "extended", "removed"];
 const JobForm = (props) => {
   const { job, type } = props;
   const { handleAlertStatus } = useContext(AlertContext);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [sectors, setSectors] = useState("");
@@ -118,7 +121,6 @@ const JobForm = (props) => {
 
     onSubmit: async (values) => {
       await handleSubmitForm(values);
-      formik.resetForm();
     },
   });
 
@@ -132,6 +134,8 @@ const JobForm = (props) => {
           type: "success",
           message: res.data.message,
         });
+        formik.resetForm();
+        navigate("/myPost");
       } else {
         const res = await jobAPI.update(job._id, values);
         handleAlertStatus({
@@ -149,14 +153,6 @@ const JobForm = (props) => {
       setLoading(false);
     }
   };
-
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return <Error error={error} />;
-  }
 
   return (
     <div className="job-form-container container-sm">
@@ -431,10 +427,17 @@ const JobForm = (props) => {
             </p>
           )}
         </div>
-        <div className="form-group row d-grid justify-content-center">
-          <button type="submit" className="btn btn-primary">
-            {type === "create" ? "Create" : "Update"}
+        <div className="form-group row form-btn">
+          <button
+            className="btn btn-danger"
+            onClick={() => navigate("/myPost")}
+          >
+            Cancel
           </button>
+
+          <Button variant="primary" disabled={loading} type="submit">
+            {loading ? "Loading…" : type === "update" ? "Update" : "Create"}
+          </Button>
         </div>
       </form>
     </div>

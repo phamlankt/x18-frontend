@@ -16,6 +16,15 @@
     flex-direction: column;
     align-items: start;
     gap: 3em;
+    .form-btn {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      button {
+        width: 100px;
+      }
+    }
     .form-group {
       width: 100%;
       position: relative;
