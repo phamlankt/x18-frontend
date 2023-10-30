@@ -1,6 +1,9 @@
 import { Radio, Select } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useRecoilValue, useRecoilState } from "recoil";
+import jobAPI from "../../apis/jobAPI";
+import Recoil from "../../recoilContextProvider";
 import businessSectorAPI from "../../apis/businessSectorAPI";
 import { useContext } from "react";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
@@ -26,9 +29,9 @@ const dataSorts = [
 
 const Filter = () => {
   const { handleAlertStatus } = useContext(AlertContext);
+  const [dataJob, setDataJob] = useRecoilState(Recoil.AtomDataJobs);
   const [searchParams, setSearchParams] = useSearchParams();
   const [dataSectors, setDataSectors] = useState([]);
-
   const [sectors, setSectors] = useState(
     searchParams.get("sector")?.split("%") || []
   );
@@ -85,6 +88,7 @@ const Filter = () => {
     if (!newParams.sortBy) {
       delete newParams.sortBy;
     }
+
     setSearchParams(newParams);
   };
 
@@ -110,7 +114,6 @@ const Filter = () => {
         handleAlertStatus({ type: "error", message: "Something went wrong" });
       }
     };
-
     handleGetSectors();
   }, []);
 

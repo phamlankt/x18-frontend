@@ -26,6 +26,9 @@
                display: grid;
                justify-content: center;
                .jobIcon{
+                display: grid;
+                gap: 10px;
+                margin-bottom: 20px;
                    div{
                        div{
                            div{
@@ -46,8 +49,8 @@
                        background-color: white;
                      
                        img{
-                           width: 200px;
-                           height: 100px;
+                           width: 150px;
+                           height: 150px;
                            border-radius: 10px;
                        }
                     
