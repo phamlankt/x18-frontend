@@ -23,7 +23,18 @@
       color: white;
       line-height: 1.2;
       margin: 0;
-      padding: 10px;
+      padding: 7px;
+      margin-right: 30px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      img {
+        height: 40px;
+        filter: brightness(4);
+      }
+      span {
+        font-size: 20px;
+      }
     }
     .menuIcon {
       padding: 10px;
@@ -32,10 +43,13 @@
       background-color: rgba($color: #000000, $alpha: 0);
       color: white;
       font-weight: 600;
-      font-size: 18px;
-    }
-    .menuIcon:hover {
-      color: #ef6526;
+      font-size: 16px;
+      &.active-item {
+        color: #ef6526;
+      }
+      &:hover {
+        color: #ef6526;
+      }
     }
   }
   .navbar {
@@ -52,9 +66,9 @@
         align-items: center;
         img {
           padding: 10px;
-          width: 70px;
-          height: 70px;
-          border-radius: 999px;
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
         }
       }
     }
@@ -129,7 +143,7 @@ div {
 .side-filter {
   margin: 12px;
   position: relative;
-  top: 20%;
+  top: 100px;
   background-color: none;
   height: auto;
   display: flex;
@@ -137,6 +151,20 @@ div {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  .clear-filter-button {
+    border: none;
+    background-color: rgba(22, 119, 255, 0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 1em;
+  }
+  p {
+    margin: 0;
+    color: black;
+    font-size: 14px;
+    font-weight: 400;
+  }
 }
 .search-bar {
   margin: 0 auto;
@@ -192,6 +220,7 @@ div {
       font-size: 1.2em;
       font-weight: 500;
     }
+
     .text-form {
       color: rgb(185, 108, 140);
     }
@@ -206,7 +235,6 @@ div {
 .main {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 30px;
   height: fit-content;
   width: 80%;
@@ -300,14 +328,13 @@ div {
         position: absolute;
         right: 0px;
         top: 50%;
-        transform: translate(100%, -50%);
+        transform: translate(-14px, -50%);
         border: 1px solid #d7977a;
         background-color: #d7977a;
         color: white;
         padding: 4px;
         border-radius: 4px;
         font-size: 16px;
-        opacity: 0;
         cursor: pointer;
         p {
           margin: 0;
@@ -316,11 +343,7 @@ div {
           gap: 4px;
         }
       }
-      &:hover .hover-info {
-        transform: translate(-14px, -50%);
-        opacity: 1;
-        transition: all 0.2s ease-in-out;
-      }
+
       &:hover {
         background-color: rgb(243, 245, 247);
         box-shadow: rgba(215, 151, 122, 0.5) 0px 2px 8px 0px;

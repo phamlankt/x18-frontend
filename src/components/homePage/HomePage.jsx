@@ -60,6 +60,7 @@ export default function HomePage() {
   ]);
 
   const handlePageChange = (page) => {
+    window.scrollTo(0, 0);
     setCurrentPage(page);
   };
 

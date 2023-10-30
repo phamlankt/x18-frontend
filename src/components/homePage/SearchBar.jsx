@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -43,6 +43,16 @@ const SearchBar = (props) => {
 
     setSearchParams(newParams);
   };
+
+  const data = {};
+  searchParams.forEach((value, key) => {
+    data[key] = value;
+  });
+  useEffect(() => {
+    setSearch(data?.search || "");
+    setLocations(data?.location?.split("%") || []);
+  }, [data.search, data.location]);
+
   return (
     <div className="search-bar">
       <form className="search-bar-form" action="submit" onSubmit={handleSubmit}>
@@ -77,13 +87,15 @@ const SearchBar = (props) => {
         </div>
         <button className="search-bar-submit-button">Search</button>
       </form>
-      {props.jobCount ? (
-        <h5 className="job-quantity">
+
+      <div className="d-flex justify-content-between">
+        <h5
+          className="job-quantity"
+          style={{ opacity: props.jobCount ? "1" : "0" }}
+        >
           There are {props.jobCount} opportunities for you
         </h5>
-      ) : (
-        <></>
-      )}
+      </div>
     </div>
   );
 };
