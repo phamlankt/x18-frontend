@@ -98,7 +98,8 @@ const JobForm = (props) => {
       salary: Yup.string().required("Salary is required"),
       location: Yup.string()
         .required("Location is required")
-        .min(6, "Location must be at least 6 characters"),
+        .min(6, "Location must be at least 6 characters")
+        .max(300, "Location must be at most 300 characters"),
       city: Yup.string()
         .required("City is required")
         .oneOf(
@@ -115,7 +116,7 @@ const JobForm = (props) => {
       amount: Yup.number()
         .required("Amount is required")
         .min(1, "Amount is invalid")
-        .max(100, "Amount is too large"),
+        .max(10000, "Amount is too large"),
       status: job ? Yup.string().required("Status is required") : Yup.string(),
     }),
 
