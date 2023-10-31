@@ -20,6 +20,11 @@ const profileModalFormItems_recruiter = [
     fieldName: "description",
     as: "textarea",
   },
+  // {
+  //   label: "Company Logo",
+  //   fieldName: "companyLogoUrl",
+  //   type: "file",
+  // },
 ];
 
 const profileModalFormItems_applicant = [
