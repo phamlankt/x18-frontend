@@ -6,11 +6,10 @@ import Register from "../pages/Register.jsx";
 import ResetPassword from "../pages/ResetPassword.jsx";
 import ListJobOfApplicant from "../pages/ListJobOfApplicant.jsx";
 import ListJobOfRecruiter from "../pages/ListJobOfRecruiter.jsx";
-import User from "../pages/admin/User.jsx";
+import User from "../pages/User.jsx";
 import CreateJobPage from "../pages/CreateJob.jsx";
 import JobDetails from "../pages/JobDetails.jsx";
 import UpdateJob from "../pages/UpdateJob.jsx";
-import AdminJob from "../pages/admin/AdminJob.jsx";
 
 export const routes = [
   {
@@ -19,10 +18,10 @@ export const routes = [
     isPrivate: false,
   },
   {
-    path: "/admin",
-    component: <AdminJob />,
-    isPrivate: false,
-    isAdmin: false,
+    path: "/admin/users",
+    component: <User />,
+    isPrivate: true,
+    isAdmin: true,
   },
   {
     path: "/admin/job",
