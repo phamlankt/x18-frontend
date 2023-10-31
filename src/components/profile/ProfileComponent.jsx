@@ -18,9 +18,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
   // console.log("auth.user",auth.user&&auth.user)
   const { auth, handleLogin } = useContext(AuthContext);
   const [logoFile, setLogoFile] = useState();
-  const [logoReview, setLogoReview] = useState(
-    auth.user.companyLogoUrl && auth.user.companyLogoUrl
-  );
+  const [logoReview, setLogoReview] = useState(auth.user.companyLogoUrl);
   const { handleAlertStatus } = useContext(AlertContext);
   const [isLoading, setLoading] = useState(false);
   const roleName = auth.user.roleName;
@@ -32,7 +30,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     address: auth.user.address,
     businessSector: auth.user.sectors,
     description: auth.user.description,
-    // companyLogo: auth.user.companyLogoUrl,
+    companyLogo: auth.user.companyLogoUrl ? auth.user.companyLogoUrl : "",
   };
   const initialValues_applicant = {
     fullName: auth.user.fullName,
@@ -61,7 +59,9 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     email: Yup.string().email(),
     phoneNumber: Yup.string().required("Phone Number is required"),
     address: Yup.string().required("Address is required"),
-    businessSector: Yup.array().required("Business sector is required"),
+    businessSector: Yup.array()
+      .required("Business sector is required")
+      .test("is-valid", "Sectors is required", (value) => value.length > 0),
     companyLogo: Yup.mixed().required("Company logo is required"),
     description: Yup.string().required("Company description is required"),
     password: Yup.string()
@@ -252,7 +252,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
       }
       onSubmit={onSubmit}
     >
-      {({ errors, touched, isSubmitting, setFieldValue }) => {
+      {({ errors, touched, setFieldTouched, isSubmitting, setFieldValue }) => {
         return (
           <Form className="container rounded">
             <div className="row">
@@ -303,10 +303,11 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                           <div className="d-grid justify-content-center">
                             <label
                               htmlFor="companyLogo"
-                              // onClick={() =>
-                              //   setFieldTouched("companyLogo", true)
-                              // }
+                              onClick={() =>
+                                setFieldTouched("companyLogo", true)
+                              }
                             >
+                              {" "}
                               {logoReview ? (
                                 <img
                                   src={logoReview}
@@ -322,12 +323,12 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                                   <p>click to upload</p>
                                 </div>
                               )}
-                              {errors.companyLogo && touched.companyLogo && (
-                                <p className="text-danger form-error">
-                                  {errors.companyLogo}
-                                </p>
-                              )}
                             </label>
+                            {errors.companyLogo && touched.companyLogo && (
+                              <p className="text-danger form-error">
+                                {errors.companyLogo}
+                              </p>
+                            )}
                           </div>
 
                           <input
@@ -339,12 +340,12 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                             style={{ display: "none" }}
                             className={
                               "form-control" +
-                              (errors["companyLogo"] && touched["companyLogo"]
+                              (errors.companyLogo && touched.companyLogo
                                 ? " is-invalid "
                                 : "")
                             }
                             onChange={(e) => {
-                              // setFieldValue("companyLogo", e.target.files[0]);
+                              setFieldValue("companyLogo", e.target.files[0]);
                               setLogoFile(e.target.files[0]);
                               e.target.files[0]
                                 ? setLogoReview(
@@ -354,12 +355,6 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                             }}
                           />
                         </div>
-
-                        <ErrorMessage
-                          name="companyLogo"
-                          component="div"
-                          className="invalid-feedback"
-                        />
                       </div>
                     </div>
                   )}
