@@ -1,9 +1,6 @@
 import { Radio, Select } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useRecoilValue, useRecoilState } from "recoil";
-import jobAPI from "../../apis/jobAPI";
-import Recoil from "../../recoilContextProvider";
 import businessSectorAPI from "../../apis/businessSectorAPI";
 import { useContext } from "react";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
@@ -29,28 +26,15 @@ const dataSorts = [
 
 const Filter = () => {
   const { handleAlertStatus } = useContext(AlertContext);
-  const [dataJob, setDataJob] = useRecoilState(Recoil.AtomDataJobs);
   const [searchParams, setSearchParams] = useSearchParams();
   const [dataSectors, setDataSectors] = useState([]);
   const [sectors, setSectors] = useState(
     searchParams.get("sector")?.split("%") || []
   );
   const [sortField, setSortField] = useState(
-    searchParams.get("sortField") || "createdAt"
+    searchParams.get("sortField") || ""
   );
-  const [sortBy, setSortBy] = useState(searchParams.get("sortBy") || "desc");
-  const [disabled, setDisabled] = useState(sortField ? false : true);
-
-  const checkDisable = (sortFieldValue) => {
-    if (!sortFieldValue) {
-      setSortBy("");
-      setDisabled(true);
-    }
-    if (sortFieldValue) {
-      setSortBy("asc");
-      setDisabled(false);
-    }
-  };
+  const [sortBy, setSortBy] = useState(searchParams.get("sortBy") || "");
 
   const handleSortBy = (e) => {
     setSortBy(e.target.value);
@@ -62,7 +46,6 @@ const Filter = () => {
 
   const handleChangeSortField = (e) => {
     setSortField(e);
-    checkDisable(e);
   };
 
   const handleSubmit = () => {
@@ -161,11 +144,10 @@ const Filter = () => {
             borderRadius: "4px",
           }}
           placeholder="Sort feilds"
-          value={sortField || undefined}
+          value={sortField || "createdAt"}
           allowClear={true}
           onClear={() => {
             setSortField("");
-            checkDisable("");
           }}
           options={dataSorts}
           onChange={handleChangeSortField}
@@ -173,14 +155,10 @@ const Filter = () => {
         <Radio.Group
           className="sort-by-wrapper"
           onChange={handleSortBy}
-          value={sortBy}
+          value={sortBy || "desc"}
         >
-          <Radio value={"asc"} disabled={disabled}>
-            Ascending
-          </Radio>
-          <Radio value={"desc"} disabled={disabled}>
-            Descending
-          </Radio>
+          <Radio value={"asc"}>Ascending</Radio>
+          <Radio value={"desc"}>Descending</Radio>
         </Radio.Group>
       </div>
 

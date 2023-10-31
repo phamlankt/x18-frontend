@@ -1,16 +1,12 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import { useRecoilValue, useRecoilState } from "recoil";
-import Recoil from "../../recoilContextProvider";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import cities from "../../global/data/VNLocaion.json";
 import { useSearchParams } from "react-router-dom";
 import { Select } from "antd";
-import jobAPI from "../../apis/jobAPI";
 
 const SearchBar = (props) => {
-  const [dataJob, setDataJob] = useRecoilState(Recoil.AtomDataJobs);
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [locations, setLocations] = useState(
