@@ -12,7 +12,6 @@ function ApplicationByJobId() {
   const [loading, setLoading] = useState(false);
   const [application, setApplication] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
-const [isJobApplied,setIsJobApplied]=useState(false)
 
   useEffect(() => {
     getApplicationByJobIdAndApplicantID(1, 10);
@@ -57,10 +56,12 @@ const [isJobApplied,setIsJobApplied]=useState(false)
   return loading ? (
     <Spin />
   ) : application && application.jobId ? (
-    <div>
-      <span className="fw-bold">Status: </span>
-      <span>{application.status}</span>
-      <h6 className="fw-bold">My Documents:</h6>
+    <div className="ms-4">
+      <div className="d-flex">
+        <h6 className="fst-italic fw-light">Status: </h6>
+        <span className="ms-1">{application.status}</span>
+      </div>
+      <h6 className="fst-italic fw-light">My Documents:</h6>
 
       {application.documents.map((document) => {
         return (
@@ -69,7 +70,9 @@ const [isJobApplied,setIsJobApplied]=useState(false)
               href={document.path}
               className="text-danger text-decoration-underline"
             >
-              {capitalizeFirstLetter(document.name)}
+              {capitalizeFirstLetter(
+                document.fileName.substring(document.fileName.indexOf("-") + 1)
+              )}
             </a>
           </div>
         );
@@ -86,7 +89,7 @@ const [isJobApplied,setIsJobApplied]=useState(false)
       )}
     </div>
   ) : (
-    <ApplicationForm setJobApplied={setIsJobApplied}/>
+    <ApplicationForm setApplication={setApplication} />
   );
 }
 
