@@ -70,7 +70,7 @@ const profileModalFormItems_default = [
   },
   {
     label: "Phone Number",
-    fieldName: "phone",
+    fieldName: "phoneNumber",
   },
 ];
 
