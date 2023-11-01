@@ -216,7 +216,6 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
   ];
 
   const handleFileUpload = async (file) => {
-    console.log("file", file);
     if (!file) return;
     try {
       setLoading(true);
@@ -224,11 +223,6 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
       formData.append("avatar", file);
       await userAPI.uploadLogo(formData);
       handleLogin();
-      // handleAlertStatus({
-      //   type: "success",
-      //   message: "Upload logo image sucessfully!",
-      // });
-      // setCheckDataUpdate(false);
     } catch (error) {
       handleAlertStatus({
         type: "error",
