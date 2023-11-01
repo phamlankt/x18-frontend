@@ -21,7 +21,7 @@ export const routes = [
   {
     path: "/admin/users",
     component: <User />,
-    isPrivate: true,
+    isPrivate: false,
     isAdmin: true,
   },
   {
