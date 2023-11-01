@@ -55,7 +55,7 @@ function JobDescription() {
               </span>
               <span className="w-25">
                 <Briefcase className="me-1" style={{ color: "orange" }} />
-                <a>{jobInfo.position}</a>
+                <a>Position: {jobInfo.position}</a>
               </span>
               <span className="w-25">
                 <Calendar className="me-1" style={{ color: "orange" }} />
@@ -63,7 +63,7 @@ function JobDescription() {
               </span>
               <span className="w-25">
                 <Calendar className="me-1" style={{ color: "orange" }} />
-                Deadline: {formatDate(jobInfo.deadline)}
+                Closing Date: {formatDate(jobInfo.deadline)}
               </span>
             </div>
             <div className="mt-3 d-flex w-75">
