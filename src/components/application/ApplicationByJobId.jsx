@@ -12,6 +12,7 @@ function ApplicationByJobId() {
   const [loading, setLoading] = useState(false);
   const [application, setApplication] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
+const [isJobApplied,setIsJobApplied]=useState(false)
 
   useEffect(() => {
     getApplicationByJobIdAndApplicantID(1, 10);
@@ -85,7 +86,7 @@ function ApplicationByJobId() {
       )}
     </div>
   ) : (
-    <ApplicationForm />
+    <ApplicationForm setJobApplied={setIsJobApplied}/>
   );
 }
 
