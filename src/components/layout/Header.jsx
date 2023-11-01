@@ -86,7 +86,14 @@ function Header() {
 
             <Dropdown overlay={menu}>
               <div>
-                <img src={myInfor.avatarUrl} alt="" />
+                <img
+                  src={
+                    myInfor.avatarUrl
+                      ? myInfor.avatarUrl
+                      : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
+                  }
+                  alt=""
+                />
               </div>
             </Dropdown>
           </div> /// add avatar dropdown

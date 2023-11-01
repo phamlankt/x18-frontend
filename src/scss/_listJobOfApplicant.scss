@@ -8,6 +8,8 @@
     display: grid;
     gap: 10px;
     width: 700px;
+    margin-left: -180px;
+
     .topic{
         text-align: left;
         width: 100%;
@@ -47,13 +49,11 @@
                        border-radius: 20px;
                        border: 1px solid #d7977a;
                        background-color: white;
-                     
                        img{
                            width: 150px;
                            height: 150px;
                            border-radius: 10px;
                        }
-                    
                        div{
                            display: grid;
                            gap: 10px;
@@ -62,15 +62,31 @@
                             height: fit-content;
                             display: flex;
                             justify-content: space-between ;
-                            button{
-                                width: fit-content;
-                                height: fit-content;
-                                border: none;
-                                background-color: rgb(177, 134, 134);
-                                color: white;
-                                font-weight: 500;
-                                padding: 5px;
-                                border-radius: 10px;
+                            div{
+                                display: flex;
+                                align-items: center;
+                                gap: 20px;
+                                .CancelButton{
+                                    width: fit-content;
+                                    height: fit-content;
+                                    border: none;
+                                    background-color: rgb(177, 134, 134);
+                                    color: white;
+                                    font-weight: 500;
+                                    padding: 5px;
+                                    font-size: 17px;
+                                    border-radius: 10px;
+                                }
+                                .NotificationButton{
+                                    width: fit-content;
+                                    height: fit-content;
+                                    border: 1px solid red;
+                                    border-radius: 10px;
+                                    background-color: white;
+                                    padding: 5px;
+                                    font-size: 17px;
+                                    color: red;
+                                }
                             }
                            }
                            .informationJob{
