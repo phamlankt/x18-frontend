@@ -115,8 +115,6 @@ const ListJobHaveApplied = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-
-
   // SEARCH AND FILTER
   useEffect(() => {
     const getData = async () => {
