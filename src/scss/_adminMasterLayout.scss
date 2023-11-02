@@ -1,0 +1,16 @@
+.admin-master-layout {
+  .admin-master-layout-content-container {
+    overflow-y: scroll;
+    margin: "0 16px";
+    height: 100%;
+    width: 100%;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    .admin-master-layout-content {
+      padding: 16px;
+      background-color: white;
+      height: 200vh;
+    }
+  }
+}

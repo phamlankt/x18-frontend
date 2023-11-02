@@ -12,8 +12,6 @@ import businessSectorAPI from "../../apis/businessSectorAPI";
 import jobAPI from "../../apis/jobAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import { useContext } from "react";
-import Loading from "../layout/Loading";
-import Error from "../layout/Error";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
@@ -139,10 +137,13 @@ const JobForm = (props) => {
         navigate("/myPost");
       } else {
         const res = await jobAPI.update(job._id, values);
-        handleAlertStatus({
-          type: "success",
-          message: res.data.message,
-        });
+
+        setTimeout(() => {
+          handleAlertStatus({
+            type: "success",
+            message: res.data.message,
+          });
+        }, 2000);
       }
     } catch (error) {
       handleAlertStatus({
@@ -151,7 +152,9 @@ const JobForm = (props) => {
       });
       setError(error.response);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     }
   };
 
