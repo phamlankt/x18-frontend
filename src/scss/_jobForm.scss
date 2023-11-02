@@ -158,3 +158,17 @@
     }
   }
 }
+
+.form-upload {
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed gray;
+  p {
+    margin: 0;
+    text-align: center;
+  }
+}

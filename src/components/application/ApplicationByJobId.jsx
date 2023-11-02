@@ -7,11 +7,13 @@ import { Spin } from "antd";
 import ApplicationForm from "./ApplicationForm";
 
 function ApplicationByJobId() {
+  const { handleAlertStatus } = useContext(AlertContext);
   const jobId = useParams().jobId;
   const [loading, setLoading] = useState(false);
   const [application, setApplication] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
-  const { handleAlertStatus } = useContext(AlertContext);
+const [isJobApplied,setIsJobApplied]=useState(false)
+
   useEffect(() => {
     getApplicationByJobIdAndApplicantID(1, 10);
   }, []);
@@ -30,12 +32,36 @@ function ApplicationByJobId() {
       setLoading(false);
     }
   };
-
+  const withdrawApplication = async (applicationId) => {
+    // setLoading(true);
+    await applicationAPI
+      .cancel({ applicationId })
+      .then(() => {
+        setApplication({ ...application, status: "cancelled" });
+        handleAlertStatus({
+          type: "success",
+          message: "Withdraw application sucessfully!",
+        });
+      })
+      .catch((error) => {
+        handleAlertStatus({
+          type: "error",
+          message: error.response.data.message,
+        });
+        console.log(error.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
   return loading ? (
     <Spin />
   ) : application && application.jobId ? (
     <div>
+      <span className="fw-bold">Status: </span>
+      <span>{application.status}</span>
       <h6 className="fw-bold">My Documents:</h6>
+
       {application.documents.map((document) => {
         return (
           <div>
@@ -48,12 +74,19 @@ function ApplicationByJobId() {
           </div>
         );
       })}
-      <div className="mt-4">
-        <button className="btn btn-primary">Withdraw Application</button>
-      </div>
+      {application.status === "sent" && (
+        <div className="mt-4">
+          <button
+            onClick={() => withdrawApplication(application._id)}
+            className="btn btn-primary"
+          >
+            Withdraw Application
+          </button>
+        </div>
+      )}
     </div>
   ) : (
-    <ApplicationForm />
+    <ApplicationForm setJobApplied={setIsJobApplied}/>
   );
 }
 
