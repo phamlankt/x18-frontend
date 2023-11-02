@@ -1,20 +1,16 @@
 import React from "react";
-import { useContext, useState } from "react";
-import { Dropdown, Button, Menu } from "antd";
-import { DownOutlined } from "@ant-design/icons";
-import { Settings } from "lucide-react";
-import { XCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { CalendarCheck } from "lucide-react";
+import { useContext } from "react";
+import { Dropdown, Menu } from "antd";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { BellRing } from "lucide-react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { LogOut } from "lucide-react";
 import { User2 } from "lucide-react";
 import Recoil from "../../recoilContextProvider";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
-import AuthState from "../../contexts/AuthContext/AuthState";
 import authAPI from "../../apis/authAPI";
+import logo from "../../images/logo.png";
 
 function Header() {
   const [myData, setMyInFor] = useRecoilState(Recoil.AtomDataUser);
@@ -24,6 +20,9 @@ function Header() {
   const { auth, handleLogout } = useContext(AuthContext);
   const myInfor = auth.user;
   const navigate = useNavigate();
+  const activeClass = (params) => {
+    return params.isActive ? "menuIcon active-item" : "menuIcon";
+  };
 
   const DeleteToken = () => {
     navigate("/login");
@@ -62,27 +61,30 @@ function Header() {
   return (
     <div className="Header">
       <div className="menu">
-        <h3 className="logo">{`<LOGO>`}</h3>
-        <Link
+        <NavLink to="/" className="logo">
+          <img src={logo} alt="logo" />
+          <span>JOBSTAR</span>
+        </NavLink>
+        <NavLink
           to="/"
-          className="menuIcon"
+          className={activeClass}
           style={{ display: "flex", alignItems: "center" }}
         >
           Jobs
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to={myInfor.roleName === "applicant" ? "/myListJob" : "/myPost"}
-          className="menuIcon"
+          className={activeClass}
           style={{ display: "flex", alignItems: "center" }}
         >
           {myInfor.roleName === "applicant" ? "Applicant" : ""}
           {myInfor.roleName === "recruiter" ? "Recruiter" : ""}
-        </Link>
+        </NavLink>
       </div>
       <div className="navbar">
         {auth.isAuthenticated ? (
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <BellRing size={35} color="white" />
+            <BellRing size={32} color="white" />
 
             <Dropdown overlay={menu}>
               <div>

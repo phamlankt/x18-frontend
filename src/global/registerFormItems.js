@@ -41,6 +41,17 @@ const registerFormItems = [
         name: "Job Seeker",
       },
     ],
+    adminOption: [
+      { value: "", name: "Choose a role ...", options: "disabled selected hidden" },
+      {
+        value: "superadmin",
+        name: "Superadmin",
+      },
+      {
+        value: "admin",
+        name: "Admin",
+      },
+    ],
   },
 ];
 

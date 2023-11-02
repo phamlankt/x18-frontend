@@ -52,11 +52,11 @@ const MasterLayout = (props) => {
           <div className="min-vh-100 w-100 position-relative mb-5">
             {ContentComponent}
           </div>
-          {hasFooter && (
-            <div className="master-layout-footer">{FooterComponent}</div>
-          )}
         </Content>
       </Layout>
+      {hasFooter && (
+        <div className="master-layout-footer">{FooterComponent}</div>
+      )}
     </Layout>
   );
 };

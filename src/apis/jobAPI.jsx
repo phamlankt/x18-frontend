@@ -9,7 +9,7 @@ const jobAPI = {
   getListJob: () => axiosInstance.get("/jobs/user/query"),
   getById: (jobId) => axiosInstance.get(`/jobs/details/${jobId}`),
   create: (values) => axiosInstance.post("/jobs/create", values),
-  update: (values) => axiosInstance.post("/jobs/update", values),
+  update: (jobId, values) => axiosInstance.put(`/jobs/${jobId}`, values),
   remove: (jobId) => axiosInstance.post("/jobs/remove", jobId),
 };
 

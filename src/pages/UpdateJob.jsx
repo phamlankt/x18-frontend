@@ -1,13 +1,14 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Spinner } from "react-bootstrap";
 import MasterLayout from "../components/layout/MasterLayout";
 import JobForm from "../components/creatJob/JobForm";
 import AlertContext from "../contexts/AlertContext/AlertContext";
 import { useContext } from "react";
 import jobAPI from "../apis/jobAPI";
 import { useParams } from "react-router-dom";
+import Loading from "../components/layout/Loading";
+import Error from "../components/layout/Error";
 
 const UpdateJob = () => {
   const { handleAlertStatus } = useContext(AlertContext);
@@ -44,29 +45,21 @@ const UpdateJob = () => {
 
   if (loading) {
     return (
-      <div
-        className="job-form-container container-sm d-flex justify-content-center align-items-center"
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.5)",
-        }}
-      >
-        <Spinner animation="border" variant="info" />
-      </div>
+      <MasterLayout
+        ContentComponent={<Loading />}
+        hasSideBar={false}
+        hasFooter={false}
+      />
     );
   }
 
   if (error) {
     return (
-      <div
-        className="job-form-container container-sm d-flex justify-content-center align-items-center"
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.5)",
-        }}
-      >
-        <h5 className="text-danger text-center">
-          {error || "Something went wrong"}
-        </h5>
-      </div>
+      <MasterLayout
+        ContentComponent={<Error error={error} />}
+        hasSideBar={false}
+        hasFooter={false}
+      />
     );
   }
 

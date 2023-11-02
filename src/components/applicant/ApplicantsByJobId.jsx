@@ -149,7 +149,7 @@ function ApplicantsByJobId() {
   };
 
   const ConfirmOrRejectApplication = async (applicationId, status) => {
-    setLoading(true);
+    // setLoading(true);
     await applicationAPI
       .updatStatusByRecruiter({ jobId, applicationId, status })
       .then(() => {
@@ -157,7 +157,14 @@ function ApplicantsByJobId() {
           type: "success",
           message: `Application is ${status} sucessfully!`,
         });
-        fetchRecords();
+        // fetchRecords();
+        const updatedData = data.map((application) => {
+          if (application.applicationId === applicationId) {
+            return { ...application, status };
+          }
+          return application;
+        });
+        setData(updatedData)
       })
       .catch((error) => {
         handleAlertStatus({

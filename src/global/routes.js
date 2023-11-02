@@ -21,7 +21,7 @@ export const routes = [
   {
     path: "/admin/users",
     component: <User />,
-    isPrivate: true,
+    isPrivate: false,
     isAdmin: true,
   },
   {
@@ -74,12 +74,12 @@ export const routes = [
   {
     path: "/createJods",
     component: <CreateJobPage />,
-    isPrivate: true,
+    isPrivate: false,
   },
   {
     path: "/updateJob/:jobId",
     component: <UpdateJob />,
-    isPrivate: true,
+    isPrivate: false,
   },
 ];
 export default routes;

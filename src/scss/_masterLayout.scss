@@ -1,6 +1,6 @@
 .master-layout {
   min-height: 100vh;
-  height: 100vh;
+  height: fit-content;
   .master-layout-header {
     background-image: url(../images/backgrounds/headerbg.png);
     background-position: center;
@@ -17,11 +17,11 @@
 
     .master-layout-leftside {
       background-color: rgba(0, 0, 0, 0.1);
-      z-index: 9;
+      z-index: 8;
       position: relative;
       .collapse-btn {
         position: absolute;
-        top: 20%;
+        top: 100px;
         right: 0px;
         transform: translateX(100%);
         text-align: center;
@@ -54,7 +54,7 @@
     }
   }
   .master-layout-footer {
-    z-index: 9;
+    z-index: 99;
     width: 100%;
     background-image: url(../images/backgrounds/headerbg.png);
     background-position: center;
@@ -63,10 +63,45 @@
   }
 }
 .footer {
-  background-color: black;
+  background-color: rgb(66, 91, 117);
   color: white;
   display: flex;
-  justify-content: space-around;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  align-items: center;
+  background-image: url(../images//backgrounds//footergb.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  .info {
+    padding: 12px;
+    flex: 1 0 300px;
+    .logo {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      img {
+        height: 40px;
+      }
+      span {
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
+    a {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .title {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      h1 {
+        color: white;
+        font-size: 16px;
+        text-transform: uppercase;
+      }
+    }
+  }
 }
 
 body {

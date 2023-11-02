@@ -57,7 +57,7 @@ const Register = () => {
     }
   }
 
-  if (auth.isAuthenticated) {
+  if (auth.isAuthenticated && !auth.user.roleName === "superadmin") {
     return <Navigate to="/" />;
   }
 
@@ -99,13 +99,25 @@ const Register = () => {
                                   className={
                                     "form-control" +
                                     (errors[item.fieldName] &&
-                                    touched[item.fieldName]
+                                      touched[item.fieldName]
                                       ? " is-invalid"
                                       : "")
                                   }
                                 >
-                                  {item.options &&
+                                  {auth.user.roleName !== "superadmin"
+                                    ? item.options &&
                                     item.options.map((option) => (
+                                      <option
+                                        key={option.value}
+                                        value={option.value}
+                                        disabled={option.options && true}
+                                        hidden={option.options && true}
+                                      >
+                                        {option.name}
+                                      </option>
+                                    ))
+                                    : item.adminOption &&
+                                    item.adminOption.map((option) => (
                                       <option
                                         key={option.value}
                                         value={option.value}

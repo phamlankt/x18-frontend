@@ -22,7 +22,7 @@ const beforeUpload = (file) => {
   return isFileTypeValid && isLt100M;
 };
 
-function UploadButton({ documentName, onUpLoadDocument }) {
+function UploadButton({ documentName }) {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
   const [uploadedDocument, setUploadedDocument] = useState({});
@@ -37,7 +37,7 @@ function UploadButton({ documentName, onUpLoadDocument }) {
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
-        onUpLoadDocument({ name: info.file.name, path: url });
+        // onUpLoadDocument({ name: info.file.name, path: url });
         // setUploadedDocument({ name: info.file.name, path: url });
       });
     }
