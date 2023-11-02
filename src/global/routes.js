@@ -1,5 +1,4 @@
-import AdminJob from "../pages/AdminJob.jsx";
-import BusinessSector from "../pages/BusinessSector.jsx";
+import BusinessSector from "../pages/admin/BusinessSector.jsx";
 import Home from "../pages/Home.jsx";
 import Login from "../pages/Login.jsx";
 import Profile from "../pages/Profile.jsx";
@@ -7,10 +6,11 @@ import Register from "../pages/Register.jsx";
 import ResetPassword from "../pages/ResetPassword.jsx";
 import ListJobOfApplicant from "../pages/ListJobOfApplicant.jsx";
 import ListJobOfRecruiter from "../pages/ListJobOfRecruiter.jsx";
-import User from "../pages/User.jsx";
+import User from "../pages/admin/User.jsx";
 import CreateJobPage from "../pages/CreateJob.jsx";
 import JobDetails from "../pages/JobDetails.jsx";
 import UpdateJob from "../pages/UpdateJob.jsx";
+import AdminJob from "../pages/admin/AdminJob.jsx";
 
 export const routes = [
   {
@@ -19,22 +19,40 @@ export const routes = [
     isPrivate: false,
   },
   {
-    path: "/admin/users",
+    path: "/admin",
+    component: <AdminJob />,
+    isPrivate: false,
+    isAdmin: false,
+  },
+  {
+    path: "/admin/job",
+    component: <AdminJob />,
+    isPrivate: false,
+    isAdmin: false,
+  },
+  {
+    path: "/admin/user",
     component: <User />,
     isPrivate: false,
-    isAdmin: true,
+    isAdmin: false,
   },
   {
-    path: "/admin/jobs",
-    component: <AdminJob />,
-    isPrivate: true,
-    isAdmin: true,
-  },
-  {
-    path: "/admin/sectors",
+    path: "/admin/price",
     component: <BusinessSector />,
-    isPrivate: true,
-    isAdmin: true,
+    isPrivate: false,
+    isAdmin: false,
+  },
+  {
+    path: "/admin/sector",
+    component: <BusinessSector />,
+    isPrivate: false,
+    isAdmin: false,
+  },
+  {
+    path: "/admin/position",
+    component: <BusinessSector />,
+    isPrivate: false,
+    isAdmin: false,
   },
   {
     path: "/jobs",
@@ -74,12 +92,12 @@ export const routes = [
   {
     path: "/createJods",
     component: <CreateJobPage />,
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: "/updateJob/:jobId",
     component: <UpdateJob />,
-    isPrivate: false,
+    isPrivate: true,
   },
 ];
 export default routes;
