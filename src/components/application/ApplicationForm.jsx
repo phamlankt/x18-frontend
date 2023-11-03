@@ -68,24 +68,7 @@ function ApplicationForm({ setApplication }) {
     }
   };
 
-  const handleFileUpload = async (file) => {
-    if (!file) return;
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("avatar", file);
-      await userAPI.uploadLogo(formData);
-    } catch (error) {
-      handleAlertStatus({
-        type: "error",
-        message: error.response.data.message,
-      });
-      console.error(error.response.data.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+ 
   return (
     <Formik
       enableReinitialize

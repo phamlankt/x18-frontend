@@ -71,7 +71,10 @@ function ApplicationByJobId() {
               className="text-danger text-decoration-underline"
             >
               {capitalizeFirstLetter(
-                document.fileName.substring(document.fileName.indexOf("-") + 1)
+                document.fileName &&
+                  document.fileName.substring(
+                    document.fileName.indexOf("-") + 1
+                  )
               )}
             </a>
           </div>
