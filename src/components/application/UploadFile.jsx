@@ -1,3 +1,4 @@
+import { Delete, DeleteIcon, Trash, Trash2 } from "lucide-react";
 import React from "react";
 
 function UploadFile({
@@ -8,6 +9,8 @@ function UploadFile({
   fieldName,
   uploadedDocuments,
   setUploadedDocuments,
+  documents,
+  setDocuments,
 }) {
   const existedDocument = uploadedDocuments.filter(
     (docu) => docu.name === fieldName
@@ -40,6 +43,18 @@ function UploadFile({
     }
   };
 
+  const removeDocument = (fieldN) => {
+    console.log("fieldN", fieldN);
+    const updatedUploadedDocuments = uploadedDocuments.filter(
+      (docu) => docu.name !== fieldN
+    );
+    setUploadedDocuments(updatedUploadedDocuments);
+    const updatedDocuments = documents.filter((docu) => {
+      if (fieldN === "CV" || fieldN === "Cover Letter") return true;
+      else return docu !== fieldN;
+    });
+    setDocuments(updatedDocuments);
+  };
   return (
     <div className="form-row">
       <div className="form-group col">
@@ -50,21 +65,45 @@ function UploadFile({
               onClick={() => setFieldTouched({ fieldName }, true)}
             >
               {" "}
-              {uploadedDocuments.length > 0 && existedDocument.length > 0 ? (
-                <div className="form-upload text-danger ">
-                  <p>{existedDocument[0].fileName}</p>
-                </div>
-              ) : (
-                <div className="form-upload">
-                  <p>
-                    Click to upload{" "}
-                    {fieldName.includes("other") ? "other document" : fieldName}
-                  </p>
-                </div>
-              )}
+              <div className="form-upload text-primary">
+                {uploadedDocuments.length > 0 && existedDocument.length > 0 ? (
+                  <>
+                    <p>{existedDocument[0].fileName}</p>
+                  </>
+                ) : (
+                  <>
+                    <p
+                      style={{ cursor: "pointer" }}
+                      className={fieldName.includes("other") && "fs-3"}
+                    >
+                      + {fieldName.includes("other") ? "" : fieldName}
+                    </p>
+                  </>
+                )}
+              </div>
             </label>
+
+            <div
+              className="text-center w-100"
+              style={{ backgroundColor: "#c6c1c1" }}
+            >
+              <div
+                style={{ cursor: "pointer" }}
+                className="my-1 text-danger"
+                onClick={async () => {
+                  await setFieldValue("CV" , "")
+                  removeDocument(fieldName)
+                  await setFieldTouched({ fieldName }, true);
+                }}
+              >
+                <Trash2 />
+              </div>
+            </div>
+
             {errors[fieldName] && touched[fieldName] && (
-              <p className="text-danger form-error text-center">{errors[fieldName]}</p>
+              <p className="text-danger form-error text-center">
+                {errors[fieldName]}
+              </p>
             )}
           </div>
 
