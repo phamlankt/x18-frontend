@@ -64,7 +64,7 @@ function UploadFile({
               )}
             </label>
             {errors[fieldName] && touched[fieldName] && (
-              <p className="text-danger form-error">{errors[fieldName]}</p>
+              <p className="text-danger form-error text-center">{errors[fieldName]}</p>
             )}
           </div>
 
