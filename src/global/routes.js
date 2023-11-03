@@ -10,7 +10,7 @@ import User from "../pages/admin/User.jsx";
 import CreateJobPage from "../pages/CreateJob.jsx";
 import JobDetails from "../pages/JobDetails.jsx";
 import UpdateJob from "../pages/UpdateJob.jsx";
-import AdminJob from "../pages/admin/AdminJob.jsx";
+import Job from "../pages/admin/Job.jsx";
 
 export const routes = [
   {
@@ -20,13 +20,13 @@ export const routes = [
   },
   {
     path: "/admin",
-    component: <AdminJob />,
+    component: <BusinessSector />,
     isPrivate: false,
     isAdmin: false,
   },
   {
     path: "/admin/job",
-    component: <AdminJob />,
+    component: <Job />,
     isPrivate: false,
     isAdmin: false,
   },
