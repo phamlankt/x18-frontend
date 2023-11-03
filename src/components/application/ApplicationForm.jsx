@@ -27,6 +27,7 @@ function ApplicationForm({ setApplication }) {
 
   function onSubmit(fields, { setStatus, setSubmitting, resetForm }) {
     setStatus();
+    console.log("fields",fields)
     const formData = new FormData();
     for (let i = 0; i < uploadedDocuments.length; i++) {
       formData.append("documents", uploadedDocuments[i].file);
@@ -105,6 +106,8 @@ function ApplicationForm({ setApplication }) {
                           fieldName={document}
                           uploadedDocuments={uploadedDocuments}
                           setUploadedDocuments={setUploadedDocuments}
+                          documents={documents}
+                          setDocuments={setDocuments}
                         />
                       );
                     })}
