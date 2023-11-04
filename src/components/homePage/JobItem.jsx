@@ -23,7 +23,7 @@ const JobItem = ({ job }) => {
     <div className="p-2">
       <div className="job" onClick={() => navigate(`/jobs/${job._id}`)}>
         <div className="logo">
-          <img src={job.creator?.avatarUrl || baseImage} alt="logo" />
+          <img src={job.creator?.companyLogoUrl || baseImage} alt="logo" />
         </div>
 
         <div className="job-info">

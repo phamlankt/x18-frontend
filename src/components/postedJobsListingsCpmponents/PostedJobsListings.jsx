@@ -20,6 +20,7 @@ import { useSearchParams } from "react-router-dom";
 import { useContext } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 
 const pageSizeDefault = 10;
 
@@ -37,6 +38,7 @@ const PostedJobsListings = () => {
   const [checkDataJob, setCheckDataJob] = useState(true);
   const [currentPageToFilter, setCurrentPageToFilter] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const { auth } = useContext(AuthContext);
 
   const antIcon = (
     <LoadingOutlined
@@ -243,7 +245,11 @@ const PostedJobsListings = () => {
                     renderItem={(value) => (
                       <div className="job" key={value.item}>
                         <img
-                          src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
+                          src={
+                            auth.user.companyLogoUrl
+                              ? auth.user.companyLogoUrl
+                              : "https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
+                          }
                           alt=""
                           className="w-40 h-40"
                         />
