@@ -20,39 +20,40 @@ export const routes = [
   },
   {
     path: "/admin",
-    component: <BusinessSector />,
-    isPrivate: false,
-    isAdmin: false,
+    component: <AdminJob />,
+    isPrivate: true,
+    isAdmin: true,
   },
   {
     path: "/admin/job",
-    component: <Job />,
-    isPrivate: false,
-    isAdmin: false,
+    component: <AdminJob />,
+    isPrivate: true,
+    isAdmin: true,
+
   },
   {
     path: "/admin/user",
     component: <User />,
-    isPrivate: false,
-    isAdmin: false,
+    isPrivate: true,
+    isSuperAdmin: true
   },
   {
     path: "/admin/price",
     component: <BusinessSector />,
-    isPrivate: false,
-    isAdmin: false,
+    isPrivate: true,
+    isAdmin: true,
   },
   {
     path: "/admin/sector",
     component: <BusinessSector />,
-    isPrivate: false,
-    isAdmin: false,
+    isPrivate: true,
+    isAdmin: true,
   },
   {
     path: "/admin/position",
     component: <BusinessSector />,
-    isPrivate: false,
-    isAdmin: false,
+    isPrivate: true,
+    isAdmin: true,
   },
   {
     path: "/jobs",
@@ -84,20 +85,26 @@ export const routes = [
   {
     path: "/myListJob",
     component: <ListJobOfApplicant />,
+    isPrivate: true,
+    isAdminApplicant: true,
   },
   {
     path: "/myPost",
     component: <ListJobOfRecruiter />,
+    isPrivate: true,
+    isAdminRecruiter: true,
   },
   {
     path: "/createJods",
     component: <CreateJobPage />,
     isPrivate: true,
+    isAdminRecruiter: true,
   },
   {
     path: "/updateJob/:jobId",
     component: <UpdateJob />,
     isPrivate: true,
+    isAdminRecruiter: true,
   },
 ];
 export default routes;

@@ -44,8 +44,7 @@ const Login = () => {
 
       const userInfo = await handleLogin();
       if (userInfo.roleName === "superadmin" || userInfo.roleName === "admin") {
-        // navigate("/admin/users");
-        navigate("/");
+        navigate("/admin");
       } else {
         navigate("/");
       }
