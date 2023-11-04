@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import jobAPI from "../../apis/jobAPI";
 import {
   BookOpen,
@@ -12,15 +12,22 @@ import {
   Share2,
   User,
 } from "lucide-react";
-import { capitalizeFirstLetter, formatDate, getCityNameFromSlug } from "../../global/common";
+import {
+  capitalizeFirstLetter,
+  formatDate,
+  getCityNameFromSlug,
+} from "../../global/common";
 import { Spin, Tag } from "antd";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 
 function JobDescription() {
+  const navigate = useNavigate()
+  const { auth } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const jobId = useParams().jobId;
   const [jobInfo, setJobInfo] = useState();
-  //   const { auth } = useContext(AuthContext);
+  
   useEffect(() => {
     getJobById();
   }, []);
@@ -66,6 +73,7 @@ function JobDescription() {
                 Closing Date: {formatDate(jobInfo.deadline)}
               </span>
             </div>
+
             <div className="mt-3 d-flex w-75">
               <span className="w-25">
                 <User className="me-1" style={{ color: "orange" }} />
@@ -95,14 +103,15 @@ function JobDescription() {
               </span>
             </div>
           </div>
-          {/* {auth.user.roleName === "applicant" && ( */}
-          <div className="text-center mt-5">
-            {/* <button className="btn btn-primary fw-bold w-50 me-4">
+
+          {!auth.isAuthenticated && (
+            <div className="text-center mt-5 w-75">
+              <button className="btn btn-primary fw-bold me-4 w-25" onClick={()=>navigate("/login")}>
                 Apply Now
-              </button> */}
-            {/* <button className="btn btn-info btn-gradient ms-4" ><Share2 className="me-1" /></button> */}
-          </div>
-          {/* )} */}
+              </button>
+              {/* <button className="btn btn-info btn-gradient ms-4" ><Share2 className="me-1" /></button> */}
+            </div>
+          )}
           <div className="job_description my-4">
             <div
               dangerouslySetInnerHTML={{ __html: jobInfo.description }}
