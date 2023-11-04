@@ -17,6 +17,7 @@ const jobAPI = {
   create: (values) => axiosInstance.post("/jobs/create", values),
   update: (jobId, values) => axiosInstance.put(`/jobs/${jobId}`, values),
   remove: (jobId) => axiosInstance.post("/jobs/remove", jobId),
+  adminRemove: (values) => axiosInstance.put("/admin/jobs/remove", values),
   getJobByUserId: (values) =>
     axiosInstance.get(
       `/admin/jobs/?userId=${values?.userId || ""}&search=${

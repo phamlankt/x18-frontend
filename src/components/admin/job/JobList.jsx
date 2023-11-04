@@ -1,13 +1,4 @@
-import {
-  Button,
-  Col,
-  Input,
-  Pagination,
-  Row,
-  Select,
-  Space,
-  Tooltip,
-} from "antd";
+import { Button, Col, Input, Pagination, Row, Select, Tooltip } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import React from "react";
 import { useState } from "react";
@@ -16,7 +7,6 @@ import { useContext } from "react";
 import { useEffect } from "react";
 import businessSectorAPI from "../../../apis/businessSectorAPI";
 import jobAPI from "../../../apis/jobAPI";
-import JobItem from "../../homePage/JobItem";
 import JobTable from "./JobTable";
 
 const statuses = ["open", "closed", "expired", "extended", "removed"];
@@ -41,6 +31,7 @@ const dataSorts = [
 
 const JobList = ({ currentUser }) => {
   const { handleAlertStatus } = useContext(AlertContext);
+  const [err, setErr] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [dataSectors, setDataSectors] = useState([]);
   const [jobList, setJobList] = useState([]);
@@ -80,10 +71,10 @@ const JobList = ({ currentUser }) => {
   const getJob = async (query) => {
     try {
       const res = await jobAPI.getJobByUserId(query);
-      console.log(res.data.data.jobList);
-      setJobList(res.data.data.jobList);
+      setJobList(res.data?.data?.jobList);
     } catch (error) {
       handleAlertStatus({ type: "error", message: "Something went wrong" });
+      setErr(error?.response?.data?.message);
     }
   };
 
@@ -93,6 +84,7 @@ const JobList = ({ currentUser }) => {
         const res = await businessSectorAPI.getAll();
         setDataSectors(res.data.data.businessSectorList);
       } catch (error) {
+        setErr(error?.response?.data?.message);
         handleAlertStatus({ type: "error", message: "Something went wrong" });
       }
     };
@@ -114,6 +106,10 @@ const JobList = ({ currentUser }) => {
     }, 500);
     return () => clearTimeout(deboundFn);
   }, [currentUser, search, sector, status, sortField, sortBy, currentPage]);
+
+  if (err) {
+    return <p className="m-2 text-red">{err}</p>;
+  }
 
   return (
     <div className="px-5">

@@ -1,4 +1,4 @@
-import { Button, Space, Table, Tag } from "antd";
+import { Space, Table, Tag, Tooltip } from "antd";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -27,7 +27,7 @@ const columns = [
     dataIndex: "deadline",
     key: "deadline",
     render: (text, record) => (
-      <div className="text-center">
+      <div className="text-center" key={text}>
         <p className="text-success m-0">{record.createdAt}</p> -{" "}
         <p className="text-danger m-0">{record.deadline}</p>
       </div>
@@ -43,8 +43,8 @@ const columns = [
     dataIndex: "sectors",
     key: "sectors",
     render: (sectors, record) => {
-      return record.sectors.map((sector) => (
-        <Tag className="m-1" color="default">
+      return record.sectors.map((sector, index) => (
+        <Tag className="m-1" color="default" key={index}>
           {sector}
         </Tag>
       ));
@@ -54,7 +54,7 @@ const columns = [
     title: "Status",
     key: "status",
     dataIndex: "status",
-    render: (status) => {
+    render: (status, record) => {
       if (status === "open") {
         return <Tag color="success">{status}</Tag>;
       }
@@ -68,15 +68,26 @@ const columns = [
         return <Tag color="processing">{status}</Tag>;
       }
       if (status === "removed") {
-        return <Tag color="default">{status}</Tag>;
+        return (
+          <Tooltip
+            placement="topLeft"
+            title={record.removeDescription}
+            arrow={true}
+            style={{ cursor: "pointer" }}
+          >
+            <Tag style={{ cursor: "pointer" }} color="default">
+              {status}
+            </Tag>
+          </Tooltip>
+        );
       }
     },
   },
   {
     title: "Action",
     key: "action",
-    render: (_, record) => (
-      <Space size="middle">
+    render: (text, record) => (
+      <Space size="middle" key={record._id}>
         <DeleteJobModal job={record} />
       </Space>
     ),
