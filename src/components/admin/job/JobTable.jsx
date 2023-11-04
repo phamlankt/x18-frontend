@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { formatDate } from "../../../utils/fomatDate";
+import DeleteJobModal from "./DeleteJobModal";
 
 const columns = [
   {
@@ -58,10 +59,10 @@ const columns = [
         return <Tag color="success">{status}</Tag>;
       }
       if (status === "closed") {
-        return <Tag color="error">{status}</Tag>;
+        return <Tag color="red">{status}</Tag>;
       }
       if (status === "expired") {
-        return <Tag color="success">{status}</Tag>;
+        return <Tag color="warning">{status}</Tag>;
       }
       if (status === "extended") {
         return <Tag color="processing">{status}</Tag>;
@@ -76,9 +77,7 @@ const columns = [
     key: "action",
     render: (_, record) => (
       <Space size="middle">
-        <Button type="primary" danger>
-          Delete
-        </Button>
+        <DeleteJobModal job={record} />
       </Space>
     ),
   },
@@ -93,6 +92,7 @@ const JobTable = ({ jobs }) => {
         ...job,
         deadline: formatDate(job.deadline),
         createdAt: formatDate(job.createdAt),
+        updateDataFn: setData,
       };
     });
     setData(dataToRender);
