@@ -1,51 +1,28 @@
-export const leftNavBarItems = [
-  {
-    id: 1,
-    path: "/",
-    text: "Products",
-  },
-  {
-    id: 2,
-    path: "/productList",
-    text: "Product List",
-  },
-  {
-    id: 3,
-    path: "/customers",
-    text: "Customers",
-  },
-  {
-    id: 4,
-    path: "/pending-accounts",
-    text: "Pending Accounts",
-    adminOnly: true,
-  },
-  {
-    id: 5,
-    path: "/accounts",
-    text: "Accounts",
-  },
-  {
-    id: 6,
-    path: "/kiots",
-    text: "Kiots",
-    adminOnly: true,
-  },
-  {
-    id: 7,
-    path: "/saleoffs",
-    text: "SaleOffs",
-  },
+import {
+  DesktopOutlined,
+  PieChartOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { BsDashCircle } from "react-icons/bs";
 
-  {
-    id: 8,
-    path: "/transactions",
-    text: "Transactions",
-  },
-  {
-    id: 9,
-    path: "/report",
-    text: "Report",
-  },
+function getItem(label, key, icon, children) {
+  return {
+    label,
+    key,
+    icon,
+    children,
+  };
+}
+
+const items = [
+  getItem("Dashboard", "/admin", <BsDashCircle />),
+  getItem("User", "/admin/user", <UserOutlined />),
+  getItem("Job", "/admin/job", <PieChartOutlined />),
+  getItem("Other", "/admin/other", <DesktopOutlined />, [
+    getItem("Price", "/admin/price"),
+    getItem("Position", "/admin/position"),
+    getItem("Sector", "/admin/sector"),
+  ]),
 ];
-export default leftNavBarItems;
+
+export default items;

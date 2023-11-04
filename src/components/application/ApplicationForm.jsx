@@ -7,7 +7,7 @@ import userAPI from "../../apis/userAPI";
 import { Field, Formik } from "formik";
 import UploadFile from "./UploadFile";
 
-function ApplicationForm() {
+function ApplicationForm({ setApplication }) {
   const { handleAlertStatus } = useContext(AlertContext);
   const [loading, setLoading] = useState(false);
   const [documents, setDocuments] = useState(["CV", "Cover Letter"]);
@@ -27,7 +27,7 @@ function ApplicationForm() {
 
   function onSubmit(fields, { setStatus, setSubmitting, resetForm }) {
     setStatus();
-    console.log("fields", fields);
+    console.log("fields",fields)
     const formData = new FormData();
     for (let i = 0; i < uploadedDocuments.length; i++) {
       formData.append("documents", uploadedDocuments[i].file);
@@ -47,46 +47,29 @@ function ApplicationForm() {
         });
   };
   const createApplication = async (applicationInfo) => {
-    setLoading(true);
-    await applicationAPI
-      .create(applicationInfo)
-      .then(() => {
-        handleAlertStatus({
-          type: "success",
-          message: "Application has been sent!",
-        });
-        navigate(0);
-      })
-      .catch((error) => {
-        console.log("error", error);
-        handleAlertStatus({
-          type: "error",
-          message: error.response.data.message,
-        });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const handleFileUpload = async (file) => {
-    if (!file) return;
     try {
       setLoading(true);
-      const formData = new FormData();
-      formData.append("avatar", file);
-      await userAPI.uploadLogo(formData);
+      const response = await applicationAPI.create(applicationInfo);
+
+      handleAlertStatus({
+        type: "success",
+        message: "Application has been sent!",
+      });
+
+      setApplication(response.data.data.applicationInfo);
+      // navigate(0);
     } catch (error) {
+      console.log("error", error);
       handleAlertStatus({
         type: "error",
         message: error.response.data.message,
       });
-      console.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
   };
 
+ 
   return (
     <Formik
       enableReinitialize
@@ -123,6 +106,8 @@ function ApplicationForm() {
                           fieldName={document}
                           uploadedDocuments={uploadedDocuments}
                           setUploadedDocuments={setUploadedDocuments}
+                          documents={documents}
+                          setDocuments={setDocuments}
                         />
                       );
                     })}

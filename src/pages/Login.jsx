@@ -160,7 +160,7 @@ const Login = () => {
               </div>
               <div className="account-social text-center mt-4">
                 <h6 className="my-4">Or Login With</h6>
-                <ul className="list-inline mb-4">
+                <ul className="list-inline mb-4 d-flex justify-content-center">
                   <li className="list-inline-item">
                     <a href className="facebook">
                       <FaFacebookF />
