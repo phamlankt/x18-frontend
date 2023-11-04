@@ -46,7 +46,7 @@ const RegisterAdmin = () => {
     return (
         <div>
             <h2>Register a new admin</h2>
-            <Form name="register" onFinish={onFinish}>
+            <Form name="register" onFinish={onFinish} labelCol={{ span: 4 }} wrapperCol={{ span: 12 }}>
                 <Form.Item
                     name="email"
                     label="Email Address"
@@ -60,8 +60,7 @@ const RegisterAdmin = () => {
                             message: 'Email is required!',
                         },
                     ]}
-                    labelCol={{ span: 4 }}
-                    wrapperCol={{ span: 12 }}
+
                 >
                     <Input />
                 </Form.Item>
@@ -74,8 +73,7 @@ const RegisterAdmin = () => {
                             message: 'Password is required!',
                         },
                     ]}
-                    labelCol={{ span: 4 }}
-                    wrapperCol={{ span: 12 }}
+
                 >
                     <Input.Password />
                 </Form.Item>
@@ -97,8 +95,7 @@ const RegisterAdmin = () => {
                             },
                         }),
                     ]}
-                    labelCol={{ span: 4 }}
-                    wrapperCol={{ span: 12 }}
+
                 >
                     <Input.Password />
                 </Form.Item>
@@ -111,8 +108,7 @@ const RegisterAdmin = () => {
                             message: 'Choose a role!',
                         },
                     ]}
-                    labelCol={{ span: 4 }}
-                    wrapperCol={{ span: 12 }}
+
                 >
                     <Select>
                         <Option value="superadmin">Super Admin</Option>
