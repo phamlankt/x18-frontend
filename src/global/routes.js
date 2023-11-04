@@ -20,13 +20,13 @@ export const routes = [
   },
   {
     path: "/admin",
-    component: <AdminJob />,
+    component: <BusinessSector />,
     isPrivate: true,
     isAdmin: true,
   },
   {
     path: "/admin/job",
-    component: <AdminJob />,
+    component: <Job />,
     isPrivate: true,
     isAdmin: true,
 
