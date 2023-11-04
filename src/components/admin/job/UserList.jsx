@@ -11,6 +11,7 @@ import { useContext } from "react";
 
 const UserList = ({ currentUser, setCurrentUser }) => {
   const { handleAlertStatus } = useContext(AlertContext);
+  const [err, setErr] = useState("");
   const [userList, setUserList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -25,7 +26,7 @@ const UserList = ({ currentUser, setCurrentUser }) => {
       roles: recruiterRole._id,
     });
 
-    setUserList(resUser.data.data.userList);
+    setUserList(resUser.data?.data?.userList);
   };
 
   const handlePageChange = (page) => {
@@ -41,12 +42,16 @@ const UserList = ({ currentUser, setCurrentUser }) => {
       try {
         getUsers({ search, currentPage });
       } catch (error) {
+        setErr(error?.response?.data?.message);
         handleAlertStatus({ type: "error", message: "Something went wrong" });
       }
     }, 500);
     return () => clearTimeout(debounceFn);
   }, [search, currentPage]);
 
+  if (err) {
+    return <p className="m-2 text-red">{err}</p>;
+  }
   return (
     <>
       <Input
