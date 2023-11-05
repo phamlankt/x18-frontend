@@ -73,6 +73,13 @@ function Header() {
           Jobs
         </NavLink>
         <NavLink
+          to="/admin/userManagement" // The path to the user management page
+          className={activeClass}
+          style={{ display: myInfor.roleName === "admin" ? "flex" : "none", alignItems: "center" }}
+          >
+          Users
+        </NavLink>
+        <NavLink
           to={myInfor.roleName === "applicant" ? "/myListJob" : "/myPost"}
           className={activeClass}
           style={{ display: "flex", alignItems: "center" }}

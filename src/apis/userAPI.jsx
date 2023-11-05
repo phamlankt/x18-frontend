@@ -8,6 +8,7 @@ const userAPI = {
       }&currentPage=${query.currentPage || 1}&pageSize=${query.pageSize || 10}`
     ),
   // getById: () => axiosInstance.get("/users/getById"),
+  create: (values) => axiosInstance.post("/users/create", values),
   // create: (values) => axiosInstance.post("/users/create", values),
   update: (values) => axiosInstance.put("/users/update", values),
   changePassword: (values) =>

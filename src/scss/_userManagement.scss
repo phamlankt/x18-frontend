@@ -1,0 +1,36 @@
+.filter-search-container {
+    display: flex;
+    align-items: center; 
+    margin-bottom: 16px;
+    margin-right: 16px;
+  }
+  
+  .search-input {
+    width: 50%;
+    margin-right: 16px; 
+    margin-left: 16px;
+  }
+  
+  .ant-table {
+    margin-right: 16px;
+    margin-left: 16px;
+    order: 2; 
+  }
+
+  .btn-search{
+    margin-left: 16px;
+  }
+
+  .activate-button {
+    background-color: #1890ff;
+    border-color: #1890ff;
+    color: #fff;
+    margin-left: 8px;
+  }
+  
+  .deactivate-button {
+    background-color: #f5222d;
+    border-color: #f5222d;
+    color: #fff;
+    margin-left: 8px;
+  }
