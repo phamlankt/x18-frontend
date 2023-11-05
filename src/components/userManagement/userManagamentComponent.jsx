@@ -29,8 +29,8 @@ const UserManagementComponent = () => {
         );
         console.log("API Response:", response);
   
-        if (response.data && response.data.userList) {
-          const userList = response.data.userList;
+        if (response.data && response.data.data.userList) {
+          const userList = response.data.data.userList;
           console.log("test:", userList);
           if (userList.users) {
             const newUsers = userList.users.map((user) => ({

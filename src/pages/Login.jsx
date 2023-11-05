@@ -13,8 +13,11 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { loginFormItems } from "../global/loginFormItems";
 import ForgotPasswordModal from "../components/forgotPassword/ForgotPasswordModal";
+import { io } from "socket.io-client";
+import SocketContext from "../contexts/SocketContext/SocketContext";
 
 const Login = () => {
+  const { handleSocket } = useContext(SocketContext);
   const { auth } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -43,9 +46,9 @@ const Login = () => {
       localStorage.setItem("accessToken", response.data.data.accessToken);
 
       const userInfo = await handleLogin();
+      handleSocket(io("http://localhost:5000"));
       if (userInfo.roleName === "superadmin" || userInfo.roleName === "admin") {
-        // navigate("/admin/users");
-        navigate("/");
+        navigate("/admin/user");
       } else {
         navigate("/");
       }
