@@ -37,7 +37,7 @@ const JobItem = ({ job }) => {
                 }
                 return `$${job.salary}`;
               })()}
-            </span>{" "}
+            </span>
             | {job.position}
           </h6>
           <div>

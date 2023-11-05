@@ -43,7 +43,6 @@ export default function HomePage() {
         });
         setDataJob(res.data.data.jobList);
       } catch (error) {
-        setError(error.response.data.message);
         handleAlertStatus({ type: "error", message: "Something went wrong" });
       } finally {
         setLoading(false);

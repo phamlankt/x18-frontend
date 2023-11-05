@@ -1,26 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MapPin } from "lucide-react";
 import { Button, Modal } from "antd";
+import { useSearchParams } from "react-router-dom";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Pagination } from "antd";
 import { List } from "antd";
-import jobAPI from "../../apis/jobAPI";
 import { useNavigate } from "react-router-dom";
 import { XCircle } from "lucide-react";
-import applicationAPI from "../../apis/applicationAPI";
+import { formatDate } from "../../utils/fomatDate";
 import { CalendarCheck } from "lucide-react";
+import applicationAPI from "../../apis/applicationAPI";
+import { useContext } from "react";
+import AlertContext from "../../contexts/AlertContext/AlertContext";
+import jobAPI from "../../apis/jobAPI";
 import SearchBar from "../homePage/SearchBar";
+import Loading from "../layout/Loading";
+
+let pageSizeDefault = 1;
 
 const ListJobHaveApplied = () => {
   const navigate = useNavigate();
-  const [idToUpdate, setIdToUpdate] = useState("");
+  const { handleAlertStatus } = useContext(AlertContext);
+  const [applicationId, setapplicationId] = useState("");
   const [dataJob, setDataJob] = useState([]);
-  const [modalText, setModalText] = useState("Do you want to delete this job?");
+  const [modalText, setModalText] = useState(
+    "Do you want to delete this job ?"
+  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [spinConnect, setSpinConnect] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [checkDataJob, setCheckDataJob] = useState(true);
+  const [saveDataApplicant, setSaveDataApplicant] = useState([]);
+  const data = {};
+  searchParams.forEach((value, key) => {
+    data[key] = value;
+  });
   const antIcon = (
     <LoadingOutlined
       style={{
@@ -34,8 +51,11 @@ const ListJobHaveApplied = () => {
     applicationAPI
       .getAll()
       .then((response) => {
-        if (response.data.applicationList.data) {
+        setLoading(false);
+        console.log(response.data.data.applicationList.data);
+        if (response.data.data.applicationList.data) {
           setDataJob(response.data.data.applicationList.data);
+          setSaveDataApplicant(response.data.data.applicationList.data);
         } else {
           return;
         }
@@ -45,23 +65,38 @@ const ListJobHaveApplied = () => {
         console.log(error, 15);
       });
   }
-
   const showModal = () => {
     setOpen(true);
   };
   const handleOk = () => {
+    console.log(12);
     window.scrollTo({
       top: 0,
       behavior: "instant",
     });
+    console.log(applicationId);
     setSpinConnect(true);
     setOpen(false);
-    jobAPI
-      .remove(idToUpdate)
+    applicationAPI
+      .cancel({ applicationId })
       .then((response) => {
         console.log(response.data);
-        setOpen(false);
-        setSpinConnect(false);
+        applicationAPI
+          .getAll()
+          .then((res) => {
+            setOpen(false);
+            setSpinConnect(false);
+            console.log(res.data);
+            if (res.data.data.applicationList.data) {
+              setDataJob(res.data.data.applicationList.data);
+            } else {
+              return;
+            }
+            setCheckDataJob(false);
+          })
+          .catch((error) => {
+            console.log(error, 15);
+          });
       })
       .catch((error) => {
         console.log(error);
@@ -82,6 +117,36 @@ const ListJobHaveApplied = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+  // SEARCH AND FILTER
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const res = await jobAPI.getBySearchAndFilter({
+          search: data.search || "",
+          sectors: data.sector || "",
+          location: data.location || "",
+          sortField: data.sortField || "createdAt",
+          sortBy: data.sortBy || "desc",
+          pageSize: pageSizeDefault,
+        });
+        const dataFilter = res.data.data.jobList.jobs;
+        console.log(dataFilter);
+        const filteredArray = saveDataApplicant.filter((obj1) => {
+          return dataFilter.some((obj2) => {
+            console.log(obj1.job._id, obj2);
+            return obj2.jobId === obj1.job._id;
+          });
+        });
+        console.log(filteredArray);
+        setDataJob(filteredArray);
+      } catch (error) {
+        handleAlertStatus({ type: "error", message: "Something went wrong" });
+      } finally {
+        return;
+      }
+    };
+    getData();
+  }, [data.search, data.sector, data.location, data.sortField, data.sortBy]);
 
   return (
     <>
@@ -92,10 +157,10 @@ const ListJobHaveApplied = () => {
             style={{
               zIndex: "999",
               width: "100%",
-              height: "100vh",
+              height: "120vh",
               justifyContent: "center",
               zIndex: 50,
-              marginTop: "20px",
+              marginTop: "-30px",
               alignItems: "center",
               backgroundColor: "rgba(0, 0, 0, 0.5)",
               display: "flex",
@@ -123,85 +188,104 @@ const ListJobHaveApplied = () => {
           </p>
           <div className="content">
             <div className="Job">
-              <div className="jobIcon">
-                <List
-                  className="123"
-                  itemLayout="vertical"
-                  pagination={{
-                    position: "center",
-                  }}
-                  style={{ gridTemplatecolumns: "50% 50%" }}
-                  dataSource={currentItems}
-                  renderItem={(value) => (
-                    <div className="job">
-                      <img
-                        src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
-                        alt=""
-                      />
-                      <div>
+              {!loading ? (
+                <div className="jobIcon">
+                  <List
+                    className="123"
+                    itemLayout="vertical"
+                    pagination={{
+                      position: "center",
+                    }}
+                    style={{ gridTemplatecolumns: "50% 50%" }}
+                    dataSource={currentItems}
+                    renderItem={(value) => (
+                      <div className="job">
+                        <img src={value.companyLogoUrl} alt="" />
                         <div>
-                          <h4
-                            onClick={() => navigate(`/jobs/${value._id}`)}
-                            style={{ cursor: "pointer" }}
-                            onMouseEnter={(event) => {
-                              event.target.style.color = "blue";
-                            }}
-                            onMouseLeave={(event) => {
-                              event.target.style.color = "black";
-                            }}
-                          >
-                            {value.title.length > 40
-                              ? value.title.substr(0, 30) + "..."
-                              : value.title}
-                          </h4>
-                          <button
-                            onClick={() => showModal()}
-                            onMouseEnter={() => setIdToUpdate(value._id)}
-                          >
-                            <XCircle /> Delete
-                          </button>
-                        </div>
-                        <h6>
-                          Position: <span>Full time</span>
-                        </h6>
-                        <div className="informationJob">
-                          <p>
-                            Salary:
-                            <span>
-                              {(() => {
-                                if (value.salary == "Negotiable") {
-                                  return "Negotiable";
-                                }
-                                return `${value.salary} USD`;
-                              })()}
-                            </span>
-                          </p>
-                          <p>
-                            <MapPin />
-                            <span>Thành phố HCM</span>
-                          </p>
-                          <p>
-                            <CalendarCheck />
-                            Deadline: <span>30/12/2023</span>
-                          </p>
-                          <p style={{ width: "fit-content" }}>
-                            Status:{" "}
-                            <span style={{ color: "red" }}>{value.status}</span>
-                          </p>
+                          <div>
+                            <h4
+                              onClick={() => navigate(`/jobs/${value.job._id}`)}
+                              style={{ cursor: "pointer" }}
+                              onMouseEnter={(event) => {
+                                event.target.style.color = "blue";
+                              }}
+                              onMouseLeave={(event) => {
+                                event.target.style.color = "black";
+                              }}
+                            >
+                              {value.job.title.length > 40
+                                ? value.job.title.substr(0, 30) + "..."
+                                : value.job.title}{" "}
+                              <span style={{ fontSize: "15px", color: "red" }}>
+                                | Date Submitted :{" "}
+                                {formatDate(value.job.createdAt)}
+                              </span>
+                            </h4>
+                            <div>
+                              {value.status === "cancelled" ? (
+                                <div className="NotificationButton">
+                                  Cancelled
+                                </div>
+                              ) : (
+                                <button
+                                  className="CancelButton"
+                                  onClick={() => showModal()}
+                                  onMouseEnter={() =>
+                                    setapplicationId(value._id)
+                                  }
+                                >
+                                  <XCircle /> Cancel
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                          <h6>
+                            Position: <span>{value.position}</span>
+                          </h6>
+                          <div className="informationJob">
+                            <p>
+                              Salary:
+                              <span>
+                                {(() => {
+                                  if (value.job.salary == "Negotiable") {
+                                    return "Negotiable";
+                                  }
+                                  return `${value.job.salary} USD`;
+                                })()}
+                              </span>
+                            </p>
+                            <p>
+                              <MapPin />
+                              <span>{value.job.city}</span>
+                            </p>
+                            <p>
+                              <CalendarCheck />
+                              Deadline:
+                              <span>{formatDate(value.job.deadline)}</span>
+                            </p>
+                            <p style={{ width: "fit-content" }}>
+                              Status:
+                              <span style={{ color: "red" }}>
+                                {value.job.status}
+                              </span>
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                />
-                <Pagination
-                  style={{ marginTop: "10px", display: "flex" }}
-                  current={currentPage}
-                  pageSize={pageSize}
-                  total={totalItems}
-                  onChange={handlePageChange}
-                  position="center"
-                />
-              </div>
+                    )}
+                  />
+                  <Pagination
+                    style={{ marginTop: "10px", display: "flex" }}
+                    current={currentPage}
+                    pageSize={pageSize}
+                    total={totalItems}
+                    onChange={handlePageChange}
+                    position="center"
+                  />
+                </div>
+              ) : (
+                <Loading />
+              )}
             </div>
           </div>
         </div>
