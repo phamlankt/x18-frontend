@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import applicationAPI from "../../apis/applicationAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import userAPI from "../../apis/userAPI";
@@ -13,6 +14,7 @@ function ApplicationForm({ setApplication }) {
   const [documents, setDocuments] = useState(["CV", "Cover Letter"]);
   const [uploadedDocuments, setUploadedDocuments] = useState([]);
   const jobId = useParams().jobId;
+  const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
   const initialValues = {
     CV: "",
@@ -26,16 +28,22 @@ function ApplicationForm({ setApplication }) {
   });
 
   function onSubmit(fields, { setStatus, setSubmitting, resetForm }) {
-    setStatus();
-    console.log("fields",fields)
-    const formData = new FormData();
-    for (let i = 0; i < uploadedDocuments.length; i++) {
-      formData.append("documents", uploadedDocuments[i].file);
-      formData.append(`documentNames`, uploadedDocuments[i].name);
+    if (auth.user.fullName) {
+      setStatus();
+      const formData = new FormData();
+      for (let i = 0; i < uploadedDocuments.length; i++) {
+        formData.append("documents", uploadedDocuments[i].file);
+        formData.append(`documentNames`, uploadedDocuments[i].name);
+      }
+      formData.append(`jobId`, jobId);
+      formData.append(`note`, fields.note);
+      createApplication(formData);
+    } else {
+      handleAlertStatus({
+        type: "info",
+        message: "You need to update your Profile in order to continue!",
+      });
     }
-    formData.append(`jobId`, jobId);
-    formData.append(`note`, fields.note);
-    createApplication(formData);
   }
 
   const addAnotherDocument = () => {
@@ -69,7 +77,6 @@ function ApplicationForm({ setApplication }) {
     }
   };
 
- 
   return (
     <Formik
       enableReinitialize
