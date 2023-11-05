@@ -264,120 +264,114 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                       isEditMode={true}
                     />
                   ))}
+                  <div className="form-row">
+                    <div className="form-group col">
+                      <label
+                        htmlFor="businessSector"
+                        onClick={() => setFieldTouched("businessSector", true)}
+                      >
+                        Business Sectors:
+                      </label>
 
+                      <Select
+                        id="businessSector"
+                        name="businessSector"
+                        mode="tags"
+                        style={{
+                          width: "100%",
+                          backgroundColor: "white",
+                          margin: " 4px 0px",
+                          borderRadius: "4px",
+                        }}
+                        bordered={false}
+                        allowClear={true}
+                        // maxTagCount={3}
+                        placeholder="Choose your sectors"
+                        onChange={(e) => {
+                          setSectors(e);
+                          setFieldValue("businessSector", e);
+                        }}
+                        value={sectors}
+                        options={bsOptions.map((sector) => ({
+                          label: sector.name,
+                          value: sector.name,
+                        }))}
+                      />
+                      {errors.businessSector && touched.businessSector && (
+                        <p className="text-danger form-error">
+                          {errors.businessSector}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                   {auth.user.roleName === "recruiter" && (
-                    <>
-                      <div className="form-row">
-                        <div className="form-group col">
-                          <label
-                            htmlFor="businessSector"
-                            onClick={() =>
-                              setFieldTouched("businessSector", true)
-                            }
-                          >
-                            Business Sectors:
-                          </label>
+                    <div className="form-row">
+                      <div className="form-group col">
+                        <div className="form-group row">
+                          <p>
+                            Company Logo:{" "}
+                            <i style={{ fontSize: "12px" }}>
+                              (Recommended scale: 1:1)
+                            </i>
+                          </p>
 
-                          <Select
-                            id="businessSector"
-                            name="businessSector"
-                            mode="tags"
-                            style={{
-                              width: "100%",
-                              backgroundColor: "white",
-                              margin: " 4px 0px",
-                              borderRadius: "4px",
-                            }}
-                            bordered={false}
-                            allowClear={true}
-                            // maxTagCount={3}
-                            placeholder="Choose your sectors"
-                            onChange={(e) => {
-                              setSectors(e);
-                              setFieldValue("businessSector", e);
-                            }}
-                            value={sectors}
-                            options={bsOptions.map((sector) => ({
-                              label: sector.name,
-                              value: sector.name,
-                            }))}
-                          />
-                          {errors.businessSector && touched.businessSector && (
-                            <p className="text-danger form-error">
-                              {errors.businessSector}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="form-row">
-                        <div className="form-group col">
-                          <div className="form-group row">
-                            <p>
-                              Company Logo:{" "}
-                              <i style={{ fontSize: "12px" }}>
-                                (Recommended scale: 1:1)
-                              </i>
-                            </p>
-
-                            <div className="d-grid justify-content-center">
-                              <label
-                                htmlFor="companyLogo"
-                                onClick={() =>
-                                  setFieldTouched("companyLogo", true)
-                                }
-                              >
-                                {" "}
-                                {logoReview ? (
-                                  <img
-                                    src={logoReview}
-                                    alt="logo review"
-                                    style={{
-                                      width: 150,
-                                      height: 150,
-                                      padding: 0,
-                                    }}
-                                  />
-                                ) : (
-                                  <div className="form-upload">
-                                    <p>click to upload</p>
-                                  </div>
-                                )}
-                              </label>
-                              {errors.companyLogo && touched.companyLogo && (
-                                <p className="text-danger form-error">
-                                  {errors.companyLogo}
-                                </p>
-                              )}
-                            </div>
-
-                            <input
-                              placeholder="logo"
-                              type="file"
-                              accept="image/*"
-                              id="companyLogo"
-                              name="companyLogo"
-                              style={{ display: "none" }}
-                              className={
-                                "form-control" +
-                                (errors.companyLogo && touched.companyLogo
-                                  ? " is-invalid "
-                                  : "")
+                          <div className="d-grid justify-content-center">
+                            <label
+                              htmlFor="companyLogo"
+                              onClick={() =>
+                                setFieldTouched("companyLogo", true)
                               }
-                              onChange={(e) => {
-                                setFieldValue("companyLogo", e.target.files[0]);
-                                setLogoFile(e.target.files[0]);
-                                e.target.files[0]
-                                  ? setLogoReview(
-                                      URL.createObjectURL(e.target.files[0])
-                                    )
-                                  : setLogoReview("");
-                              }}
-                            />
+                            >
+                              {" "}
+                              {logoReview ? (
+                                <img
+                                  src={logoReview}
+                                  alt="logo review"
+                                  style={{
+                                    width: 150,
+                                    height: 150,
+                                    padding: 0,
+                                  }}
+                                />
+                              ) : (
+                                <div className="form-upload">
+                                  <p>click to upload</p>
+                                </div>
+                              )}
+                            </label>
+                            {errors.companyLogo && touched.companyLogo && (
+                              <p className="text-danger form-error">
+                                {errors.companyLogo}
+                              </p>
+                            )}
                           </div>
+
+                          <input
+                            placeholder="logo"
+                            type="file"
+                            accept="image/*"
+                            id="companyLogo"
+                            name="companyLogo"
+                            style={{ display: "none" }}
+                            className={
+                              "form-control" +
+                              (errors.companyLogo && touched.companyLogo
+                                ? " is-invalid "
+                                : "")
+                            }
+                            onChange={(e) => {
+                              setFieldValue("companyLogo", e.target.files[0]);
+                              setLogoFile(e.target.files[0]);
+                              e.target.files[0]
+                                ? setLogoReview(
+                                    URL.createObjectURL(e.target.files[0])
+                                  )
+                                : setLogoReview("");
+                            }}
+                          />
                         </div>
                       </div>
-                    </>
+                    </div>
                   )}
 
                   <div className="mt-5 d-flex justify-content-evenly">
