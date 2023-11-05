@@ -33,6 +33,7 @@ const ListJobHaveApplied = () => {
   const [spinConnect, setSpinConnect] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [checkDataJob, setCheckDataJob] = useState(true);
+  const [saveDataApplicant, setSaveDataApplicant] = useState([]);
   const data = {};
   searchParams.forEach((value, key) => {
     data[key] = value;
@@ -54,6 +55,7 @@ const ListJobHaveApplied = () => {
         console.log(response.data.data.applicationList.data);
         if (response.data.data.applicationList.data) {
           setDataJob(response.data.data.applicationList.data);
+          setSaveDataApplicant(response.data.data.applicationList.data);
         } else {
           return;
         }
@@ -127,8 +129,16 @@ const ListJobHaveApplied = () => {
           sortBy: data.sortBy || "desc",
           pageSize: pageSizeDefault,
         });
-        console.log(res.data.data.jobList.jobs);
-        setDataJob(res.data.data.jobList.jobs);
+        const dataFilter = res.data.data.jobList.jobs;
+        console.log(dataFilter);
+        const filteredArray = saveDataApplicant.filter((obj1) => {
+          return dataFilter.some((obj2) => {
+            console.log(obj1.job._id, obj2);
+            return obj2.jobId === obj1.job._id;
+          });
+        });
+        console.log(filteredArray);
+        setDataJob(filteredArray);
       } catch (error) {
         handleAlertStatus({ type: "error", message: "Something went wrong" });
       } finally {
@@ -190,10 +200,7 @@ const ListJobHaveApplied = () => {
                     dataSource={currentItems}
                     renderItem={(value) => (
                       <div className="job">
-                        <img
-                          src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
-                          alt=""
-                        />
+                        <img src={value.companyLogoUrl} alt="" />
                         <div>
                           <div>
                             <h4
@@ -208,7 +215,11 @@ const ListJobHaveApplied = () => {
                             >
                               {value.job.title.length > 40
                                 ? value.job.title.substr(0, 30) + "..."
-                                : value.job.title}
+                                : value.job.title}{" "}
+                              <span style={{ fontSize: "15px", color: "red" }}>
+                                | Date Submitted :{" "}
+                                {formatDate(value.job.createdAt)}
+                              </span>
                             </h4>
                             <div>
                               {value.status === "cancelled" ? (
@@ -229,7 +240,7 @@ const ListJobHaveApplied = () => {
                             </div>
                           </div>
                           <h6>
-                            Position: <span>Full time</span>
+                            Position: <span>{value.position}</span>
                           </h6>
                           <div className="informationJob">
                             <p>
@@ -249,7 +260,7 @@ const ListJobHaveApplied = () => {
                             </p>
                             <p>
                               <CalendarCheck />
-                              Deadline:{" "}
+                              Deadline:
                               <span>{formatDate(value.job.deadline)}</span>
                             </p>
                             <p style={{ width: "fit-content" }}>
