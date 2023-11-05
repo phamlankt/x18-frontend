@@ -3,6 +3,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Table, Button, Input, Select, message } from "antd";
 import "../../scss/_userManagement.scss";
 import userAPI from "../../apis/userAPI";
+import roleAPI from "../../apis/roleAPI";
 
 const { Column } = Table;
 const { Option } = Select;
@@ -21,7 +22,7 @@ const UserManagementComponent = () => {
 
   const fetchRoles = async () => {
     try {
-      const response = await userAPI.getAllRoles();
+      const response = await roleAPI.getAll();
       if (response.data) {
         const roles = response.data.data.roleList;
         const mapping = {};
@@ -45,7 +46,7 @@ const UserManagementComponent = () => {
 
   const fetchData = async () => {
     try {
-      const response = await userAPI.getAll({
+      const response = await userAPI.getAllByRoleId({
         search: searchText,
         roles: selectedRoleId,
         currentPage,
