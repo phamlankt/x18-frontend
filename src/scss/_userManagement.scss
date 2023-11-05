@@ -1,9 +1,8 @@
-
-
 .filter-search-container {
     display: flex;
-    align-items: center; /* Center items vertically in the container */
+    align-items: center; 
     margin-bottom: 16px;
+    margin-right: 16px;
   }
   
   .search-input {
@@ -18,17 +17,20 @@
     order: 2; 
   }
 
-  .ant-btn-activate {
+  .btn-search{
+    margin-left: 16px;
+  }
+
+  .activate-button {
+    background-color: #1890ff;
+    border-color: #1890ff;
+    color: #fff;
     margin-left: 8px;
-    background-color: #1890ff; 
-    border-color: #1890ff; 
-    color: #fff; 
   }
   
-  
-  .ant-btn-deactivate {
+  .deactivate-button {
+    background-color: #f5222d;
+    border-color: #f5222d;
+    color: #fff;
     margin-left: 8px;
-    background-color: #f5222d; 
-    border-color: #f5222d; 
-    color: #fff; 
   }
