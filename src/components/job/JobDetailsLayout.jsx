@@ -47,7 +47,7 @@ function JobDetailsLayout() {
         key: "2",
         label:
           roleName === "recruiter"
-            ? "Applicants"
+            ? jobInfo.creator === auth.user._id && "Applicants"
             : roleName === "applicant" &&
               (application && application.jobId
                 ? "My Application"
