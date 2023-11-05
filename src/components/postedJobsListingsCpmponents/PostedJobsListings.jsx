@@ -21,6 +21,7 @@ import { useContext } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { formatDate } from "../../utils/fomatDate";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 
 const pageSizeDefault = 10;
 
@@ -231,7 +232,7 @@ const PostedJobsListings = () => {
                     renderItem={(value) => (
                       <div className="job" key={value.item}>
                         <img
-                          src={value.companyLogo}
+                          src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
                           alt=""
                           className="w-40 h-40"
                         />

@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import { Button, Modal } from "antd";
 import AlertContext from "../../../contexts/AlertContext/AlertContext";
+import jobAPI from "../../../apis/jobAPI";
+import { formatDate } from "../../../utils/fomatDate";
 const DeleteJobModal = ({ job }) => {
   const { handleAlertStatus } = useContext(AlertContext);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [reason, setReason] = useState("");
+  const [reason, setReason] = useState(job?.removeDescription || "");
 
   const showModal = () => {
     setOpen(true);
@@ -14,18 +16,27 @@ const DeleteJobModal = ({ job }) => {
   const handleOk = async () => {
     try {
       setLoading(true);
-      ///gọi api cập nhật job
-
-      /// xử lý client
-
-      /// thông báo thành công
-      handleAlertStatus("success", "Remove job successfully!");
-      console.log(reason);
-    } catch (error) {
-      handleAlertStatus(
-        "error",
-        error.response.data.message || "Remove job failed!"
+      //call api
+      const res = await jobAPI.adminRemove({ jobId: job._id, reason });
+      //update client
+      job.updateDataFn((prevList) =>
+        prevList.map((job) =>
+          job._id !== res.data.data.jobInfo._id
+            ? job
+            : {
+                ...res.data.data.jobInfo,
+                createdAt: formatDate(res.data.data.jobInfo.createdAt),
+                deadline: formatDate(res.data.data.jobInfo.deadline),
+              }
+        )
       );
+
+      handleAlertStatus({
+        type: "success",
+        message: "Remove job sucessfully!",
+      });
+    } catch (error) {
+      handleAlertStatus({ type: "error", message: "Remove job failed!" });
     } finally {
       setTimeout(() => {
         setOpen(false);
@@ -33,6 +44,7 @@ const DeleteJobModal = ({ job }) => {
       }, 2000);
     }
   };
+
   const handleCancel = () => {
     setOpen(false);
   };
