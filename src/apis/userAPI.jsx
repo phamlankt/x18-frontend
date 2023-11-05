@@ -1,13 +1,15 @@
 import axiosInstance from "./axiosInstance";
 
 const userAPI = {
-  // getById: () => axiosInstance.get("/users/getById"),
-  getAll: (values) =>
+  getAllByRoleId: (query) =>
     axiosInstance.get(
-      `/admin/users/?search=${values.search}&roles=${values.roles}&pageSize=${values.pageSize}&currentPage=${values.currentPage}`
+      `/admin/users/?search=${query.search || ""}&roles=${
+        query.roles
+      }&currentPage=${query.currentPage || 1}&pageSize=${query.pageSize || 10}`
     ),
-  getAllRoles: () => axiosInstance.get("/role"),
+  // getById: () => axiosInstance.get("/users/getById"),
   create: (values) => axiosInstance.post("/users/create", values),
+  // create: (values) => axiosInstance.post("/users/create", values),
   update: (values) => axiosInstance.put("/users/update", values),
   changePassword: (values) =>
     axiosInstance.put("/users/changePassword", values),

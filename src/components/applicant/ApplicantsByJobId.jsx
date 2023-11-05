@@ -64,9 +64,11 @@ function ApplicantsByJobId() {
               <div key={attachment.name}>
                 <a
                   className="link-primary text-decoration-underline"
-                  href={attachment.url}
+                  href={attachment.path}
                 >
-                  {capitalizeFirstLetter(attachment.name)}
+                  {capitalizeFirstLetter(attachment.fileName.substring(
+                    attachment.fileName.indexOf("-") + 1
+                  ))}
                 </a>
               </div>
             );

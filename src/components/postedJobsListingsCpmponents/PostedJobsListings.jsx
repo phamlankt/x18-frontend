@@ -19,7 +19,9 @@ import { Dropdown, Menu } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { useContext } from "react";
 import { DownOutlined } from "@ant-design/icons";
+import { formatDate } from "../../utils/fomatDate";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 
 const pageSizeDefault = 10;
 
@@ -35,8 +37,11 @@ const PostedJobsListings = () => {
   const [dataJob, setDataJob] = useState([]);
   const [jobId, setjobId] = useState("");
   const [checkDataJob, setCheckDataJob] = useState(true);
-  const [currentPageToFilter, setCurrentPageToFilter] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const data = {};
+  searchParams.forEach((value, key) => {
+    data[key] = value;
+  });
 
   const antIcon = (
     <LoadingOutlined
@@ -109,41 +114,27 @@ const PostedJobsListings = () => {
     setOpen(false);
   };
 
-  const data = {};
-  searchParams.forEach((value, key) => {
-    data[key] = value;
-  });
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     try {
-  //       const res = await jobAPI.getBySearchAndFilter({
-  //         search: data.search || "",
-  //         sectors: data.sector || "",
-  //         location: data.location || "",
-  //         sortField: data.sortField || "createdAt",
-  //         sortBy: data.sortBy || "desc",
-  //         currentPage: currentPageToFilter,
-  //         pageSize: pageSizeDefault,
-  //       });
-  //       console.log(res.data.data.jobList.jobs);
-  //       setDataJob(res.data.data.jobList.jobs);
-  //     } catch (error) {
-  //       setError(error.response.data.message);
-  //       handleAlertStatus({ type: "error", message: "Something went wrong" });
-  //     } finally {
-  //       return;
-  //     }
-  //   };
-  //   getData();
-  // }, [
-  //   data.search,
-  //   data.sector,
-  //   data.location,
-  //   data.sortField,
-  //   data.sortBy,
-  //   currentPageToFilter,
-  // ]);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const res = await jobAPI.getBySearchAndFilter({
+          search: data.search || "",
+          sectors: data.sector || "",
+          location: data.location || "",
+          sortField: data.sortField || "createdAt",
+          sortBy: data.sortBy || "desc",
+          pageSize: pageSizeDefault,
+        });
+        console.log(res.data.data.jobList.jobs);
+        setDataJob(res.data.data.jobList.jobs);
+      } catch (error) {
+        handleAlertStatus({ type: "error", message: "Something went wrong" });
+      } finally {
+        return;
+      }
+    };
+    getData();
+  }, [data.search, data.sector, data.location, data.sortField, data.sortBy]);
 
   if (checkDataJob) {
     try {
@@ -160,7 +151,6 @@ const PostedJobsListings = () => {
           setCheckDataJob(false);
         })
         .catch((error) => {
-          console.log(error, 15);
           setCheckDataJob(false);
         });
     } catch (e) {
@@ -168,9 +158,8 @@ const PostedJobsListings = () => {
     }
   }
 
-  const pageSize = 5; // Số lượng mục trên mỗi trang
-  const totalItems = dataJob.length; // Tổng số mục trong danh sách của bạn
-  // Tính toán mục trên trang hiện tại
+  const pageSize = 5;
+  const totalItems = dataJob.length;
   const startItemIndex = (currentPage - 1) * pageSize;
   const endItemIndex = startItemIndex + pageSize;
   const currentItems = dataJob.slice(startItemIndex, endItemIndex);
@@ -207,7 +196,7 @@ const PostedJobsListings = () => {
             style={{
               zIndex: "999",
               width: "100%",
-              height: "100vh",
+              height: "110vh",
               justifyContent: "center",
               zIndex: 50,
               marginTop: "-30px",
@@ -274,7 +263,7 @@ const PostedJobsListings = () => {
                             </div>
                           </div>
                           <h6>
-                            Position: <span>Full time</span>
+                            Position: <span>{value.position}</span>
                           </h6>
                           <div className="informationJob">
                             <p>
@@ -290,14 +279,15 @@ const PostedJobsListings = () => {
                             </p>
                             <p>
                               <MapPin />
-                              <span>Thành phố HCM</span>
+                              <span>{value.city}</span>
                             </p>
                             <p>
                               <CalendarCheck />
-                              Hạn Nộp: <span>30/12/2023</span>
+                              Deadline:
+                              <span>{formatDate(value.deadline)}</span>
                             </p>
                             <p style={{ width: "fit-content" }}>
-                              Status:{" "}
+                              Status:
                               <span style={{ color: "red" }}>
                                 {value.status}
                               </span>

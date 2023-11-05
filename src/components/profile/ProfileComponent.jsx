@@ -13,15 +13,16 @@ import {
 import businessSectorAPI from "../../apis/businessSectorAPI";
 import userAPI from "../../apis/userAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
+import { Select } from "antd";
 
 function ProfileComponent({ onOpenResetPasswordModal }) {
-  // console.log("auth.user",auth.user&&auth.user)
   const { auth, handleLogin } = useContext(AuthContext);
   const [logoFile, setLogoFile] = useState();
   const [logoReview, setLogoReview] = useState(auth.user.companyLogoUrl);
   const { handleAlertStatus } = useContext(AlertContext);
   const [isLoading, setLoading] = useState(false);
   const roleName = auth.user.roleName;
+  const [sectors, setSectors] = useState(auth.user.sectors);
 
   const initialValues_recruiter = {
     companyName: auth.user.companyName,
@@ -107,7 +108,6 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
 
   function onSubmit(fields, { setStatus, setSubmitting, resetForm }) {
     setStatus();
-    console.log("fields", fields);
     const userInfo_recruiter = {
       id: auth.user._id,
       userId: auth.user._id,
@@ -147,7 +147,6 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
         : auth.user.roleName === "applicant"
         ? userInfo_applicant
         : userInfo_admin;
-    console.log("userInfo", userInfo);
     updateUser(userInfo);
   }
 
@@ -194,26 +193,10 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
       value: businessSector.name,
     });
   });
-
-  const profileModalFormItems_recruiter_new = [
-    ...profileModalFormItems_recruiter,
-    {
-      label: "Business Sector",
-      fieldName: "businessSector",
-      as: "select",
-      options: bsOptions,
-    },
-  ];
-
-  const profileModalFormItems_applicant_new = [
-    ...profileModalFormItems_applicant,
-    {
-      label: "Business Sector",
-      fieldName: "businessSector",
-      as: "select",
-      options: bsOptions,
-    },
-  ];
+  const handleChangeSector = (e) => {
+    console.log("e", e);
+    setSectors(e);
+  };
 
   const handleFileUpload = async (file) => {
     if (!file) return;
@@ -268,9 +251,9 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                     <h4 className="text-right">Profile Settings</h4>
                   </div>
                   {(auth.user.roleName === "recruiter"
-                    ? profileModalFormItems_recruiter_new
+                    ? profileModalFormItems_recruiter
                     : auth.user.roleName === "applicant"
-                    ? profileModalFormItems_applicant_new
+                    ? profileModalFormItems_applicant
                     : profileModalFormItems_default
                   ).map((item) => (
                     <ModalFormItem
@@ -281,11 +264,49 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                       isEditMode={true}
                     />
                   ))}
+                  <div className="form-row">
+                    <div className="form-group col">
+                      <label
+                        htmlFor="businessSector"
+                        onClick={() => setFieldTouched("businessSector", true)}
+                      >
+                        Business Sectors:
+                      </label>
 
+                      <Select
+                        id="businessSector"
+                        name="businessSector"
+                        mode="tags"
+                        style={{
+                          width: "100%",
+                          backgroundColor: "white",
+                          margin: " 4px 0px",
+                          borderRadius: "4px",
+                        }}
+                        bordered={false}
+                        allowClear={true}
+                        // maxTagCount={3}
+                        placeholder="Choose your sectors"
+                        onChange={(e) => {
+                          setSectors(e);
+                          setFieldValue("businessSector", e);
+                        }}
+                        value={sectors}
+                        options={bsOptions.map((sector) => ({
+                          label: sector.name,
+                          value: sector.name,
+                        }))}
+                      />
+                      {errors.businessSector && touched.businessSector && (
+                        <p className="text-danger form-error">
+                          {errors.businessSector}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                   {auth.user.roleName === "recruiter" && (
                     <div className="form-row">
                       <div className="form-group col">
-                        {/* <label htmlFor="companyLogo"> Company Logo</label> */}
                         <div className="form-group row">
                           <p>
                             Company Logo:{" "}
