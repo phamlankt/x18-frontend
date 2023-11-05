@@ -6,20 +6,35 @@ import ApplicantsByJobId from "../applicant/ApplicantsByJobId";
 import ApplicationByJobId from "../application/ApplicationByJobId";
 import { useParams } from "react-router-dom";
 import jobAPI from "../../apis/jobAPI";
+import applicationAPI from "../../apis/applicationAPI";
 
 function JobDetailsLayout() {
   const { auth } = useContext(AuthContext);
   const roleName = auth.user.roleName;
   const [jobInfo, setJobInfo] = useState();
   const jobId = useParams().jobId;
-  
+  const [application, setApplication] = useState({});
+  useEffect(() => {
+    getApplicationByJobIdAndApplicantID(1, 10);
+    getJobById();
+  }, []);
+
+  const getApplicationByJobIdAndApplicantID = async () => {
+    try {
+      const response = await applicationAPI.getApplicationByJobIdForApplicant(
+        jobId
+      );
+      if (response.data.data.applicationInfo)
+        setApplication(response.data.data.applicationInfo);
+    } catch (error) {
+      console.log(error.response.data.error);
+    }
+  };
+
   const getJobById = async () => {
     const response = await jobAPI.getById(jobId);
     setJobInfo(response.data.data.jobInfo);
   };
-  useEffect(() => {
-    getJobById();
-  }, []);
 
   const items = [
     {
@@ -28,17 +43,25 @@ function JobDetailsLayout() {
       children: <JobDescription />,
     },
     auth.isAuthenticated &&
-    jobInfo && {
+      jobInfo && {
         key: "2",
         label:
           roleName === "recruiter"
             ? "Applicants"
-            : roleName === "applicant" && "My Application",
+            : roleName === "applicant" &&
+              (application && application.jobId
+                ? "My Application"
+                : "Application Form"),
         children:
           roleName === "recruiter" ? (
             <ApplicantsByJobId />
           ) : (
-            roleName === "applicant" && <ApplicationByJobId />
+            roleName === "applicant" && (
+              <ApplicationByJobId
+                application={application}
+                setApplication={setApplication}
+              />
+            )
           ),
       },
   ];
