@@ -10,7 +10,7 @@ function ModalFormItem({ item, isEditMode, errors, touched }) {
             <span>
               (<span className="text-danger">*</span>)
             </span>
-          )}
+          )}:
         </label>
         <Field
           name={item.fieldName}
