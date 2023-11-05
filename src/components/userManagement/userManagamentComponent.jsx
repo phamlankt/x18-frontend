@@ -9,101 +9,105 @@ const { Option } = Select;
 
 const UserManagementComponent = () => {
   const [users, setUsers] = useState([]);
-  const [filterRole, setFilterRole] = useState("all");
+  const [filterRole, setFilterRole] = useState("");
   const [searchText, setSearchText] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalCounts, setTotalCounts] = useState(0);
   const [offset, setOffset] = useState(0);
-  const [roleMapping, setRoleMapping] = useState({})
+  const [roleMapping, setRoleMapping] = useState({});
+  const [selectedRoleId, setSelectedRoleId] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
+
+  const fetchRoles = async () => {
+    try {
+      const response = await userAPI.getAllRoles();
+      if (response.data) {
+        const roles = response.data.data.roleList;
+        const mapping = {};
+        roles.forEach((role) => {
+          mapping[role.name] = role._id;
+        });
+        setRoleMapping(mapping);
+      }
+    } catch (error) {
+      console.error("Error fetching roles:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await userAPI.getAll(
-          searchText,
-          filterRole,
-          currentPage,
-          pageSize
-        );
-        console.log("API Response:", response);
-  
-        if (response.data && response.data.userList) {
-          const userList = response.data.userList;
-          console.log("test:", userList);
-          if (userList.users) {
-            const newUsers = userList.users.map((user) => ({
-              ...user,
-              roleName: roleMapping[user.roleId] || 'Unknown Role',
-            }));
-            const newTotalCounts = userList.pagination.totalCounts;
-          setUsers(newUsers);
-          setTotalCounts(newTotalCounts);
-          setOffset(newUsers.length);
-        } else {
-          console.error("API response is missing 'users'.");
+    fetchRoles();
+  }, []);
+
+  useEffect(() => {
+    fetchData(selectedRoleId);
+  }, [selectedRoleId, searchText, currentPage, pageSize]);
+
+  const fetchData = async () => {
+    try {
+      const response = await userAPI.getAll({
+        search: searchText,
+        roles: selectedRoleId,
+        currentPage,
+        pageSize,
+      });
+
+      if (response.data && response.data.data.userList) {
+        const userList = response.data.data.userList;
+        if (userList.users) {
+          setUsers(userList.users);
+          setTotalCounts(userList.pagination.totalCounts);
+          setOffset(userList.pagination.offset);
         }
-      } else {
-        console.error("API response is missing 'userList'.");
       }
     } catch (error) {
       console.error("API request error:", error);
     }
   };
-  
+
+  useEffect(() => {
     fetchData();
-  }, [searchText, filterRole, currentPage, pageSize]);
-  
-
-  // Fetch roles from your API
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const response = await userAPI.getAllRoles();
-        if (response.data) {
-          const roles = response.data.roles;
-          const mapping = {};
-          roles.forEach((role) => {
-            mapping[role.roleId] = role.name;
-          });
-
-          setRoleMapping(mapping);
-        }
-      } catch (error) {
-        console.error("Error fetching roles:", error);
-      }
-    };
-
-    fetchRoles();
-  }, []);
-
-  useEffect(() => {
-    const filtered = users.filter((user) => {
-      const roleMatch = filterRole === 'all' || user.role === filterRole;
-      const nameMatch = user.fullName.toLowerCase().includes(searchText.toLowerCase());
-      return roleMatch && nameMatch;
-    });
-    setFilteredUsers(filtered);
-  }, [users, searchText, filterRole]);
+  }, [selectedRoleId, searchText, currentPage, pageSize]);
 
   const handleSearch = (value) => {
     setSearchText(value);
   };
 
+  useEffect(() => {
+    fetchData(selectedRoleId);
+  }, [selectedRoleId, searchText, currentPage, pageSize]);
+
+  const handleSelectRole = (selectedRoleName) => {
+    setFilterRole(selectedRoleName);
+    const selectedRoleId = roleMapping[selectedRoleName] || "";
+    setSelectedRoleId(selectedRoleId);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [searchText, currentPage, pageSize]);
+
+  useEffect(() => {
+    const filtered = users
+      .filter((user) => filterRole === "" || user.role === filterRole)
+      .filter((user) =>
+        user.email.toLowerCase().includes(searchText.toLowerCase())
+      );
+    setFilteredUsers(filtered);
+  }, [users, searchText, filterRole]);
+
   const handleActivateDeactivate = (userId) => {
     const userToUpdate = users.find((user) => user._id === userId);
-
     if (userToUpdate) {
-      const newStatus = userToUpdate.status === 'active' ? 'inactive' : 'active';
+      const newStatus =
+        userToUpdate.status === "active" ? "inactive" : "active";
       setTimeout(() => {
         userToUpdate.status = newStatus;
         setUsers([...users]);
-
-        if (newStatus === 'active') {
-          message.success('User activated successfully');
+        if (newStatus === "active") {
+          message.success("User activated successfully");
         } else {
-          message.success('User deactivated successfully');
+          message.success("User deactivated successfully");
         }
       }, 1000);
     }
@@ -115,40 +119,54 @@ const UserManagementComponent = () => {
 
   const handlePageChange = (page, pageSize) => {
     setCurrentPage(page);
+    setOffset((page - 1) * pageSize);
+    fetchData(selectedRoleId);
   };
-  console.log("Users:", users);
-console.log("Filtered Users:", filteredUsers);
 
   return (
     <div>
       <h2>Users Management</h2>
+      <br></br>
       <div className="filter-search-container">
         <Input
           className="search-input"
-          placeholder="Search by name or email"
+          placeholder="Search by email"
           prefix={<SearchOutlined />}
           onChange={(e) => handleSearch(e.target.value)}
         />
-         <Select
+        <Select
           style={{ width: 200 }}
           value={filterRole}
-          onChange={(value) => setFilterRole(value)}
+          onChange={handleSelectRole}
         >
-          <Option key="all" value="all">
+          <Option key="all" value="">
             All Roles
           </Option>
-          {Object.entries(roleMapping).map(([roleId, roleName]) => (
-            <Option key={roleId} value={roleId}>
-              {roleName}
+          {Object.entries(roleMapping).map(([roleName, roleId]) => (
+            <Option key={roleId} value={roleName}>
+              {roleName.charAt(0).toUpperCase() + roleName.slice(1)}{" "}
             </Option>
           ))}
         </Select>
-        <Button className="btn-search" type="primary">
-          Search
-        </Button>
       </div>
-      <Table dataSource={filteredUsers} rowKey="id">
-        <Column title="No" dataIndex="id" key="id" />
+      <Table
+        dataSource={filteredUsers}
+        rowKey="_id"
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: totalCounts,
+          onChange: handlePageChange,
+        }}
+      >
+        <Column
+          title="No."
+          key="no"
+          render={(text, record, index) => {
+            const currentNo = index + 1 + (currentPage - 1) * pageSize;
+            return <span>{currentNo}</span>;
+          }}
+        />
         <Column title="Full Name" dataIndex="fullName" key="fullName" />
         <Column title="Email" dataIndex="email" key="email" />
         <Column
@@ -157,15 +175,28 @@ console.log("Filtered Users:", filteredUsers);
           key="phoneNumber"
         />
         <Column
-          title="Role"
-          dataIndex="roleId"
-          key="role"
-          render={(roleId) => {
-            const roleName = roleMapping[roleId] || 'Unknown Role';
-            return <span>{roleName}</span>;
-          }}
+  title="Role"
+  dataIndex="roleId"
+  key="roleId"
+  render={(text, record) => (
+    <span>
+      {roleMapping[record.roleId]
+        ? roleMapping[record.roleId].charAt(0).toUpperCase() +
+          roleMapping[record.roleId].slice(1)
+        : "Unknown Role"}
+    </span>
+  )}
+/>
+
+
+        <Column
+          title="Status"
+          dataIndex="status"
+          key="status"
+          render={(text, record) => (
+            <span>{record.status === "active" ? "Active" : "Inactive"}</span>
+          )}
         />
-        <Column title="Status" dataIndex="status" key="status" />
         <Column
           title="Action"
           key="action"
