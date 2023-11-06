@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Form, Input, Select, Button } from 'antd';
+import { Form, Input, Select, Button, Alert } from 'antd';
 import AuthContext from "../../contexts/AuthContext/AuthContext";
 import { useNavigate } from "react-router-dom";
 import adminAPI from "../../apis/adminAPI";
@@ -14,9 +14,6 @@ const RegisterAdmin = () => {
     const { handleLogin } = useContext(AuthContext);
 
     const onFinish = async (data) => {
-        console.log(data.email);
-        console.log(data.password);
-        console.log(data.role);
         try {
             setLoading(true);
             setError(null);
@@ -34,7 +31,7 @@ const RegisterAdmin = () => {
                 localStorage.setItem("accessToken", response.data.data.accessToken);
 
                 await handleLogin();
-                navigate("/admin/user");
+                navigate("/admin/users");
             }
         } catch (error) {
             setError(error.response.data.error);
@@ -122,6 +119,16 @@ const RegisterAdmin = () => {
                             {loading ? "Loading" : "Register"}
                         </Button>
                     </div>
+                    {error && (
+                        <Alert
+                            message="Error"
+                            description={error}
+                            type="error"
+                            showIcon
+                            closable
+                            onClose={() => setError(null)}
+                        />
+                    )}
                 </Form.Item>
             </Form>
         </div>

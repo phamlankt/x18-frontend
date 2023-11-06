@@ -1,9 +1,9 @@
 import React from "react";
 import AdminMasterLayout from "../../components/layout/AdminMasterLayout";
-import AdminUser from "../../components/admin/User";
+import UserList from "../../components/admin/User";
 
 function User() {
-  return <AdminMasterLayout ContentComponent={<AdminUser />} />
+  return <AdminMasterLayout ContentComponent={<UserList />} />
 }
 
 export default User;
