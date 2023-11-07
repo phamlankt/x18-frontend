@@ -148,8 +148,10 @@ const UserManagementComponent = () => {
       <Modal
         title="Admin Profile"
         open={isModalVisible}
-        onOk={() => setIsModalVisible(false)}
+        centered
+        width={960}
         onCancel={() => setIsModalVisible(false)}
+        footer={null}
       >
         <ProfileModal />
       </Modal>

@@ -54,8 +54,8 @@ const ProfileModal = () => {
             <div style={{ flex: 1 }}>
                 <Form >
                     <Form.Item
+                        style={{ marginTop: '32px' }}
                         name="avatar"
-                        label="Avatar"
                         valuePropName="fileList"
                         getValueFromEvent={handleFileUpload}
                     >
@@ -81,7 +81,7 @@ const ProfileModal = () => {
                     labelCol={{ span: 4 }}
                     wrapperCol={{ span: 12 }}
                     initialValues={{
-                        fullName: "auth.user.fullName",
+                        fullName: auth.user.fullName,
                         email: auth.user.email,
                         phoneNumber: auth.user.phoneNumber,
                     }}
