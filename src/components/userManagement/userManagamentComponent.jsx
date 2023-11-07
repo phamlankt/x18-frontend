@@ -22,7 +22,7 @@ const UserManagementComponent = () => {
   const [selectedRoleId, setSelectedRoleId] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { auth, handleLogin } = useContext(AuthContext);
+  const { auth } = useContext(AuthContext);
 
   const fetchRoles = async () => {
     try {
@@ -132,19 +132,21 @@ const UserManagementComponent = () => {
 
   return (
     <div>
-      <Button
-        style={{
-          position: 'absolute',
-          top: 8,
-          right: 160,
-          zIndex: 1,
-        }}
-        className="mt-2"
-        type="primary"
-        onClick={() => setIsModalVisible(true)}
-      >
-        Upload Profile
-      </Button>
+      {auth.user.roleName === 'admin' || auth.user.roleName === 'superadmin' ? (
+        <Button
+          style={{
+            position: 'absolute',
+            top: 8,
+            right: 160,
+            zIndex: 1,
+          }}
+          className="mt-2"
+          type="primary"
+          onClick={() => setIsModalVisible(true)}
+        >
+          Upload Profile
+        </Button>
+      ) : null}
       <Modal
         title="Admin Profile"
         open={isModalVisible}
@@ -153,7 +155,7 @@ const UserManagementComponent = () => {
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-        <ProfileModal />
+        <ProfileModal isOpenModal={setIsModalVisible} />
       </Modal>
 
       <h2>Users Management</h2>

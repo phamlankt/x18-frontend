@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
-import { Form, Input, Button, Upload, Avatar } from 'antd';
+import { Form, Input, Button, Upload, Avatar, message, Spin, Alert } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import adminAPI from "../../apis/adminAPI";
 
 
 
 
-const ProfileModal = () => {
+const ProfileModal = ({ isOpenModal }) => {
     const { auth, handleLogin } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -21,8 +21,9 @@ const ProfileModal = () => {
                 fullName: data.fullName,
                 phoneNumber: data.phoneNumber,
             });
-            console.log(auth.user.fullName);
             handleLogin();
+            message.success('Profile updated successfully', 3);
+            isOpenModal(false);
         } catch (error) {
             setError(error.response.data.error);
         }
@@ -45,12 +46,10 @@ const ProfileModal = () => {
         }
     };
 
-    useEffect(() => {
-        console.log(!auth.user.fullName);
-    }, [])
 
     return (
         <div style={{ display: 'flex' }}>
+            {error && <Alert message={error} type="error" showIcon closable onClose={() => setError(null)} />}
             <div style={{ flex: 1 }}>
                 <Form >
                     <Form.Item
@@ -117,8 +116,8 @@ const ProfileModal = () => {
                         <Input />
                     </Form.Item>
                     <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
-                        <Button type="primary" htmlType="submit">
-                            Update Profile
+                        <Button type="primary" htmlType="submit" icon={loading ? <Spin /> : null}>
+                            {loading ? <Spin /> : "Update Profile"}
                         </Button>
                     </Form.Item>
                 </Form>
