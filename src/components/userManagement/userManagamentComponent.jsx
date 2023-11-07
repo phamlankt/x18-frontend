@@ -100,8 +100,25 @@ const UserManagementComponent = () => {
         )
     );
   };
+  const regenerateTable = () => {
+    setFilteredUsers(
+      users
+        .filter((user) => filterRole === "" || user.roleId === selectedRoleId)
+        .filter((user) =>
+          user.email.toLowerCase().includes(searchText.toLowerCase())
+        )
+    );
+  };
 
   const handleSelectRole = (selectedRoleName) => {
+    if (selectedRoleName === "") {
+      setFilterRole(""); // Clear the filter
+      setSelectedRoleId(""); // Set selectedRoleId to an empty string
+    } else {
+      setFilterRole(selectedRoleName);
+      setSelectedRoleId(roleNameToIdMap[selectedRoleName]);
+    }
+  };
     if (selectedRoleName === "") {
       setFilterRole(""); // Clear the filter
       setSelectedRoleId(""); // Set selectedRoleId to an empty string
