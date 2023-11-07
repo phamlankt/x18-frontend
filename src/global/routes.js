@@ -18,18 +18,6 @@ export const routes = [
     component: <Home />,
     isPrivate: false,
   },
-  // {
-  //   path: "/admin/userManagement",
-  //   component: <UserManagement />,
-  //   isPrivate: true,
-  //   isAdmin: true,
-  // },
-  // {
-  //   path: "/admin/job",
-  //   component: <AdminJob />,
-  //   isPrivate: false,
-  //   isAdmin: false,
-  // },
   {
     path: "/admin",
     component: <BusinessSector />,
@@ -41,13 +29,12 @@ export const routes = [
     component: <Job />,
     isPrivate: true,
     isAdmin: true,
-
   },
   {
     path: "/admin/user",
     component: <User />,
     isPrivate: true,
-    isSuperAdmin: true
+    isSuperAdmin: true,
   },
   {
     path: "/admin/price",
