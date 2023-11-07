@@ -52,7 +52,6 @@ const ListJobHaveApplied = () => {
       .getAll()
       .then((response) => {
         setLoading(false);
-        console.log(response.data.data.applicationList.data);
         if (response.data.data.applicationList.data) {
           setDataJob(response.data.data.applicationList.data);
           setSaveDataApplicant(response.data.data.applicationList.data);
@@ -128,16 +127,17 @@ const ListJobHaveApplied = () => {
           sortField: data.sortField || "createdAt",
           sortBy: data.sortBy || "desc",
           pageSize: pageSizeDefault,
+          currentPage: currentPage,
         });
         const dataFilter = res.data.data.jobList.jobs;
-        console.log(dataFilter);
+        console.log(res.data);
         const filteredArray = saveDataApplicant.filter((obj1) => {
           return dataFilter.some((obj2) => {
-            console.log(obj1.job._id, obj2);
-            return obj2.jobId === obj1.job._id;
+            console.log(obj1.job._id, obj2._id);
+            return obj2._id === obj1.job._id;
           });
         });
-        console.log(filteredArray);
+        console.log(filteredArray);                  
         setDataJob(filteredArray);
       } catch (error) {
         handleAlertStatus({ type: "error", message: "Something went wrong" });
@@ -206,17 +206,28 @@ const ListJobHaveApplied = () => {
                             <h4
                               onClick={() => navigate(`/jobs/${value.job._id}`)}
                               style={{ cursor: "pointer" }}
-                              onMouseEnter={(event) => {
-                                event.target.style.color = "blue";
-                              }}
-                              onMouseLeave={(event) => {
-                                event.target.style.color = "black";
-                              }}
                             >
-                              {value.job.title.length > 40
-                                ? value.job.title.substr(0, 30) + "..."
-                                : value.job.title}{" "}
-                              <span style={{ fontSize: "15px", color: "red" }}>
+                              <span
+                                onMouseEnter={(event) => {
+                                  event.target.style.color = "blue";
+                                }}
+                                onMouseLeave={(event) => {
+                                  event.target.style.color = "black";
+                                }}
+                              >
+                                {value.job.title.length > 10
+                                  ? value.job.title.substr(0, 10) + "..."
+                                  : value.job.title}{" "}
+                              </span>
+                              <span
+                                style={{ fontSize: "15px", color: "red" }}
+                                onMouseEnter={(event) => {
+                                  event.target.style.color = "blue";
+                                }}
+                                onMouseLeave={(event) => {
+                                  event.target.style.color = "red";
+                                }}
+                              >
                                 | Date Submitted :{" "}
                                 {formatDate(value.job.createdAt)}
                               </span>
@@ -240,7 +251,7 @@ const ListJobHaveApplied = () => {
                             </div>
                           </div>
                           <h6>
-                            Position: <span>{value.position}</span>
+                            Position: <span>{value.job.position}</span>
                           </h6>
                           <div className="informationJob">
                             <p>
