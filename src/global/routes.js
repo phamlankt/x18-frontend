@@ -11,6 +11,7 @@ import JobDetails from "../pages/JobDetails.jsx";
 import UpdateJob from "../pages/UpdateJob.jsx";
 import User from "../pages/admin/User.jsx";
 import Job from "../pages/admin/Job.jsx";
+import AdminRegister from "../pages/admin/Register.jsx";
 
 export const routes = [
   {
@@ -46,6 +47,12 @@ export const routes = [
   {
     path: "/admin/user",
     component: <User />,
+    isPrivate: true,
+    isSuperAdmin: true
+  },
+  {
+    path: "/admin/register",
+    component: <AdminRegister />,
     isPrivate: true,
     isSuperAdmin: true
   },
