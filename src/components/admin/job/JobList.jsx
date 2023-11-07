@@ -31,6 +31,7 @@ const dataSorts = [
 
 const JobList = ({ currentUser }) => {
   const { handleAlertStatus } = useContext(AlertContext);
+  const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [dataSectors, setDataSectors] = useState([]);
@@ -70,22 +71,28 @@ const JobList = ({ currentUser }) => {
   };
   const getJob = async (query) => {
     try {
+      setLoading(true);
       const res = await jobAPI.getJobByUserId(query);
       setJobList(res.data?.data?.jobList);
     } catch (error) {
       handleAlertStatus({ type: "error", message: "Something went wrong" });
       setErr(error?.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     const handleGetSectors = async () => {
       try {
+        setLoading(true);
         const res = await businessSectorAPI.getAll();
         setDataSectors(res.data.data.businessSectorList);
       } catch (error) {
         setErr(error?.response?.data?.message);
         handleAlertStatus({ type: "error", message: "Something went wrong" });
+      } finally {
+        setLoading(false);
       }
     };
     handleGetSectors();
@@ -208,7 +215,11 @@ const JobList = ({ currentUser }) => {
           margin: "2em 0px",
         }}
       >
-        <JobTable jobs={jobList.jobs} />
+        <JobTable
+          currentUser={currentUser}
+          loading={loading}
+          jobs={jobList.jobs}
+        />
         <div className="w-100 mt-2 d-flex justify-content-center">
           <Pagination
             defaultCurrent={1}
