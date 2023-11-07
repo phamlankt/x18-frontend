@@ -4,16 +4,34 @@ import AuthContext from "./contexts/AuthContext/AuthContext";
 import Forbidden from "./pages/Forbidden";
 
 const SuperAdminRoute = ({ component }) => {
-  const { auth } = useContext(AuthContext);
+  const { auth, handleLogin } = useContext(AuthContext);
   const { isAuthenticated, user } = auth;
 
-  if (isAuthenticated && user.roleName === "superadmin") {
-    return component;
-  } else if (isAuthenticated && user.roleName !== "superadmin") {
-    return <Forbidden />;
+  if (!isAuthenticated) {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      const userInfo = handleLogin();
+      userInfo.then(() => {
+        if (userInfo.email) {
+          checkComponent(component);
+        } else return <Navigate to="/login" />;
+      });
+    } else return <Navigate to="/login" />;
+  } else {
+    if (isAuthenticated && user.roleName === "superadmin") {
+      return component;
+    } else if (isAuthenticated && user.roleName !== "superadmin") {
+      return <Forbidden />;
+    }
   }
 
-  return <Navigate to="/login" />;
+  function checkComponent(component) {
+    if (isAuthenticated && user.roleName === "superadmin") {
+      return component;
+    } else if (isAuthenticated && user.roleName !== "superadmin") {
+      return <Forbidden />;
+    }
+  }
 };
 
 export default SuperAdminRoute;
