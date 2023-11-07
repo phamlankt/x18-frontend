@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Table, Button, Input, Select, message } from "antd";
+import { Table, Button, Input, Select, message, Modal } from "antd";
 import "../../scss/_userManagement.scss";
 import userAPI from "../../apis/userAPI";
 import roleAPI from "../../apis/roleAPI";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
+import ProfileModal from "../admin/ProfileModal";
 
 const { Column } = Table;
 const { Option } = Select;
@@ -19,6 +21,8 @@ const UserManagementComponent = () => {
   const [roleMapping, setRoleMapping] = useState({});
   const [selectedRoleId, setSelectedRoleId] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const { auth, handleLogin } = useContext(AuthContext);
 
   const fetchRoles = async () => {
     try {
@@ -124,8 +128,32 @@ const UserManagementComponent = () => {
     fetchData(selectedRoleId);
   };
 
+
+
   return (
     <div>
+      <Button
+        style={{
+          position: 'absolute',
+          top: 8,
+          right: 160,
+          zIndex: 1,
+        }}
+        className="mt-2"
+        type="primary"
+        onClick={() => setIsModalVisible(true)}
+      >
+        Upload Profile
+      </Button>
+      <Modal
+        title="Admin Profile"
+        open={isModalVisible}
+        onOk={() => setIsModalVisible(false)}
+        onCancel={() => setIsModalVisible(false)}
+      >
+        <ProfileModal />
+      </Modal>
+
       <h2>Users Management</h2>
       <br></br>
       <div className="filter-search-container">
@@ -176,18 +204,18 @@ const UserManagementComponent = () => {
           key="phoneNumber"
         />
         <Column
-  title="Role"
-  dataIndex="roleId"
-  key="roleId"
-  render={(text, record) => (
-    <span>
-      {roleMapping[record.roleId]
-        ? roleMapping[record.roleId].charAt(0).toUpperCase() +
-          roleMapping[record.roleId].slice(1)
-        : "Unknown Role"}
-    </span>
-  )}
-/>
+          title="Role"
+          dataIndex="roleId"
+          key="roleId"
+          render={(text, record) => (
+            <span>
+              {roleMapping[record.roleId]
+                ? roleMapping[record.roleId].charAt(0).toUpperCase() +
+                roleMapping[record.roleId].slice(1)
+                : "Unknown Role"}
+            </span>
+          )}
+        />
 
 
         <Column
