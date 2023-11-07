@@ -15,7 +15,7 @@ import { loginFormItems } from "../global/loginFormItems";
 import ForgotPasswordModal from "../components/forgotPassword/ForgotPasswordModal";
 
 const Login = () => {
-  const { auth } = useContext(AuthContext);
+  const { socket } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -43,6 +43,7 @@ const Login = () => {
       localStorage.setItem("accessToken", response.data.data.accessToken);
 
       const userInfo = await handleLogin();
+      socket && socket.emit("newUser", {"id":userInfo._id,"email":userInfo.email});
       if (userInfo.roleName === "superadmin" || userInfo.roleName === "admin") {
         navigate("/admin");
       } else {

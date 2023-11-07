@@ -6,31 +6,12 @@ import { capitalizeFirstLetter, formatDate } from "../../global/common";
 import { Spin } from "antd";
 import ApplicationForm from "./ApplicationForm";
 
-function ApplicationByJobId({application,setApplication}) {
+function ApplicationByJobId({ application, setApplication, jobInfo }) {
   const { handleAlertStatus } = useContext(AlertContext);
   const jobId = useParams().jobId;
   const [loading, setLoading] = useState(false);
-  // const [application, setApplication] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
 
-  // useEffect(() => {
-  //   getApplicationByJobIdAndApplicantID(1, 10);
-  // }, []);
-
-  // const getApplicationByJobIdAndApplicantID = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const response = await applicationAPI.getApplicationByJobIdForApplicant(
-  //       jobId
-  //     );
-  //     if (response.data.data.applicationInfo)
-  //       setApplication(response.data.data.applicationInfo);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     setErrorMessage(error.response.data.error);
-  //     setLoading(false);
-  //   }
-  // };
   const withdrawApplication = async (applicationId) => {
     // setLoading(true);
     await applicationAPI
@@ -92,7 +73,7 @@ function ApplicationByJobId({application,setApplication}) {
       )}
     </div>
   ) : (
-    <ApplicationForm setApplication={setApplication} />
+    <ApplicationForm setApplication={setApplication} jobInfo={jobInfo} />
   );
 }
 

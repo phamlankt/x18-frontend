@@ -8,53 +8,52 @@ import AdminApplicantRoute from "./AdminApplicantRoute";
 import "react-toastify/dist/ReactToastify.css";
 import AlertState from "./contexts/AlertContext/AlertState";
 import { ToastContainer } from "react-toastify";
-import SuperAdminRoute from "./SuperAdminRoute";
 
 function App() {
   return (
-    <AlertState>
-      <AuthState>
-        <>
-          <ToastContainer />
-          <Routes>
-            {routes.map((route, index) => {
-              const {
-                path,
-                component,
-                isPrivate,
-                isAdmin,
-                isSuperAdmin,
-                isAdminRecruiter,
-                isAdminApplicant,
-              } = route;
-              return (
-                <Route
-                  key={index}
-                  path={path}
-                  element={
-                    isPrivate ? (
-                      isSuperAdmin ? (
-                        <SuperAdminRoute component={component} />
-                      ) : isAdmin ? (
-                        <AdminRoute component={component} />
-                      ) : isAdminRecruiter ? (
-                        <AdminRecruiterRoute component={component} />
-                      ) : isAdminApplicant ? (
-                        <AdminApplicantRoute component={component} />
+    
+      <AlertState>
+        <AuthState>
+          <>
+            <ToastContainer />
+            <Routes>
+              {routes.map((route, index) => {
+                const {
+                  path,
+                  component,
+                  isPrivate,
+                  isAdmin,
+                  isSuperAdmin,
+                  isAdminRecruiter,
+                  isAdminApplicant,
+                } = route;
+                return (
+                  <Route
+                    key={index}
+                    path={path}
+                    element={
+                      isPrivate ? (
+                        isAdmin ? (
+                          <AdminRoute component={component} />
+                        ) : isAdminRecruiter ? (
+                          <AdminRecruiterRoute component={component} />
+                        ) : isAdminApplicant ? (
+                          <AdminApplicantRoute component={component} />
+                        ) : (
+                          <PrivateRoute component={component} />
+                        )
                       ) : (
-                        <PrivateRoute component={component} />
+                        component
                       )
-                    ) : (
-                      component
-                    )
-                  }
-                />
-              );
-            })}
-          </Routes>
-        </>
-      </AuthState>
-    </AlertState>
+                    }
+                  />
+                );
+              })}
+            </Routes>
+          </>
+        </AuthState>
+      </AlertState>
+    
   );
 }
 
