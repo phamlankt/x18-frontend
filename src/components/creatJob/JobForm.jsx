@@ -53,7 +53,7 @@ const JobForm = (props) => {
         setLoading(true);
         const res = await businessSectorAPI.getAll();
         setSectors(
-          res.data.data.businessSectorList.map((sector) => ({
+          res.data?.data?.businessSectorList?.sectors.map((sector) => ({
             label: sector.name,
             value: sector.name,
           }))

@@ -1,9 +1,14 @@
 import axiosInstance from "./axiosInstance";
 
 const businessSectorAPI = {
-    getAll: () => axiosInstance.get("/businessSectors"),
-    create: (business_sector) => axiosInstance.post("/business_sector/create",business_sector),
-    update: (business_sector) => axiosInstance.post("/business_sector/update",business_sector),
+  getAll: (query) =>
+    axiosInstance.get(
+      `/businessSectors/?search=${query?.search || ""}&currentPage=${
+        query?.currentPage || 1
+      }&pageSize=${query?.pageSize || 0}`
+    ),
+  create: (values) => axiosInstance.post("/businessSectors/create", values),
+  update: (values) => axiosInstance.put("/businessSectors/update", values),
 };
 
 export default businessSectorAPI;

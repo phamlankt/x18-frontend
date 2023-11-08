@@ -87,7 +87,7 @@ const JobList = ({ currentUser }) => {
       try {
         setLoading(true);
         const res = await businessSectorAPI.getAll();
-        setDataSectors(res.data.data.businessSectorList);
+        setDataSectors(res.data?.data?.businessSectorList?.sectors);
       } catch (error) {
         setErr(error?.response?.data?.message);
         handleAlertStatus({ type: "error", message: "Something went wrong" });
