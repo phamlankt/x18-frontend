@@ -1,9 +1,10 @@
 import { Button, Input } from "antd";
 import React from "react";
 
-const SearchSector = ({ search, setSearch, getData }) => {
+const SearchSector = ({ search, setSearch, getData, loading }) => {
   return (
     <form
+      onSubmit={getData}
       style={{
         display: "flex",
         gap: "12px",
@@ -18,7 +19,7 @@ const SearchSector = ({ search, setSearch, getData }) => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      <Button type="primary" onClick={getData}>
+      <Button type="primary" htmlType="submit" disabled={loading}>
         Search
       </Button>
     </form>

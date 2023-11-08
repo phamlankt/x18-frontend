@@ -4,8 +4,9 @@ import AlertContext from "../../../contexts/AlertContext/AlertContext";
 import { FiEdit } from "react-icons/fi";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import businessSectorAPI from "../../../apis/businessSectorAPI";
 
-const SectorForm = ({ sector, type }) => {
+const SectorForm = ({ sector, type, getData }) => {
   const { handleAlertStatus } = useContext(AlertContext);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -17,19 +18,32 @@ const SectorForm = ({ sector, type }) => {
   const handleOk = async (values) => {
     try {
       setLoading(true);
-      //call api
 
       if (type === "add") {
+        const res = await businessSectorAPI.create(values);
       }
       if (type === "update") {
+        const bodyData = {
+          sector: values.sector,
+          sectorId: sector._id,
+        };
+        const res = await businessSectorAPI.update(bodyData);
       }
-      console.log(values.sector);
+
+      await getData();
+
       handleAlertStatus({
         type: "success",
-        message: "Remove job sucessfully!",
+        message:
+          type === "add"
+            ? "Create sector sucessfully!"
+            : "Update sector sucessfully!",
       });
     } catch (error) {
-      handleAlertStatus({ type: "error", message: "Remove job failed!" });
+      handleAlertStatus({
+        type: "error",
+        message: error?.response?.data?.message || "Something went wrong!",
+      });
     } finally {
       setTimeout(() => {
         setOpen(false);

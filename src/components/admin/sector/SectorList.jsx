@@ -2,7 +2,14 @@ import React from "react";
 import SectorForm from "./SectorForm";
 import { Table } from "antd";
 
-const SectorList = ({ data, loading, setCurrentPage }) => {
+const SectorList = ({
+  data,
+  loading,
+  setCurrentPage,
+  pageSize,
+  getData,
+  total,
+}) => {
   const columns = [
     {
       title: "",
@@ -20,7 +27,14 @@ const SectorList = ({ data, loading, setCurrentPage }) => {
       title: "Action",
       dataIndex: "name",
       key: "name",
-      render: (text, data) => <SectorForm type="update" sector={data} />,
+      render: (text, data) => (
+        <SectorForm
+          key={data._id}
+          type="update"
+          sector={data}
+          getData={getData}
+        />
+      ),
     },
   ];
 
@@ -34,8 +48,8 @@ const SectorList = ({ data, loading, setCurrentPage }) => {
       loading={loading}
       pagination={{
         className: "pagination",
-        pageSize: 10,
-        total: data.length,
+        pageSize: pageSize,
+        total: total,
         onChange: (page) => {
           setCurrentPage(page);
         },

@@ -2,72 +2,53 @@ import React, { useEffect } from "react";
 import SearchSector from "./SearchSector";
 import SectorList from "./SectorList";
 import { useState } from "react";
-import { async } from "rxjs";
 import SectorForm from "./SectorForm";
-
-const dataSource = [
-  {
-    _id: "1",
-    name: "IT",
-  },
-  {
-    _id: "2",
-    name: "HR",
-  },
-  {
-    _id: "3",
-    name: "Marketing",
-  },
-  {
-    _id: "4",
-    name: "Finance",
-  },
-  {
-    _id: "5",
-    name: "Art",
-  },
-  {
-    _id: "6",
-    name: "Education",
-  },
-];
+import businessSectorAPI from "../../../apis/businessSectorAPI";
 
 const SectorPage = () => {
-  const [data, setData] = useState(dataSource);
-  const [Search, setSearch] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
 
   const getData = async (e) => {
     e?.preventDefault();
     try {
       setLoading(true);
-      ///// call api
-      if (Search === "") {
-        setData(dataSource);
-        return;
-      }
-      const res = data.filter((el) =>
-        el.name.toLowerCase().includes(Search.toLowerCase())
+      const query = {
+        search,
+        currentPage,
+        pageSize,
+      };
+      const res = await businessSectorAPI.getAll(query);
+
+      setData(res.data?.data?.businessSectorList.sectors);
+      setPageSize(res.data?.data?.businessSectorList?.pagination?.pageSize);
+      setTotal(
+        res.data?.data?.businessSectorList?.pagination?.totalSectorCount
       );
-      setData(res);
-      //////
     } catch (error) {
       setError(error.response.data.message);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     }
   };
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [currentPage]);
 
   const props = {
+    pageSize,
+    total,
     data,
     setData,
-    Search,
+    search,
     setSearch,
     loading,
     setLoading,
@@ -79,7 +60,7 @@ const SectorPage = () => {
   };
 
   if (error) {
-    return <h1>{error}</h1>;
+    return <h5 className="text-center text-danger">{error}</h5>;
   }
 
   return (
@@ -95,7 +76,7 @@ const SectorPage = () => {
     >
       <h1 className="text-center fs-5">Sector List</h1>
       <SearchSector {...props} />
-      <SectorForm type="add" />
+      <SectorForm type="add" {...props} />
       <SectorList {...props} />
     </div>
   );
