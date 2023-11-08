@@ -1,5 +1,5 @@
 import React from "react";
-import { useContext, useState, useEffect, useMemo } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Dropdown, Menu } from "antd";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -11,8 +11,24 @@ import Recoil from "../../recoilContextProvider";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
 import authAPI from "../../apis/authAPI";
 import logo from "../../images/logo.png";
+import Notifications from "../notification/Notifications";
+import notificationAPI from "../../apis/notificationAPI";
 
 function Header() {
+  // const initialBtn1 = (
+  //   <>
+  //     <button className="settings">abc has been applied for job1</button>
+  //   </>
+  // );
+  // const initialBtn2 = (
+  //   <>
+  //     <button className="settings">abc has been applied for job2</button>
+  //   </>
+  // );
+  // const [notifications, setNotifications] = useState([
+  //   initialBtn1,
+  //   initialBtn2,
+  // ]);
   const [notifications, setNotifications] = useState([]);
   const [myData, setMyInFor] = useRecoilState(Recoil.AtomDataUser);
   const [stopFecthAPI, setStopFectAPI] = useRecoilState(
@@ -26,13 +42,35 @@ function Header() {
   };
 
   useEffect(() => {
-    socket &&
-      socket.on("getAppliedJobNotification", (data) => {
-        console.log("applicationData", data);
-        setNotifications((prev) => [...prev, data]);
+    fetchNotification();
+  }, []);
+  const fetchNotification = async () => {
+    try {
+      await notificationAPI.getByReceiver().then((result) => {
+        setNotifications(result.data.data.notificationList);
       });
-  }, [socket]);
-  console.log("notifications", notifications);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on("getAppliedJobNotification", (data) => {
+  //       console.log("socket", socket.id);
+  //       // console.log("applicationData", data);
+  //       // console.log("data.email", data.email);
+  //       const btnText = `${data.email} has been applied for ${data.jobId}`;
+
+  //       const notificationButton = (
+  //         <button className="settings">abc has been apply for new job</button>
+  //       );
+  //       console.log("notificationButton", notificationButton);
+  //       setNotifications((prev) => [...prev, notificationButton]);
+  //     });
+  //   }
+  // }, [socket]);
+  // console.log("notifications", notifications);
 
   const DeleteToken = () => {
     navigate("/login");
@@ -57,18 +95,6 @@ function Header() {
     console.log("Clicked: ", e.key);
   };
 
-  const notifiedMessages = useMemo(
-    () =>
-      notifications.map((notification) => {
-        console.log("notification", notification);
-        return (
-          <button className="settings">
-            {notification.email} has been applied for {notification.jobId}
-          </button>
-        );
-      }),
-    [socket]
-  );
   const menu = (
     <Menu onClick={handleMenuClick} className="menu">
       <button className="settings" onClick={() => navigate("/profile")}>
@@ -79,7 +105,12 @@ function Header() {
       </button>
     </Menu>
   );
-
+  // const addNoti = () => {
+  //   const newNoti = (
+  //     <button className="settings">abc has been applied for new job</button>
+  //   );
+  //   setNotifications((prev) => [...prev, newNoti]);
+  // };
   return (
     <div className="Header">
       <div className="menu">
@@ -114,6 +145,7 @@ function Header() {
         </NavLink>
       </div>
       <div className="navbar">
+        {/* <button onClick={addNoti}>Add notification</button> */}
         {auth.isAuthenticated ? (
           <div
             style={{
@@ -123,14 +155,30 @@ function Header() {
               gap: "10px",
             }}
           >
-            {/* <BellRing size={32} color="white" /> */}
-
-            <Dropdown
-              open={true}
-              overlay={<Menu className="menu">abc{notifiedMessages} </Menu>}
-            >
+            {notifications.length > 0 ? (
+              <Dropdown
+                // open={true}
+                overlay={
+                  <Menu className="menu">
+                    {
+                      <Notifications
+                        notifications={notifications}
+                        setNotifications={setNotifications}
+                      />
+                    }{" "}
+                  </Menu>
+                }
+              >
+                <div>
+                  <BellRing color="white" />
+                  <span className="text-danger fw-bold ms-1">
+                    {notifications.length}
+                  </span>
+                </div>
+              </Dropdown>
+            ) : (
               <BellRing color="white" />
-            </Dropdown>
+            )}
 
             <Dropdown overlay={menu}>
               <div>

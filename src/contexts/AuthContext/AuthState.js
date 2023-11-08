@@ -21,7 +21,7 @@ const AuthState = ({ children }) => {
         isAuthenticated: true,
         user: data.userInfo,
       });
-      setSocket(io("http://localhost:5000"));
+      setSocket(io("http://localhost:3001",{ transports : ['websocket'] }));
       return data.userInfo;
     } catch (error) {
       console.log(error);

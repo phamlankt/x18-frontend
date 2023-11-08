@@ -110,7 +110,6 @@ const PostedJobsListings = () => {
     }
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
   };
 
@@ -125,7 +124,6 @@ const PostedJobsListings = () => {
           sortBy: data.sortBy || "desc",
           pageSize: pageSizeDefault,
         });
-        console.log(res.data.data.jobList.jobs);
         setDataJob(res.data.data.jobList.jobs);
       } catch (error) {
         handleAlertStatus({ type: "error", message: "Something went wrong" });
