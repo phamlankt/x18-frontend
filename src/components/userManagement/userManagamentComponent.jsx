@@ -15,7 +15,6 @@ const UserManagementComponent = () => {
   const [filterRole, setFilterRole] = useState("");
   const [searchText, setSearchText] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [totalCounts, setTotalCounts] = useState(0);
   const [offset, setOffset] = useState(0);
   const [roleMapping, setRoleMapping] = useState({});
@@ -161,6 +160,7 @@ const UserManagementComponent = () => {
         ...prevState,
         [userId]: true
       }));
+    if (userRole === "superadmin") {
     } else {
       message.error("You don't have permission to update this user.");
     }
@@ -280,9 +280,16 @@ const UserManagementComponent = () => {
                     ? "deactivate-button"
                     : "activate-button"
                 }
+                style={{ marginRight: "10px" }} // Add margin to create spacing
               >
                 {record.status === "active" ? "Deactivate" : "Activate"}
               </Button>
+              {userRole === "superadmin" &&
+              roleMapping[record.roleId] === "admin" ? (
+                <Button type="primary" onClick={() => handleUpdate(record.id)}>
+                  Update
+                </Button>
+              ) : null}
             </span>
           )}
         />
