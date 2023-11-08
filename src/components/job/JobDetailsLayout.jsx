@@ -60,6 +60,7 @@ function JobDetailsLayout() {
               <ApplicationByJobId
                 application={application}
                 setApplication={setApplication}
+                jobInfo={jobInfo}
               />
             )
           ),

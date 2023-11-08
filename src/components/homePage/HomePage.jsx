@@ -22,6 +22,7 @@ export default function HomePage() {
   const [dataJob, setDataJob] = useRecoilState(Recoil.AtomDataJobs);
   const dataJobs = useRecoilValue(Recoil.AtomDataJobs);
   const [currentPage, setCurrentPage] = useState(1);
+  
 
   const data = {};
   searchParams.forEach((value, key) => {

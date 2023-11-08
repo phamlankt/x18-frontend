@@ -8,13 +8,13 @@ import userAPI from "../../apis/userAPI";
 import { Field, Formik } from "formik";
 import UploadFile from "./UploadFile";
 
-function ApplicationForm({ setApplication }) {
+function ApplicationForm({ setApplication,jobInfo }) {
   const { handleAlertStatus } = useContext(AlertContext);
   const [loading, setLoading] = useState(false);
   const [documents, setDocuments] = useState(["CV", "Cover Letter"]);
   const [uploadedDocuments, setUploadedDocuments] = useState([]);
   const jobId = useParams().jobId;
-  const { auth } = useContext(AuthContext);
+  const { auth,socket } = useContext(AuthContext);
   const navigate = useNavigate();
   const initialValues = {
     CV: "",
@@ -65,7 +65,12 @@ function ApplicationForm({ setApplication }) {
       });
 
       setApplication(response.data.data.applicationInfo);
-      // navigate(0);
+      socket.emit("sendApplication",{
+        email: auth.user.email,
+        jobId:jobId,
+        creator:jobInfo.creator,
+        status:"sent"
+      })
     } catch (error) {
       console.log("error", error);
       handleAlertStatus({

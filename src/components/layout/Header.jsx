@@ -1,5 +1,5 @@
 import React from "react";
-import { useContext } from "react";
+import { useContext, useState, useEffect, useMemo } from "react";
 import { Dropdown, Menu } from "antd";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -13,16 +13,26 @@ import authAPI from "../../apis/authAPI";
 import logo from "../../images/logo.png";
 
 function Header() {
+  const [notifications, setNotifications] = useState([]);
   const [myData, setMyInFor] = useRecoilState(Recoil.AtomDataUser);
   const [stopFecthAPI, setStopFectAPI] = useRecoilState(
     Recoil.AtomCheckDataUser
   );
-  const { auth, handleLogout } = useContext(AuthContext);
+  const { auth, handleLogout, socket } = useContext(AuthContext);
   const myInfor = auth.user;
   const navigate = useNavigate();
   const activeClass = (params) => {
     return params.isActive ? "menuIcon active-item" : "menuIcon";
   };
+
+  useEffect(() => {
+    socket &&
+      socket.on("getAppliedJobNotification", (data) => {
+        console.log("applicationData", data);
+        setNotifications((prev) => [...prev, data]);
+      });
+  }, [socket]);
+  console.log("notifications", notifications);
 
   const DeleteToken = () => {
     navigate("/login");
@@ -47,6 +57,18 @@ function Header() {
     console.log("Clicked: ", e.key);
   };
 
+  const notifiedMessages = useMemo(
+    () =>
+      notifications.map((notification) => {
+        console.log("notification", notification);
+        return (
+          <button className="settings">
+            {notification.email} has been applied for {notification.jobId}
+          </button>
+        );
+      }),
+    [socket]
+  );
   const menu = (
     <Menu onClick={handleMenuClick} className="menu">
       <button className="settings" onClick={() => navigate("/profile")}>
@@ -75,8 +97,11 @@ function Header() {
         <NavLink
           to="/admin/userManagement" // The path to the user management page
           className={activeClass}
-          style={{ display: myInfor.roleName === "admin" ? "flex" : "none", alignItems: "center" }}
-          >
+          style={{
+            display: myInfor.roleName === "admin" ? "flex" : "none",
+            alignItems: "center",
+          }}
+        >
           Users
         </NavLink>
         <NavLink
@@ -90,8 +115,22 @@ function Header() {
       </div>
       <div className="navbar">
         {auth.isAuthenticated ? (
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <BellRing size={32} color="white" />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            {/* <BellRing size={32} color="white" /> */}
+
+            <Dropdown
+              open={true}
+              overlay={<Menu className="menu">abc{notifiedMessages} </Menu>}
+            >
+              <BellRing color="white" />
+            </Dropdown>
 
             <Dropdown overlay={menu}>
               <div>
