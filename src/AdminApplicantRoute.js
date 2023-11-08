@@ -4,26 +4,51 @@ import AuthContext from "./contexts/AuthContext/AuthContext";
 import Forbidden from "./pages/Forbidden";
 
 const AdminApplicantRoute = ({ component }) => {
-  const { auth } = useContext(AuthContext);
+  const { auth, handleLogin } = useContext(AuthContext);
   const { isAuthenticated, user } = auth;
 
-  if (
-    isAuthenticated &&
-    (user.roleName === "superadmin" ||
+  if (!isAuthenticated) {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      const userInfo = handleLogin();
+      userInfo.then(() => {
+        if (userInfo.email) {
+          checkComponent(component);
+        } else return <Navigate to="/login" />;
+      });
+    } else return <Navigate to="/login" />;
+  } else {
+    // checkComponent(component);
+    if (
+      user.roleName === "superadmin" ||
       user.roleName === "admin" ||
-      user.roleName === "applicant")
-  ) {
-    return component;
-  } else if (
-    isAuthenticated &&
-    (user.roleName !== "superadmin" ||
+      user.roleName === "applicant"
+    ) {
+      return component;
+    } else if (
+      user.roleName !== "superadmin" ||
       user.roleName === "admin" ||
-      user.roleName !== "applapplicanticant")
-  ) {
-    return <Forbidden />;
+      user.roleName !== "applicant"
+    ) {
+      return <Forbidden />;
+    }
   }
 
-  return <Navigate to="/login" />;
+  function checkComponent(component) {
+    if (
+      user.roleName === "superadmin" ||
+      user.roleName === "admin" ||
+      user.roleName === "applicant"
+    ) {
+      return component;
+    } else if (
+      user.roleName !== "superadmin" ||
+      user.roleName === "admin" ||
+      user.roleName !== "applicant"
+    ) {
+      return <Forbidden />;
+    }
+  }
 };
 
 export default AdminApplicantRoute;
