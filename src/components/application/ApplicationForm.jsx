@@ -65,11 +65,12 @@ function ApplicationForm({ setApplication, jobInfo }) {
       });
 
       setApplication(response.data.data.applicationInfo);
-      socket.emit("sendApplication", {
-        email: auth.user.email,
+      socket.emit("sendApplicationEvent", {
+        recruiter: jobInfo.creator,
+        applicant: auth.user.email,
         jobId: jobId,
+        jobTitle:jobInfo.title,
         applicationId: response.data.data.applicationInfo._id,
-        creator: jobInfo.creator,
         status: "sent",
       });
     } catch (error) {
@@ -108,10 +109,10 @@ function ApplicationForm({ setApplication, jobInfo }) {
               <div className="col-md-12 border-right">
                 <div className="p-3 py-5">
                   <div className="d-flex justify-content-center">
-                    {documents.map((document) => {
+                    {documents.map((document,index) => {
                       return (
                         <UploadFile
-                          key={document}
+                          key={index}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
                           errors={errors}

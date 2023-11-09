@@ -4,10 +4,12 @@ import { capitalizeFirstLetter, formatDate } from "../../global/common";
 import applicationAPI from "../../apis/applicationAPI";
 import { useParams } from "react-router-dom";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 
-function ApplicantsByJobId() {
+function ApplicantsByJobId({ jobTitle }) {
   const [loading, setLoading] = useState(false);
   const { handleAlertStatus } = useContext(AlertContext);
+  const { auth, socket } = useContext(AuthContext);
   const jobId = useParams().jobId;
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -66,9 +68,11 @@ function ApplicantsByJobId() {
                   className="link-primary text-decoration-underline"
                   href={attachment.path}
                 >
-                  {capitalizeFirstLetter(attachment.fileName.substring(
-                    attachment.fileName.indexOf("-") + 1
-                  ))}
+                  {capitalizeFirstLetter(
+                    attachment.fileName.substring(
+                      attachment.fileName.indexOf("-") + 1
+                    )
+                  )}
                 </a>
               </div>
             );
@@ -87,7 +91,11 @@ function ApplicantsByJobId() {
                 className="btn btn-primary fw-bold"
                 style={{ fontSize: "0.5vw" }}
                 onClick={() =>
-                  ConfirmOrRejectApplication(record.applicationId, "confirmed")
+                  ConfirmOrRejectApplication(
+                    record.applicationId,
+                    record.applicantId,
+                    "confirmed"
+                  )
                 }
               >
                 Confirm
@@ -96,7 +104,11 @@ function ApplicantsByJobId() {
                 className="btn btn-danger fw-bold"
                 style={{ fontSize: "0.5vw" }}
                 onClick={() =>
-                  ConfirmOrRejectApplication(record.applicationId, "rejected")
+                  ConfirmOrRejectApplication(
+                    record.applicationId,
+                    record.applicantId,
+                    "rejected"
+                  )
                 }
               >
                 Reject
@@ -150,14 +162,26 @@ function ApplicantsByJobId() {
     }
   };
 
-  const ConfirmOrRejectApplication = async (applicationId, status) => {
+  const ConfirmOrRejectApplication = async (
+    applicationId,
+    applicantId,
+    status
+  ) => {
     // setLoading(true);
     await applicationAPI
       .updatStatusByRecruiter({ jobId, applicationId, status })
-      .then(() => {
+      .then((result) => {
         handleAlertStatus({
           type: "success",
           message: `Application is ${status} sucessfully!`,
+        });
+        socket.emit("sendApplicationEvent", {
+          recruiter: auth.user.email,
+          applicant: result.data.data.applicationInfo.applicantId,
+          jobId,
+          jobTitle,
+          applicationId,
+          status,
         });
         // fetchRecords();
         const updatedData = data.map((application) => {
@@ -166,7 +190,7 @@ function ApplicantsByJobId() {
           }
           return application;
         });
-        setData(updatedData)
+        setData(updatedData);
       })
       .catch((error) => {
         handleAlertStatus({

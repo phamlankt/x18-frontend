@@ -13,22 +13,11 @@ import authAPI from "../../apis/authAPI";
 import logo from "../../images/logo.png";
 import Notifications from "../notification/Notifications";
 import notificationAPI from "../../apis/notificationAPI";
+import AlertContext from "../../contexts/AlertContext/AlertContext";
+import { handleApplicationNotification } from "../../global/common";
 
 function Header() {
-  // const initialBtn1 = (
-  //   <>
-  //     <button className="settings">abc has been applied for job1</button>
-  //   </>
-  // );
-  // const initialBtn2 = (
-  //   <>
-  //     <button className="settings">abc has been applied for job2</button>
-  //   </>
-  // );
-  // const [notifications, setNotifications] = useState([
-  //   initialBtn1,
-  //   initialBtn2,
-  // ]);
+  const { handleAlertStatus } = useContext(AlertContext);
   const [notifications, setNotifications] = useState([]);
   const [myData, setMyInFor] = useRecoilState(Recoil.AtomDataUser);
   const [stopFecthAPI, setStopFectAPI] = useRecoilState(
@@ -54,23 +43,21 @@ function Header() {
     }
   };
 
-  // useEffect(() => {
-  //   if (socket) {
-  //     socket.on("getAppliedJobNotification", (data) => {
-  //       console.log("socket", socket.id);
-  //       // console.log("applicationData", data);
-  //       // console.log("data.email", data.email);
-  //       const btnText = `${data.email} has been applied for ${data.jobId}`;
-
-  //       const notificationButton = (
-  //         <button className="settings">abc has been apply for new job</button>
-  //       );
-  //       console.log("notificationButton", notificationButton);
-  //       setNotifications((prev) => [...prev, notificationButton]);
-  //     });
-  //   }
-  // }, [socket]);
-  // console.log("notifications", notifications);
+  useEffect(() => {
+    if (socket) {
+      socket.on("getJobNotification", (data) => {
+        const btnText = handleApplicationNotification(data);
+        handleAlertStatus({
+          type: "success",
+          message: btnText,
+        });
+        const notificationButton = (
+          <button className="settings">{btnText}</button>
+        );
+        setNotifications((prev) => [...prev, notificationButton]);
+      });
+    }
+  }, [socket]);
 
   const DeleteToken = () => {
     navigate("/login");

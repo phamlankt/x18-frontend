@@ -44,9 +44,9 @@ function ApplicationByJobId({ application, setApplication, jobInfo }) {
       </div>
       <h6 className="fst-italic fw-light">My Documents:</h6>
 
-      {application.documents.map((document) => {
+      {application.documents.map((document,index) => {
         return (
-          <div>
+          <div key={index}>
             <a
               href={document.path}
               className="text-danger text-decoration-underline"
