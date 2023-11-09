@@ -8,7 +8,6 @@ import userAPI from "../../apis/userAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import { useNavigate, useParams } from "react-router-dom";
 
-
 const ResetPasswordModal = ({ show, handleClose }) => {
   const { handleAlertStatus } = useContext(AlertContext);
   const [loading, setLoading] = useState(false);
@@ -19,7 +18,7 @@ const ResetPasswordModal = ({ show, handleClose }) => {
     confirmPassword: "",
   };
   const token = useParams().token;
-  
+
   const validationSchema = Yup.object().shape({
     password: Yup.string()
       .required("Password is required")
@@ -43,7 +42,7 @@ const ResetPasswordModal = ({ show, handleClose }) => {
     setErrorMessage("");
     const userInfo = {
       password: fields.password,
-      token:token
+      token: token,
     };
 
     await userAPI
@@ -53,12 +52,12 @@ const ResetPasswordModal = ({ show, handleClose }) => {
           type: "success",
           message: "Reset password sucessfully!",
         });
-        
+
         handleClose();
         navigate("/");
       })
       .catch((error) => {
-        console.log("error Message",error)
+        console.log("error Message", error);
         setErrorMessage(error.response.data.error);
         console.log("error", error.response.data.error);
       });
@@ -91,6 +90,7 @@ const ResetPasswordModal = ({ show, handleClose }) => {
                 <h5>New password</h5>
                 {passwordProfileModal.map((item) => (
                   <ModalFormItem
+                    key={item.fieldName}
                     item={item}
                     errors={errors}
                     touched={touched}

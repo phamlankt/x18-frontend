@@ -54,7 +54,7 @@ function JobDetailsLayout() {
                 : "Application Form"),
         children:
           roleName === "recruiter" ? (
-            <ApplicantsByJobId />
+            <ApplicantsByJobId jobTitle={jobInfo.title}/>
           ) : (
             roleName === "applicant" && (
               <ApplicationByJobId

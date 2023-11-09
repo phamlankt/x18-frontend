@@ -110,7 +110,6 @@ const PostedJobsListings = () => {
     }
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
   };
 

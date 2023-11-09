@@ -8,13 +8,13 @@ import userAPI from "../../apis/userAPI";
 import { Field, Formik } from "formik";
 import UploadFile from "./UploadFile";
 
-function ApplicationForm({ setApplication,jobInfo }) {
+function ApplicationForm({ setApplication, jobInfo }) {
   const { handleAlertStatus } = useContext(AlertContext);
   const [loading, setLoading] = useState(false);
   const [documents, setDocuments] = useState(["CV", "Cover Letter"]);
   const [uploadedDocuments, setUploadedDocuments] = useState([]);
   const jobId = useParams().jobId;
-  const { auth,socket } = useContext(AuthContext);
+  const { auth, socket } = useContext(AuthContext);
   const navigate = useNavigate();
   const initialValues = {
     CV: "",
@@ -65,12 +65,14 @@ function ApplicationForm({ setApplication,jobInfo }) {
       });
 
       setApplication(response.data.data.applicationInfo);
-      socket.emit("sendApplication",{
-        email: auth.user.email,
-        jobId:jobId,
-        creator:jobInfo.creator,
-        status:"sent"
-      })
+      socket.emit("sendApplicationEvent", {
+        recruiter: jobInfo.creator,
+        applicant: auth.user.email,
+        jobId: jobId,
+        jobTitle:jobInfo.title,
+        applicationId: response.data.data.applicationInfo._id,
+        status: "sent",
+      });
     } catch (error) {
       console.log("error", error);
       handleAlertStatus({
@@ -107,10 +109,10 @@ function ApplicationForm({ setApplication,jobInfo }) {
               <div className="col-md-12 border-right">
                 <div className="p-3 py-5">
                   <div className="d-flex justify-content-center">
-                    {documents.map((document) => {
+                    {documents.map((document,index) => {
                       return (
                         <UploadFile
-                          key={document}
+                          key={index}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
                           errors={errors}

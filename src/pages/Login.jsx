@@ -5,7 +5,7 @@ import {
   FaRightToBracket,
   FaTwitter,
 } from "react-icons/fa6";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext/AuthContext";
 import authAPI from "../apis/authAPI";
@@ -15,6 +15,7 @@ import { loginFormItems } from "../global/loginFormItems";
 import ForgotPasswordModal from "../components/forgotPassword/ForgotPasswordModal";
 
 const Login = () => {
+
   const { socket } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
