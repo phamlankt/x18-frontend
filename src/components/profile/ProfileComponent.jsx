@@ -264,46 +264,53 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                       isEditMode={true}
                     />
                   ))}
-                  <div className="form-row">
-                    <div className="form-group col">
-                      <label
-                        htmlFor="businessSector"
-                        onClick={() => setFieldTouched("businessSector", true)}
-                      >
-                        Business Sectors:
-                      </label>
 
-                      <Select
-                        id="businessSector"
-                        name="businessSector"
-                        mode="tags"
-                        style={{
-                          width: "100%",
-                          backgroundColor: "white",
-                          margin: " 4px 0px",
-                          borderRadius: "4px",
-                        }}
-                        bordered={false}
-                        allowClear={true}
-                        // maxTagCount={3}
-                        placeholder="Choose your sectors"
-                        onChange={(e) => {
-                          setSectors(e);
-                          setFieldValue("businessSector", e);
-                        }}
-                        value={sectors}
-                        options={bsOptions.map((sector) => ({
-                          label: sector.name,
-                          value: sector.name,
-                        }))}
-                      />
-                      {errors.businessSector && touched.businessSector && (
-                        <p className="text-danger form-error">
-                          {errors.businessSector}
-                        </p>
-                      )}
+                  {(auth.user.roleName === "recruiter" ||
+                    auth.user.roleName === "applicant") && (
+                    <div className="form-row">
+                      <div className="form-group col">
+                        <label
+                          htmlFor="businessSector"
+                          onClick={() =>
+                            setFieldTouched("businessSector", true)
+                          }
+                        >
+                          Business Sectors:
+                        </label>
+
+                        <Select
+                          id="businessSector"
+                          name="businessSector"
+                          mode="tags"
+                          style={{
+                            width: "100%",
+                            backgroundColor: "white",
+                            margin: " 4px 0px",
+                            borderRadius: "4px",
+                          }}
+                          bordered={false}
+                          allowClear={true}
+                          // maxTagCount={3}
+                          placeholder="Choose your sectors"
+                          onChange={(e) => {
+                            setSectors(e);
+                            setFieldValue("businessSector", e);
+                          }}
+                          value={sectors}
+                          options={bsOptions.map((sector) => ({
+                            label: sector.name,
+                            value: sector.name,
+                          }))}
+                        />
+                        {errors.businessSector && touched.businessSector && (
+                          <p className="text-danger form-error">
+                            {errors.businessSector}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )}
+
                   {auth.user.roleName === "recruiter" && (
                     <div className="form-row">
                       <div className="form-group col">
