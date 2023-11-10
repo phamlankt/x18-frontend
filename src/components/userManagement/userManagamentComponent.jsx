@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Table, Button, Input, Select, message } from "antd";
+import { Table, Button, Input, Select, message, Modal } from "antd";
 import "../../scss/_userManagement.scss";
 import userAPI from "../../apis/userAPI";
 import roleAPI from "../../apis/roleAPI";
+import ProfileModal from "../admin/ProfileModal";
 
 const { Column } = Table;
 const { Option } = Select;
@@ -21,7 +22,8 @@ const UserManagementComponent = () => {
   const [userRole, setUserRole] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [roleNameToIdMap, setRoleNameToIdMap] = useState({});
-  const [isShowModalUpdate, setIsShowModalUpdate] = useState(false);
+  const [isShowModalUpdate, setIsShowModalUpdate] = useState({});
+  const [selectedUserData, setSelectedUserData] = useState(null);
 
   // Fetch roles and set roleMapping
   useEffect(() => {
@@ -136,7 +138,12 @@ const UserManagementComponent = () => {
       userRole === "superadmin" ||
       (userRole === "admin" && userRecord.role === "admin")
     ) {
-      setIsShowModalUpdate(true);
+      setSelectedUserData(userRecord);
+      setIsShowModalUpdate(prevState => ({
+        ...prevState,
+        [userId]: true
+      }));
+      console.log(userRecord);
     } else {
       message.error("You don't have permission to update this user.");
     }
@@ -225,6 +232,19 @@ const UserManagementComponent = () => {
                   Update
                 </Button>
               ) : null}
+              <Modal
+                title="Admin Profile"
+                open={isShowModalUpdate[record._id]}
+                centered
+                width={960}
+                onCancel={() => setIsShowModalUpdate(prevState => ({
+                  ...prevState,
+                  [record._id]: false
+                }))}
+                footer={null}
+              >
+                <ProfileModal isOpenModal={setIsShowModalUpdate} userId={record._id} userData={selectedUserData} />
+              </Modal>
               <Button
                 onClick={() => handleActivateDeactivate(record._id)}
                 className={
