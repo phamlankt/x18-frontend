@@ -11,6 +11,7 @@ import JobDetails from "../pages/JobDetails.jsx";
 import UpdateJob from "../pages/UpdateJob.jsx";
 import User from "../pages/admin/User.jsx";
 import Job from "../pages/admin/Job.jsx";
+import Dashboard from "../pages/admin/Dashboard.jsx";
 
 export const routes = [
   {
@@ -20,7 +21,7 @@ export const routes = [
   },
   {
     path: "/admin",
-    component: <BusinessSector />,
+    component: <Dashboard />,
     isPrivate: true,
     isAdmin: true,
   },
