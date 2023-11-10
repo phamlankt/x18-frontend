@@ -19,10 +19,9 @@ const UserManagementComponent = () => {
   const [roleMapping, setRoleMapping] = useState({});
   const [selectedRoleId, setSelectedRoleId] = useState("");
   const [userRole, setUserRole] = useState("");
-
   const [filteredUsers, setFilteredUsers] = useState([]);
-
   const [roleNameToIdMap, setRoleNameToIdMap] = useState({});
+  const [isShowModalUpdate, setIsShowModalUpdate] = useState(false);
 
   // Fetch roles and set roleMapping
   useEffect(() => {
@@ -137,8 +136,7 @@ const UserManagementComponent = () => {
       userRole === "superadmin" ||
       (userRole === "admin" && userRecord.role === "admin")
     ) {
-      // Implement your update logic here
-      console.log("Updating user:", userId);
+      setIsShowModalUpdate(true);
     } else {
       message.error("You don't have permission to update this user.");
     }
@@ -203,7 +201,7 @@ const UserManagementComponent = () => {
             <span>
               {roleMapping[record.roleId]
                 ? roleMapping[record.roleId].charAt(0).toUpperCase() +
-                  roleMapping[record.roleId].slice(1)
+                roleMapping[record.roleId].slice(1)
                 : "Unknown Role"}
             </span>
           )}
@@ -222,13 +220,13 @@ const UserManagementComponent = () => {
           render={(text, record) => (
             <span>
               {userRole === "superadmin" ||
-              (userRole === "admin" && record.roleId === "admin") ? (
-                <Button type="primary" onClick={() => handleUpdate(record.id)}>
+                (userRole === "admin" && record.roleId === "admin") ? (
+                <Button type="primary" onClick={() => handleUpdate(record._id, userRole, record)}>
                   Update
                 </Button>
               ) : null}
               <Button
-                onClick={() => handleActivateDeactivate(record.id)}
+                onClick={() => handleActivateDeactivate(record._id)}
                 className={
                   record.status === "active"
                     ? "deactivate-button"
