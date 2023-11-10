@@ -87,7 +87,7 @@ const JobList = ({ currentUser }) => {
       try {
         setLoading(true);
         const res = await businessSectorAPI.getAll();
-        setDataSectors(res.data.data.businessSectorList);
+        setDataSectors(res.data?.data?.businessSectorList?.sectors);
       } catch (error) {
         setErr(error?.response?.data?.message);
         handleAlertStatus({ type: "error", message: "Something went wrong" });
@@ -139,10 +139,10 @@ const JobList = ({ currentUser }) => {
         <Col span={6} className="px-2">
           <Select
             className="w-100"
-            showSearch
+            mode="tag"
+            showSearch={true}
             allowClear={true}
             placeholder="Select a sector"
-            optionFilterProp="children"
             onChange={handleSectorChange}
             value={sector || undefined}
             options={dataSectors.map((sector) => ({

@@ -97,6 +97,7 @@ const ChangePasswordModal = ({ show, handleClose }) => {
                 <h5>New password</h5>
                 {passwordProfileModal.map((item) => (
                   <ModalFormItem
+                  key={item.fieldName}
                     item={item}
                     errors={errors}
                     touched={touched}

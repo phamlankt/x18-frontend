@@ -1,6 +1,7 @@
 import axiosInstance from "./axiosInstance";
 
 const jobAPI = {
+  getStatistic: () => axiosInstance.get("/admin/statistic/job"),
   getAll: () => axiosInstance.get("/jobs/active"),
   getBySearchAndFilter: (values) =>
     axiosInstance.get(

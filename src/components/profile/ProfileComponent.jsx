@@ -180,7 +180,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
   const fetchBusinessSector = async () => {
     try {
       const response = await businessSectorAPI.getAll();
-      setBusinessSector(response.data.data.businessSectorList);
+      setBusinessSector(response.data?.data?.businessSectorList.sectors);
     } catch (error) {
       console.log(error);
     }

@@ -1,6 +1,7 @@
 import axiosInstance from "./axiosInstance";
 
 const userAPI = {
+  getStatistic: () => axiosInstance.get("/admin/statistic/user"),
   getAllByRoleId: (query) =>
     axiosInstance.get(
       `/admin/users/?search=${query.search || ""}&roles=${

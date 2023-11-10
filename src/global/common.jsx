@@ -18,3 +18,23 @@ export const getCityNameFromSlug = (slug) => {
   const filteredCity = cities.filter((city) => city.slug === slug);
   return filteredCity[0].name;
 };
+
+export const handleApplicationNotification = (data) => {
+  const { status } = data;
+  let btnText = "";
+  switch (status) {
+    case "sent":
+      btnText = `${data.applicant} has applied for job title "${data.jobTitle}"`;
+      break;
+    case "cancelled":
+      btnText = `${data.applicant} has cancelled application for job title "${data.jobTitle}"`;
+      break;
+    case "confirmed":
+      btnText = `Application accepted for job title "${data.jobTitle}"`;
+      break;
+    case "rejected":
+      btnText = `Application rejected for  job title "${data.jobTitle}"`;
+      break;
+  }
+  return btnText;
+};

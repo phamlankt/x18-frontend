@@ -8,9 +8,10 @@ import AdminApplicantRoute from "./AdminApplicantRoute";
 import "react-toastify/dist/ReactToastify.css";
 import AlertState from "./contexts/AlertContext/AlertState";
 import { ToastContainer } from "react-toastify";
-import SuperAdminRoute from "./SuperAdminRoute";
-
+import { useEffect, useContext } from "react";
+import AuthContext from "./contexts/AuthContext/AuthContext";
 function App() {
+
   return (
     <AlertState>
       <AuthState>
@@ -33,9 +34,7 @@ function App() {
                   path={path}
                   element={
                     isPrivate ? (
-                      isSuperAdmin ? (
-                        <SuperAdminRoute component={component} />
-                      ) : isAdmin ? (
+                      isAdmin ? (
                         <AdminRoute component={component} />
                       ) : isAdminRecruiter ? (
                         <AdminRecruiterRoute component={component} />
