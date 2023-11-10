@@ -22,19 +22,25 @@ function Notifications({ notifications, setNotifications }) {
       notifications.map((notification, index) => {
         return (
           !notification.read && (
-            <button
+            <div
+              className="notification-tag-container"
               key={index}
-              className="btn btn-link"
               onClick={() => handleNotification(notification)}
             >
-              {notification.status === "sent"
-                ? `${notification.applicant} has applied for "${notification.jobTitle}"`
-                : notification.status === "cancelled"
-                ? `${notification.applicant} has cancelled application for "${notification.jobTitle}"`
-                : (notification.status === "confirmed" ||
-                    notification.status === "rejected") &&
-                  `application ${notification.status} for "${notification.jobTitle}"`}
-            </button>
+              <p>
+                {notification.status === "sent"
+                  ? `${notification.applicant} has applied for "${notification.jobTitle}"`
+                  : notification.status === "cancelled"
+                  ? `${notification.applicant} has cancelled application for "${notification.jobTitle}"`
+                  : (notification.status === "confirmed" ||
+                      notification.status === "rejected") &&
+                    `application ${notification.status} for "${notification.jobTitle}"`}
+              </p>
+              <div className="notification-action">
+                <p></p>
+                <p>Just now</p>
+              </div>
+            </div>
           )
         );
       })

@@ -5,6 +5,7 @@ import { Table } from "antd";
 const SectorList = ({
   data,
   loading,
+  currentPage,
   setCurrentPage,
   pageSize,
   getData,
@@ -15,7 +16,9 @@ const SectorList = ({
       title: "",
       dataIndex: "_id",
       key: "_id",
-      render: (text, data, index) => <p>{index + 1}</p>,
+      render: (text, data, index) => (
+        <p>{pageSize * (currentPage - 1) + index + 1}</p>
+      ),
     },
     {
       title: "Name",

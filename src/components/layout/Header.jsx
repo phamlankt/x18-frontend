@@ -147,20 +147,21 @@ function Header() {
                 // open={true}
                 overlay={
                   <Menu className="menu">
-                    {
+                    <div>
+                      <p className="notification-title m-0">
+                        Your notifications:
+                      </p>
                       <Notifications
                         notifications={notifications}
                         setNotifications={setNotifications}
                       />
-                    }{" "}
+                    </div>
                   </Menu>
                 }
               >
-                <div>
+                <div className="notification-container">
                   <BellRing color="white" />
-                  <span className="text-danger fw-bold ms-1">
-                    {notifications.length}
-                  </span>
+                  <span className="notification">{notifications.length}</span>
                 </div>
               </Dropdown>
             ) : (
