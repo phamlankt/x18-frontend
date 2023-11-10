@@ -46,15 +46,15 @@ function Header() {
   useEffect(() => {
     if (auth.isAuthenticated && socket) {
       socket.on("getJobNotification", (data) => {
-        const btnText = handleApplicationNotification(data);
+        // console.log("data",data)
+        const message = handleApplicationNotification(data);
+
         handleAlertStatus({
           type: "success",
-          message: btnText,
+          message: message,
         });
-        const notificationButton = (
-          <button className="settings">{btnText}</button>
-        );
-        setNotifications((prev) => [...prev, notificationButton]);
+       
+        setNotifications(prev=>[...prev, data]);
       });
     }
   }, [socket]);
