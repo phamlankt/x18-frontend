@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Input, Button, Upload, Avatar, message, Spin, Alert } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import adminAPI from "../../apis/adminAPI";
+import "../../scss/_admin-profile-modal.scss";
 
 
 const ProfileModal = ({ isOpenModal, userId, userData }) => {
@@ -9,16 +10,18 @@ const ProfileModal = ({ isOpenModal, userId, userData }) => {
     const [error, setError] = useState(null);
     const [fileAvatar, setFileAvatar] = useState(null);
 
+    const defaultAvatarUrl = "https://1.bp.blogspot.com/-LjgFJBMTmeM/YZ-UJ2Mdb-I/AAAAAAAACMk/3iYczLi5BTQefjXjnJsNtaSYlP-A2jO6wCLcBGAsYHQ/s1200/2a.jpg"
+
     const onFinish = async (data) => {
         try {
             setLoading(true);
             setError(null);
             const formData = new FormData();
 
-            if (fileAvatar) formData.append("avatar", fileAvatar);
             formData.append("userId", userId);
-            formData.append("fullName", data.fullName);
-            formData.append("phoneNumber", data.phoneNumber);
+            if (fileAvatar) formData.append("avatar", fileAvatar);
+            if (data.fullName) formData.append("fullName", data.fullName);
+            if (data.phoneNumber) formData.append("phoneNumber", data.phoneNumber);
 
             await adminAPI.update(formData);
             message.success('Profile updated successfully', 3);
@@ -41,15 +44,16 @@ const ProfileModal = ({ isOpenModal, userId, userData }) => {
 
 
     return (
-        <div style={{ display: 'flex' }}>
+        <div className="container">
             {error && <Alert message={error} type="error" showIcon closable onClose={() => setError(null)} />}
-            <div style={{ flex: 1 }}>
+            <div className="fl1">
                 <Form >
                     <Form.Item
-                        style={{ marginTop: '32px' }}
+                        className="mt32"
                         name="avatar"
                         getValueFromEvent={handleUploadFile}
                     >
+                        <img className="avatar" src={userData.avatarUrl ? userData.avatarUrl : defaultAvatarUrl} alt="" />
                         <Upload
                             name="avatar"
                             listType="picture-card"
@@ -66,7 +70,7 @@ const ProfileModal = ({ isOpenModal, userId, userData }) => {
                     </Form.Item>
                 </Form>
             </div>
-            <div style={{ flex: 3 }}>
+            <div className="fl3">
                 <Form
                     name="profile"
                     onFinish={onFinish}

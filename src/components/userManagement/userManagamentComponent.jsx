@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
 import { Table, Button, Input, Select, message, Modal } from "antd";
 import "../../scss/_userManagement.scss";
 import userAPI from "../../apis/userAPI";
 import roleAPI from "../../apis/roleAPI";
 import ProfileModal from "../admin/ProfileModal";
+import { Link } from "react-router-dom";
 
 const { Column } = Table;
 const { Option } = Select;
@@ -143,7 +144,6 @@ const UserManagementComponent = () => {
         ...prevState,
         [userId]: true
       }));
-      console.log(userRecord);
     } else {
       message.error("You don't have permission to update this user.");
     }
@@ -151,7 +151,18 @@ const UserManagementComponent = () => {
 
   return (
     <div>
-      <h2>Users Management</h2>
+      <div className="users-management-container">
+        <h2>Users Management</h2>
+        <Link to={"/admin/register"}>
+          <Button
+            icon={<PlusOutlined />}
+            type="default"
+            className="green-btn"
+          >
+            Register A New Admin
+          </Button>
+        </Link>
+      </div>
       <br />
       <div className="filter-search-container">
         <Input
