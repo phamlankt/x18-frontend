@@ -31,7 +31,7 @@ function Header() {
   };
 
   useEffect(() => {
-    fetchNotification();
+    auth.isAuthenticated && fetchNotification();
   }, []);
   const fetchNotification = async () => {
     try {
@@ -39,22 +39,22 @@ function Header() {
         setNotifications(result.data.data.notificationList);
       });
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data.message);
     }
   };
 
   useEffect(() => {
-    if (socket) {
+    if (auth.isAuthenticated && socket) {
       socket.on("getJobNotification", (data) => {
-        const btnText = handleApplicationNotification(data);
+        // console.log("data",data)
+        const message = handleApplicationNotification(data);
+
         handleAlertStatus({
           type: "success",
-          message: btnText,
+          message: message,
         });
-        const notificationButton = (
-          <button className="settings">{btnText}</button>
-        );
-        setNotifications((prev) => [...prev, notificationButton]);
+       
+        setNotifications(prev=>[...prev, data]);
       });
     }
   }, [socket]);
