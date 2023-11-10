@@ -1,11 +1,9 @@
 import React, { useContext, useState } from "react";
-import { Form, Input, Select, Button, Alert } from 'antd';
+import { Form, Input, Button, Alert } from 'antd';
 import AuthContext from "../../contexts/AuthContext/AuthContext";
 import { useNavigate } from "react-router-dom";
 import adminAPI from "../../apis/adminAPI";
 import authAPI from "../../apis/authAPI";
-
-const { Option } = Select;
 
 const RegisterAdmin = () => {
     const [loading, setLoading] = useState(false);
@@ -31,7 +29,7 @@ const RegisterAdmin = () => {
                 localStorage.setItem("accessToken", response.data.data.accessToken);
 
                 await handleLogin();
-                navigate("/admin/users");
+                navigate("/admin/user");
             }
         } catch (error) {
             setError(error.response.data.error);
@@ -95,22 +93,6 @@ const RegisterAdmin = () => {
 
                 >
                     <Input.Password />
-                </Form.Item>
-                <Form.Item
-                    name="role"
-                    label="Role"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Choose a role!',
-                        },
-                    ]}
-
-                >
-                    <Select>
-                        <Option value="superadmin">Super Admin</Option>
-                        <Option value="admin">Admin</Option>
-                    </Select>
                 </Form.Item>
                 <Form.Item wrapperCol={{ span: 12, offset: 4 }}
                 >
