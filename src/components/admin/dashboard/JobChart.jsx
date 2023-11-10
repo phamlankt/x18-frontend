@@ -39,9 +39,9 @@ export default function JobChart() {
   }, []);
 
   const currentDate = new Date();
-  let labels = [formatToDDMM(currentDate)];
+  let labels = [];
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 7; i++) {
     const date = new Date(currentDate);
     date.setDate(date.getDate() - i);
 
@@ -62,7 +62,7 @@ export default function JobChart() {
       },
       {
         type: "bar",
-        label: "Recruitment",
+        label: "Job",
         backgroundColor: "rgb(75, 192, 192)",
         data: jobData,
         borderColor: "rgb(75, 192, 192)",
