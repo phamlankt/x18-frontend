@@ -21,6 +21,7 @@ const SectorForm = ({ sector, type, getData }) => {
 
       if (type === "add") {
         const res = await businessSectorAPI.create(values);
+        formik.resetForm();
       }
       if (type === "update") {
         const bodyData = {
