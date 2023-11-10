@@ -1,13 +1,10 @@
-
-import React, { useState, useEffect, useMemo, useContext } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { Table, Button, Input, Select, message, Modal } from "antd";
 import "../../scss/_userManagement.scss";
 import userAPI from "../../apis/userAPI";
 import roleAPI from "../../apis/roleAPI";
-import AuthContext from "../../contexts/AuthContext/AuthContext";
 import ProfileModal from "../admin/ProfileModal";
-import { NavLink } from "react-router-dom"
 
 const { Column } = Table;
 const { Option } = Select;
@@ -23,12 +20,10 @@ const UserManagementComponent = () => {
   const [roleMapping, setRoleMapping] = useState({});
   const [selectedRoleId, setSelectedRoleId] = useState("");
   const [userRole, setUserRole] = useState("");
-
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const { auth } = useContext(AuthContext);
-
   const [roleNameToIdMap, setRoleNameToIdMap] = useState({});
+  const [isShowModalUpdate, setIsShowModalUpdate] = useState({});
+  const [selectedUserData, setSelectedUserData] = useState(null);
 
   // Fetch roles and set roleMapping
   useEffect(() => {
@@ -143,56 +138,19 @@ const UserManagementComponent = () => {
       userRole === "superadmin" ||
       (userRole === "admin" && userRecord.role === "admin")
     ) {
-      // Implement your update logic here
-      console.log("Updating user:", userId);
+      setSelectedUserData(userRecord);
+      setIsShowModalUpdate(prevState => ({
+        ...prevState,
+        [userId]: true
+      }));
+      console.log(userRecord);
     } else {
       message.error("You don't have permission to update this user.");
     }
   };
 
-
-
   return (
     <div>
-      <NavLink to="/admin/register">
-        <Button
-          type="link"
-          style={{
-            position: 'absolute',
-            top: 16,
-            right: 160,
-            color: '#FFCF9D'
-          }}
-        >
-          Register a new admin
-        </Button>
-      </NavLink>
-      {auth.user.roleName === 'admin' || auth.user.roleName === 'superadmin' ? (
-        <Button
-          style={{
-            position: 'absolute',
-            top: 8,
-            right: 320,
-            zIndex: 1,
-          }}
-          className="mt-2"
-          type="primary"
-          onClick={() => setIsModalVisible(true)}
-        >
-          Upload Profile
-        </Button>
-      ) : null}
-      <Modal
-        title="Admin Profile"
-        open={isModalVisible}
-        centered
-        width={960}
-        onCancel={() => setIsModalVisible(false)}
-        footer={null}
-      >
-        <ProfileModal isOpenModal={setIsModalVisible} />
-      </Modal>
-
       <h2>Users Management</h2>
       <br />
       <div className="filter-search-container">
@@ -250,14 +208,11 @@ const UserManagementComponent = () => {
             <span>
               {roleMapping[record.roleId]
                 ? roleMapping[record.roleId].charAt(0).toUpperCase() +
-
                 roleMapping[record.roleId].slice(1)
-
                 : "Unknown Role"}
             </span>
           )}
         />
-
         <Column
           title="Status"
           dataIndex="status"
@@ -273,12 +228,25 @@ const UserManagementComponent = () => {
             <span>
               {userRole === "superadmin" ||
                 (userRole === "admin" && record.roleId === "admin") ? (
-                <Button type="primary" onClick={() => handleUpdate(record.id)}>
+                <Button type="primary" onClick={() => handleUpdate(record._id, userRole, record)}>
                   Update
                 </Button>
               ) : null}
+              <Modal
+                title="Admin Profile"
+                open={isShowModalUpdate[record._id]}
+                centered
+                width={960}
+                onCancel={() => setIsShowModalUpdate(prevState => ({
+                  ...prevState,
+                  [record._id]: false
+                }))}
+                footer={null}
+              >
+                <ProfileModal isOpenModal={setIsShowModalUpdate} userId={record._id} userData={selectedUserData} />
+              </Modal>
               <Button
-                onClick={() => handleActivateDeactivate(record.id)}
+                onClick={() => handleActivateDeactivate(record._id)}
                 className={
                   record.status === "active"
                     ? "deactivate-button"
