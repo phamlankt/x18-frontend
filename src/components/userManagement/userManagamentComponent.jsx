@@ -1,9 +1,12 @@
+
 import React, { useState, useEffect, useMemo } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Table, Button, Input, Select, message } from "antd";
+import { Table, Button, Input, Select, message, Modal } from "antd";
 import "../../scss/_userManagement.scss";
 import userAPI from "../../apis/userAPI";
 import roleAPI from "../../apis/roleAPI";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
+import ProfileModal from "../admin/ProfileModal";
 
 const { Column } = Table;
 const { Option } = Select;
@@ -21,6 +24,8 @@ const UserManagementComponent = () => {
   const [userRole, setUserRole] = useState("");
 
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const { auth } = useContext(AuthContext);
 
   const [roleNameToIdMap, setRoleNameToIdMap] = useState({});
 
@@ -144,8 +149,36 @@ const UserManagementComponent = () => {
     }
   };
 
+
+
   return (
     <div>
+      {auth.user.roleName === 'admin' || auth.user.roleName === 'superadmin' ? (
+        <Button
+          style={{
+            position: 'absolute',
+            top: 8,
+            right: 160,
+            zIndex: 1,
+          }}
+          className="mt-2"
+          type="primary"
+          onClick={() => setIsModalVisible(true)}
+        >
+          Upload Profile
+        </Button>
+      ) : null}
+      <Modal
+        title="Admin Profile"
+        open={isModalVisible}
+        centered
+        width={960}
+        onCancel={() => setIsModalVisible(false)}
+        footer={null}
+      >
+        <ProfileModal isOpenModal={setIsModalVisible} />
+      </Modal>
+
       <h2>Users Management</h2>
       <br />
       <div className="filter-search-container">
@@ -203,11 +236,14 @@ const UserManagementComponent = () => {
             <span>
               {roleMapping[record.roleId]
                 ? roleMapping[record.roleId].charAt(0).toUpperCase() +
+
                   roleMapping[record.roleId].slice(1)
+
                 : "Unknown Role"}
             </span>
           )}
         />
+
         <Column
           title="Status"
           dataIndex="status"
