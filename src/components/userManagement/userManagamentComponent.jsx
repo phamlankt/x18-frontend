@@ -77,13 +77,14 @@ const UserManagementComponent = () => {
         currentPage,
         pageSize,
       });
-
+  
       if (response.data && response.data.data.userList) {
         const userList = response.data.data.userList;
         if (userList.users) {
+          const newOffset = (currentPage - 1) * pageSize;
           setUsers(userList.users);
           setTotalCounts(userList.pagination.totalCounts);
-          setOffset(userList.pagination.offset);
+          setOffset(newOffset);
         }
       }
     } catch (error) {
