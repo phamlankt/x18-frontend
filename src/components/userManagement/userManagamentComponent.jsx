@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
 import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
 import { Table, Button, Input, Select, message, Modal } from "antd";
 import "../../scss/_userManagement.scss";
@@ -6,11 +6,13 @@ import userAPI from "../../apis/userAPI";
 import roleAPI from "../../apis/roleAPI";
 import ProfileModal from "../admin/ProfileModal";
 import { Link } from "react-router-dom";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 
 const { Column } = Table;
 const { Option } = Select;
 
 const UserManagementComponent = () => {
+  const { auth } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [filterRole, setFilterRole] = useState("");
   const [searchText, setSearchText] = useState("");
@@ -140,9 +142,9 @@ const UserManagementComponent = () => {
       (userRole === "admin" && userRecord.role === "admin")
     ) {
       setSelectedUserData(userRecord);
-      setIsShowModalUpdate(prevState => ({
+      setIsShowModalUpdate((prevState) => ({
         ...prevState,
-        [userId]: true
+        [userId]: true,
       }));
     } else {
       message.error("You don't have permission to update this user.");
@@ -153,15 +155,17 @@ const UserManagementComponent = () => {
     <div>
       <div className="users-management-container">
         <h2>Users Management</h2>
-        <Link to={"/admin/register"}>
-          <Button
-            icon={<PlusOutlined />}
-            type="default"
-            className="green-btn"
-          >
-            Register A New Admin
-          </Button>
-        </Link>
+        {auth.user.roleName === "superadmin" && (
+          <Link to={"/admin/register"}>
+            <Button
+              icon={<PlusOutlined />}
+              type="default"
+              className="green-btn"
+            >
+              Register A New Admin
+            </Button>
+          </Link>
+        )}
       </div>
       <br />
       <div className="filter-search-container">
@@ -219,7 +223,7 @@ const UserManagementComponent = () => {
             <span>
               {roleMapping[record.roleId]
                 ? roleMapping[record.roleId].charAt(0).toUpperCase() +
-                roleMapping[record.roleId].slice(1)
+                  roleMapping[record.roleId].slice(1)
                 : "Unknown Role"}
             </span>
           )}
@@ -238,8 +242,11 @@ const UserManagementComponent = () => {
           render={(text, record) => (
             <span>
               {userRole === "superadmin" ||
-                (userRole === "admin" && record.roleId === "admin") ? (
-                <Button type="primary" onClick={() => handleUpdate(record._id, userRole, record)}>
+              (userRole === "admin" && record.roleId === "admin") ? (
+                <Button
+                  type="primary"
+                  onClick={() => handleUpdate(record._id, userRole, record)}
+                >
                   Update
                 </Button>
               ) : null}
@@ -248,13 +255,19 @@ const UserManagementComponent = () => {
                 open={isShowModalUpdate[record._id]}
                 centered
                 width={960}
-                onCancel={() => setIsShowModalUpdate(prevState => ({
-                  ...prevState,
-                  [record._id]: false
-                }))}
+                onCancel={() =>
+                  setIsShowModalUpdate((prevState) => ({
+                    ...prevState,
+                    [record._id]: false,
+                  }))
+                }
                 footer={null}
               >
-                <ProfileModal isOpenModal={setIsShowModalUpdate} userId={record._id} userData={selectedUserData} />
+                <ProfileModal
+                  isOpenModal={setIsShowModalUpdate}
+                  userId={record._id}
+                  userData={selectedUserData}
+                />
               </Modal>
               <Button
                 onClick={() => handleActivateDeactivate(record._id)}
