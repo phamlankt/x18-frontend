@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import notificationAPI from "../../apis/notificationAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import { parsePath, useNavigate } from "react-router-dom";
+import { getPastTime } from "../../utils/fomatDate";
 
 function Notifications({ notifications, setNotifications }) {
   const navigate = useNavigate();
@@ -22,19 +23,25 @@ function Notifications({ notifications, setNotifications }) {
       notifications.map((notification, index) => {
         return (
           !notification.read && (
-            <button
+            <div
+              className="notification-tag-container"
               key={index}
-              className="btn btn-link"
               onClick={() => handleNotification(notification)}
             >
-              {notification.status === "sent"
-                ? `${notification.applicant} has applied for "${notification.jobTitle}"`
-                : notification.status === "cancelled"
-                ? `${notification.applicant} has cancelled application for "${notification.jobTitle}"`
-                : (notification.status === "confirmed" ||
-                    notification.status === "rejected") &&
-                  `application ${notification.status} for "${notification.jobTitle}"`}
-            </button>
+              <p>
+                {notification.status === "sent"
+                  ? `${notification.applicant} has applied for "${notification.jobTitle}"`
+                  : notification.status === "cancelled"
+                  ? `${notification.applicant} has cancelled application for "${notification.jobTitle}"`
+                  : (notification.status === "confirmed" ||
+                      notification.status === "rejected") &&
+                    `application ${notification.status} for "${notification.jobTitle}"`}
+              </p>
+              <div className="notification-action">
+                <p></p>
+                <p>{getPastTime(notification.createdAt)}</p>
+              </div>
+            </div>
           )
         );
       })

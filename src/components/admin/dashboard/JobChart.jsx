@@ -73,7 +73,7 @@ export default function JobChart() {
   return (
     <div
       style={{
-        flex: "1 0 auto",
+        flex: "0 0 800px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

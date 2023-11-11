@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 0px 22px;
   background-color: none;
   justify-content: space-between;
   z-index: 99;
@@ -58,7 +59,6 @@
     gap: 20px;
     font-size: 15px;
     div {
-      width: 150px;
       div {
         cursor: pointer;
         height: 50px;
@@ -356,5 +356,59 @@ div {
     justify-content: center;
     align-items: center;
     gap: 0;
+  }
+}
+
+.notification-container {
+  position: relative;
+  width: 20px;
+
+  .notification {
+    position: absolute;
+    right: -8px;
+    top: 8px;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    text-align: center;
+  }
+}
+.notification-title {
+  border-bottom: 1px solid gray;
+  padding: 8px;
+  font-weight: 500;
+}
+
+.notification-tag-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+  cursor: pointer;
+  p {
+    font-weight: 400;
+  }
+  .notification-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    p {
+      margin: 0px;
+      font-weight: 400;
+      color: gray;
+      font-style: italic;
+    }
+    button {
+      color: rgb(69, 155, 178);
+      font-style: italic;
+    }
+  }
+  &:hover {
+    background-color: rgb(243, 245, 247);
+    p {
+      color: rgb(69, 155, 178);
+    }
   }
 }
