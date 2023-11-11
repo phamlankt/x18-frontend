@@ -16,15 +16,14 @@ const AuthState = ({ children }) => {
     try {
       const response = await authAPI.authInfo();
       const data = response.data.data;
-
       setAuth({
         isAuthenticated: true,
         user: data.userInfo,
       });
-      setSocket(io("http://localhost:3001",{ transports : ['websocket'] }));
+      setSocket(io("http://localhost:3001", { transports: ["websocket"] }));
       return data.userInfo;
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data.message);
     }
   };
 
@@ -35,11 +34,23 @@ const AuthState = ({ children }) => {
     });
   };
 
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+      return null;
+    }
+  };
+
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     // Call API /me => check token => user, isAuthenticated
     if (accessToken) {
-      handleLogin();
+      const decodedJwt = parseJwt(accessToken);
+
+      if (decodedJwt.exp * 1000 > Date.now()) {
+        handleLogin();
+      }
     }
   }, []);
 
@@ -49,7 +60,7 @@ const AuthState = ({ children }) => {
         auth,
         handleLogin,
         handleLogout,
-        socket
+        socket,
       }}
     >
       {children}
