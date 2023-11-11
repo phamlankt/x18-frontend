@@ -26,6 +26,7 @@ import AuthContext from "../../contexts/AuthContext/AuthContext";
 const pageSizeDefault = 10;
 
 const PostedJobsListings = () => {
+  const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
   const { handleAlertStatus } = useContext(AlertContext);
   const [open, setOpen] = useState(false);
@@ -230,8 +231,11 @@ const PostedJobsListings = () => {
                     renderItem={(value) => (
                       <div className="job" key={value.item}>
                         <img
-                          src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
-                          alt=""
+                          src={
+                            auth.user.companyLogoUrl ||
+                            "https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
+                          }
+                          alt="Company Logo"
                           className="w-40 h-40"
                         />
                         <div>
