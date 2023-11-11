@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import notificationAPI from "../../apis/notificationAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import { parsePath, useNavigate } from "react-router-dom";
+import { getPastTime } from "../../utils/fomatDate";
 
 function Notifications({ notifications, setNotifications }) {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ function Notifications({ notifications, setNotifications }) {
               </p>
               <div className="notification-action">
                 <p></p>
-                <p>Just now</p>
+                <p>{getPastTime(notification.createdAt)}</p>
               </div>
             </div>
           )
