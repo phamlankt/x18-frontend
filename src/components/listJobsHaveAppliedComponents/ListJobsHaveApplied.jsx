@@ -27,7 +27,7 @@ const ListJobHaveApplied = () => {
   const [applicationId, setapplicationId] = useState("");
   const [dataJob, setDataJob] = useState([]);
   const [modalText, setModalText] = useState(
-    "Do you want to delete this job ?"
+    "Do you really want to delete this job ?"
   );
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
