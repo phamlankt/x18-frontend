@@ -15,6 +15,7 @@ const UserManagementComponent = () => {
   const [filterRole, setFilterRole] = useState("");
   const [searchText, setSearchText] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [totalCounts, setTotalCounts] = useState(0);
   const [offset, setOffset] = useState(0);
   const [roleMapping, setRoleMapping] = useState({});
@@ -99,25 +100,8 @@ const UserManagementComponent = () => {
         )
     );
   };
-  const regenerateTable = () => {
-    setFilteredUsers(
-      users
-        .filter((user) => filterRole === "" || user.roleId === selectedRoleId)
-        .filter((user) =>
-          user.email.toLowerCase().includes(searchText.toLowerCase())
-        )
-    );
-  };
 
   const handleSelectRole = (selectedRoleName) => {
-    if (selectedRoleName === "") {
-      setFilterRole(""); // Clear the filter
-      setSelectedRoleId(""); // Set selectedRoleId to an empty string
-    } else {
-      setFilterRole(selectedRoleName);
-      setSelectedRoleId(roleNameToIdMap[selectedRoleName]);
-    }
-  };
     if (selectedRoleName === "") {
       setFilterRole(""); // Clear the filter
       setSelectedRoleId(""); // Set selectedRoleId to an empty string
@@ -151,20 +135,7 @@ const UserManagementComponent = () => {
   };
 
   const handleUpdate = (userId, userRole, userRecord) => {
-    if (
-      userRole === "superadmin" ||
-      (userRole === "admin" && userRecord.role === "admin")
-    ) {
-      setSelectedUserData(userRecord);
-      setIsShowModalUpdate(prevState => ({
-        ...prevState,
-        [userId]: true
-      }));
-    if (userRole === "superadmin") {
-    } else {
-      message.error("You don't have permission to update this user.");
-    }
-  };
+};
 
   return (
     <div>
@@ -207,10 +178,10 @@ const UserManagementComponent = () => {
         dataSource={filteredUsers}
         rowKey="_id"
         pagination={{
-          current: currentPage,
-          pageSize: pageSize,
-          total: totalCounts,
-          onChange: handlePageChange,
+            current: currentPage,
+            pageSize: pageSize,
+            total: totalCounts,
+            onChange: handlePageChange,
         }}
       >
         <Column
@@ -254,9 +225,18 @@ const UserManagementComponent = () => {
           key="action"
           render={(text, record) => (
             <span>
-              {userRole === "superadmin" ||
-                (userRole === "admin" && record.roleId === "admin") ? (
-                <Button type="primary" onClick={() => handleUpdate(record._id, userRole, record)}>
+              <Button
+                onClick={() => handleActivateDeactivate(record._id)}
+                className={
+                  record.status === "active"
+                    ? "deactivate-button"
+                    : "activate-button"
+                }
+              >
+                {record.status === "active" ? "Deactivate" : "Activate"}
+              </Button>
+             {(userRole === "superadmin" && roleMapping[record.roleId] === "admin") ? (
+                <Button className="btn-update" type="primary" onClick={() => handleUpdate(record.id)}>
                   Update
                 </Button>
               ) : null}
@@ -273,23 +253,6 @@ const UserManagementComponent = () => {
               >
                 <ProfileModal isOpenModal={setIsShowModalUpdate} userId={record._id} userData={selectedUserData} />
               </Modal>
-              <Button
-                onClick={() => handleActivateDeactivate(record._id)}
-                className={
-                  record.status === "active"
-                    ? "deactivate-button"
-                    : "activate-button"
-                }
-                style={{ marginRight: "10px" }} // Add margin to create spacing
-              >
-                {record.status === "active" ? "Deactivate" : "Activate"}
-              </Button>
-              {userRole === "superadmin" &&
-              roleMapping[record.roleId] === "admin" ? (
-                <Button type="primary" onClick={() => handleUpdate(record.id)}>
-                  Update
-                </Button>
-              ) : null}
             </span>
           )}
         />
