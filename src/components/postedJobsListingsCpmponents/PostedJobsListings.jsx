@@ -265,7 +265,12 @@ const PostedJobsListings = () => {
                         <div>
                           <div>
                             <h5
-                              onClick={() => navigate(`/jobs/${value._id}`)}
+                              onClick={() => {
+                                if (value.status !== "removed") {
+                                  navigate(`/jobs/${value._id}`);
+                                }
+                                return false;
+                              }}
                               style={{ cursor: "pointer" }}
                               onMouseEnter={(event) => {
                                 event.target.style.color = "blue";
@@ -279,8 +284,17 @@ const PostedJobsListings = () => {
                                 : value.title}
                             </h5>
                             <div style={{ zIndex: "10" }}>
-                              <Dropdown overlay={menu}>
+                              <Dropdown
+                                overlay={
+                                  value.status === "removed" ? (
+                                    <div></div>
+                                  ) : (
+                                    menu
+                                  )
+                                }
+                              >
                                 <Button
+                                  style={{ width: "56px" }}
                                   onMouseEnter={() => setjobId(value._id)}
                                 >
                                   <Settings />
