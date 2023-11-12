@@ -70,7 +70,6 @@ const ListJobHaveApplied = () => {
     setOpen(true);
   };
   const handleOk = () => {
-    console.log(12);
     window.scrollTo({
       top: 0,
       behavior: "instant",
@@ -80,7 +79,6 @@ const ListJobHaveApplied = () => {
     applicationAPI
       .cancel({ applicationId })
       .then((response) => {
-        console.log("response",response)
         socket.emit("sendApplicationEvent", {
           recruiter: response.data.data.applicationInfo.creator,
           applicant: auth.user.email,
