@@ -92,7 +92,7 @@ const Filter = () => {
     const handleGetSectors = async () => {
       try {
         const res = await businessSectorAPI.getAll();
-        setDataSectors(res.data.data.businessSectorList.sectors);
+        setDataSectors(res.data?.data?.businessSectorList?.sectors);
       } catch (error) {
         handleAlertStatus({ type: "error", message: "Something went wrong" });
       }
