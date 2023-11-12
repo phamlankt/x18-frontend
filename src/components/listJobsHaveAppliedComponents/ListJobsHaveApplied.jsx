@@ -158,7 +158,8 @@ const ListJobHaveApplied = () => {
           return dataFilter.some((obj2) => {
             return obj2._id === obj1.job._id;
           });
-        });
+        });                
+
         setDataJob(filteredArray);
       } catch (error) {
         handleAlertStatus({ type: "error", message: "Something went wrong" });
