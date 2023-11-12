@@ -47,8 +47,6 @@ const PostedJobsListings = () => {
     data[key] = value;
   });
 
-  console.log(auth);
-
   const antIcon = (
     <LoadingOutlined
       style={{
@@ -77,7 +75,6 @@ const PostedJobsListings = () => {
     });
     setSpinConnect(true);
     setOpen(false);
-    console.log(jobId);
     try {
       jobAPI
         .remove({ jobId })
@@ -122,14 +119,13 @@ const PostedJobsListings = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        if (window.location.href === "http://localhost:3000/myListJob") {
+        if (window.location.href === "http://localhost:3000/myPost") {
           jobAPI
             .getListJob()
             .then((response) => {
               if (response.data.data.undefined.data) {
                 setLoading(false);
                 setSpinConnect(false);
-                console.log(response.data.data.undefined.data);
                 setSaveDataApplicant(response.data.data.undefined.data);
                 setDataJob(response.data.data.undefined.data);
               } else {
@@ -150,7 +146,6 @@ const PostedJobsListings = () => {
           pageSize: pageSizeDefault,
         });
         const dataFilter = res.data.data.jobList.jobs;
-        console.log(dataFilter);
         const filteredArray = saveDataApplicant.filter((obj1) => {
           return dataFilter.some((obj2) => {
             return obj2._id === obj1._id;
@@ -174,7 +169,6 @@ const PostedJobsListings = () => {
           if (response.data.data.undefined.data) {
             setLoading(false);
             setSpinConnect(false);
-            console.log(response.data.data.undefined.data);
             setSaveDataApplicant(response.data.data.undefined.data);
             setDataJob(response.data.data.undefined.data);
           } else {
