@@ -126,7 +126,7 @@ const ListJobHaveApplied = () => {
   // SEARCH AND FILTER
   useEffect(() => {
     const getData = async () => {
-      if (window.location.href === "http://localhost:3000/myListJob") {
+        if (window.location.href === `${process.env.REACT_APP_BASE_URL}/myListJob`) {
         applicationAPI
           .getAll()
           .then((response) => {

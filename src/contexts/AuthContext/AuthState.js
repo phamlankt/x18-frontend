@@ -20,7 +20,8 @@ const AuthState = ({ children }) => {
         isAuthenticated: true,
         user: data.userInfo,
       });
-      setSocket(io("http://localhost:3001", { transports: ["websocket"] }));
+      
+      setSocket(io(`${process.env.REACT_APP_BASE_API}`, { transports: ["websocket"] }));
       return data.userInfo;
     } catch (error) {
       console.log(error.response.data.message);
