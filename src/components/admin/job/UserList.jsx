@@ -1,4 +1,4 @@
-import { Avatar, Button, Input, List, Pagination, Tooltip } from "antd";
+import { Avatar, Button, Input, List, Pagination, Spin, Tooltip } from "antd";
 import { InfoCircleOutlined, UserOutlined } from "@ant-design/icons";
 
 import React from "react";
@@ -11,6 +11,7 @@ import { useContext } from "react";
 
 const UserList = ({ currentUser, setCurrentUser }) => {
   const { handleAlertStatus } = useContext(AlertContext);
+  const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [userList, setUserList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,10 +41,13 @@ const UserList = ({ currentUser, setCurrentUser }) => {
   useEffect(() => {
     const debounceFn = setTimeout(() => {
       try {
+        setLoading(true);
         getUsers({ search, currentPage });
       } catch (error) {
         setErr(error?.response?.data?.message);
         handleAlertStatus({ type: "error", message: "Something went wrong" });
+      } finally {
+        setLoading(false);
       }
     }, 500);
     return () => clearTimeout(debounceFn);
@@ -52,6 +56,7 @@ const UserList = ({ currentUser, setCurrentUser }) => {
   if (err) {
     return <p className="m-2 text-red">{err}</p>;
   }
+
   return (
     <>
       <Input
@@ -83,6 +88,7 @@ const UserList = ({ currentUser, setCurrentUser }) => {
       >
         <List
           itemLayout="horizontal"
+          loading={loading}
           style={{ overflow: "hidden" }}
           dataSource={userList.users}
           renderItem={(item) => (

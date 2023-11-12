@@ -116,7 +116,6 @@ const PostedJobsListings = () => {
     }
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
   };
 
@@ -267,7 +266,7 @@ const PostedJobsListings = () => {
                         <img
                           src={auth.user.companyLogoUrl}
                           alt=""
-                          className="w-44 h-40"
+                          className="w-40 h-40"
                         />
                         <div>
                           <div>

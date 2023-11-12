@@ -6,11 +6,12 @@ import { Link } from "react-router-dom";
 import { formatDate } from "../../../utils/fomatDate";
 import DeleteJobModal from "./DeleteJobModal";
 
-const columns = [
+const columnsData = [
   {
     title: "Title",
     dataIndex: "title",
     key: "title",
+    align: "left",
     render: (text, record) => (
       <Link to={`/jobs/${record._id}`}>
         <span className="fw-bold">{text}</span>
@@ -21,27 +22,41 @@ const columns = [
     title: "Creator",
     dataIndex: ["creator", "companyName"],
     key: "creator",
+    align: "center",
   },
   {
     title: "Time",
     dataIndex: "deadline",
     key: "deadline",
+    align: "center",
     render: (text, record) => (
-      <div className="text-center" key={text}>
-        <p className="text-success m-0">{record.createdAt}</p> -{" "}
-        <p className="text-danger m-0">{record.deadline}</p>
-      </div>
+      <p
+        className="text-center m-0"
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "4px",
+        }}
+        key={text}
+      >
+        <span className="text-success m-0">{record.createdAt}</span> -{" "}
+        <span className="text-danger m-0">{record.deadline}</span>
+      </p>
     ),
   },
   {
     title: "Location",
     dataIndex: "location",
     key: "location",
+    align: "left",
   },
   {
     title: "Sector",
     dataIndex: "sectors",
     key: "sectors",
+    align: "center",
     render: (sectors, record) => {
       return record.sectors.map((sector, index) => (
         <Tag className="m-1" color="default" key={index}>
@@ -54,6 +69,7 @@ const columns = [
     title: "Status",
     key: "status",
     dataIndex: "status",
+    align: "center",
     render: (status, record) => {
       if (status === "open") {
         return <Tag color="success">{status}</Tag>;
@@ -86,6 +102,7 @@ const columns = [
   {
     title: "Action",
     key: "action",
+    align: "center",
     render: (text, record) => (
       <Space size="middle" key={record._id}>
         <DeleteJobModal job={record} />
@@ -94,8 +111,9 @@ const columns = [
   },
 ];
 
-const JobTable = ({ jobs }) => {
+const JobTable = ({ jobs, loading, currentUser }) => {
   const [data, setData] = useState([]);
+  const [columns, setColumns] = useState(columnsData);
 
   useEffect(() => {
     const dataToRender = jobs?.map((job) => {
@@ -107,15 +125,35 @@ const JobTable = ({ jobs }) => {
       };
     });
     setData(dataToRender);
+
+    let newColunms = columnsData;
+
+    if (currentUser) {
+      newColunms = newColunms.filter((col) => col.key !== "creator");
+      newColunms = newColunms.map((col) => {
+        if (col.key === "deadline") {
+          return {
+            ...col,
+            width: 200,
+          };
+        }
+        return col;
+      });
+    }
+
+    setColumns(newColunms);
   }, [jobs]);
 
   return (
     <Table
       className="w-100"
+      style={{ minWidth: "850px" }}
+      sticky={{ offsetHeader: 0 }}
       bordered={true}
       columns={columns}
       dataSource={data}
       pagination={false}
+      loading={loading}
     />
   );
 };

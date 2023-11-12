@@ -16,16 +16,18 @@ import AlertContext from "../../contexts/AlertContext/AlertContext";
 import jobAPI from "../../apis/jobAPI";
 import SearchBar from "../homePage/SearchBar";
 import Loading from "../layout/Loading";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 
 let pageSizeDefault = 1;
 
 const ListJobHaveApplied = () => {
   const navigate = useNavigate();
+  const { auth, socket } = useContext(AuthContext);
   const { handleAlertStatus } = useContext(AlertContext);
   const [applicationId, setapplicationId] = useState("");
   const [dataJob, setDataJob] = useState([]);
   const [modalText, setModalText] = useState(
-    "Do you want to delete this job ?"
+    "Do you really want to delete this job ?"
   );
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
@@ -73,19 +75,26 @@ const ListJobHaveApplied = () => {
       top: 0,
       behavior: "instant",
     });
-    console.log(applicationId);
     setSpinConnect(true);
     setOpen(false);
     applicationAPI
       .cancel({ applicationId })
       .then((response) => {
-        console.log(response.data);
+        console.log("response",response)
+        socket.emit("sendApplicationEvent", {
+          recruiter: response.data.data.applicationInfo.creator,
+          applicant: auth.user.email,
+          jobId: response.jobId,
+          jobTitle: "",
+          applicationId,
+          status: "cancelled",
+        });
+
         applicationAPI
           .getAll()
           .then((res) => {
             setOpen(false);
             setSpinConnect(false);
-            console.log(res.data);
             if (res.data.data.applicationList.data) {
               setDataJob(res.data.data.applicationList.data);
             } else {

@@ -3,21 +3,25 @@ import { Button, Modal } from "antd";
 import AlertContext from "../../../contexts/AlertContext/AlertContext";
 import jobAPI from "../../../apis/jobAPI";
 import { formatDate } from "../../../utils/fomatDate";
+import { useFormik } from "formik";
+import * as yup from "yup";
 const DeleteJobModal = ({ job }) => {
   const { handleAlertStatus } = useContext(AlertContext);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [reason, setReason] = useState(job?.removeDescription || "");
 
   const showModal = () => {
     setOpen(true);
   };
 
-  const handleOk = async () => {
+  const handleOk = async (values) => {
     try {
       setLoading(true);
       //call api
-      const res = await jobAPI.adminRemove({ jobId: job._id, reason });
+      const res = await jobAPI.adminRemove({
+        jobId: job._id,
+        reason: values.reason,
+      });
       //update client
       job.updateDataFn((prevList) =>
         prevList.map((job) =>
@@ -45,20 +49,38 @@ const DeleteJobModal = ({ job }) => {
     }
   };
 
+  const formik = useFormik({
+    initialValues: {
+      reason: "",
+    },
+    validationSchema: yup.object({
+      reason: yup
+        .string()
+        .required("Reason is required")
+        .max(1000, "Must be 100 characters or less"),
+    }),
+    onSubmit: handleOk,
+  });
+
   const handleCancel = () => {
     setOpen(false);
   };
   return (
     <>
-      <Button type="primary" danger onClick={showModal}>
+      <Button
+        type="primary"
+        danger
+        onClick={showModal}
+        disabled={job.status === "removed" ? true : false}
+      >
         Remove
       </Button>
       <Modal
         title="Confirm Remove Job"
-        okButtonProps={{ danger: true }}
+        okButtonProps={{ danger: true, disabled: formik.errors.reason }}
         okText="Remove"
         open={open}
-        onOk={handleOk}
+        onOk={formik.handleSubmit}
         confirmLoading={loading}
         onCancel={handleCancel}
       >
@@ -74,10 +96,13 @@ const DeleteJobModal = ({ job }) => {
               required
               id="delete-job"
               name="delete-job"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
+              value={formik.values.reason}
+              onChange={(e) => formik.setFieldValue("reason", e.target.value)}
             />
           </label>
+          {formik.errors.reason && (
+            <p className="text-danger">{formik.errors.reason}</p>
+          )}
         </form>
       </Modal>
     </>

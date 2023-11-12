@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { SearchOutlined } from "@ant-design/icons";
-import { Table, Button, Input, Select, message } from "antd";
+import React, { useState, useEffect, useMemo } from "react";
+import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
+import { Table, Button, Input, Select, message, Modal } from "antd";
 import "../../scss/_userManagement.scss";
 import userAPI from "../../apis/userAPI";
 import roleAPI from "../../apis/roleAPI";
+import ProfileModal from "../admin/ProfileModal";
+import { Link } from "react-router-dom";
 
 const { Column } = Table;
 const { Option } = Select;
@@ -18,31 +20,54 @@ const UserManagementComponent = () => {
   const [offset, setOffset] = useState(0);
   const [roleMapping, setRoleMapping] = useState({});
   const [selectedRoleId, setSelectedRoleId] = useState("");
+  const [userRole, setUserRole] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [roleNameToIdMap, setRoleNameToIdMap] = useState({});
+  const [isShowModalUpdate, setIsShowModalUpdate] = useState({});
+  const [selectedUserData, setSelectedUserData] = useState(null);
 
-  const fetchRoles = async () => {
-    try {
-      const response = await roleAPI.getAll();
-      if (response.data) {
-        const roles = response.data.data.roleList;
-        const mapping = {};
-        roles.forEach((role) => {
-          mapping[role.name] = role._id;
-        });
-        setRoleMapping(mapping);
-      }
-    } catch (error) {
-      console.error("Error fetching roles:", error);
-    }
-  };
-
+  // Fetch roles and set roleMapping
   useEffect(() => {
+    async function fetchRoles() {
+      try {
+        const response = await roleAPI.getAll();
+        if (response.data) {
+          const roles = response.data.data.roleList;
+          const mapping = {};
+          const nameToIdMap = {};
+          roles.forEach((role) => {
+            mapping[role._id] = role.name;
+            nameToIdMap[role.name] = role._id;
+          });
+          setRoleMapping(mapping);
+          setRoleNameToIdMap(nameToIdMap);
+        }
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      }
+    }
     fetchRoles();
   }, []);
 
   useEffect(() => {
-    fetchData(selectedRoleId);
+    async function fetchUserRole() {
+      try {
+        const userRole = "superadmin";
+        setUserRole(userRole);
+      } catch (error) {
+        console.error("Error fetching user role:", error);
+      }
+    }
+    fetchUserRole();
+  }, []);
+
+  useEffect(() => {
+    fetchData();
   }, [selectedRoleId, searchText, currentPage, pageSize]);
+
+  useEffect(() => {
+    regenerateTable();
+  }, [filteredUsers]);
 
   const fetchData = async () => {
     try {
@@ -52,13 +77,14 @@ const UserManagementComponent = () => {
         currentPage,
         pageSize,
       });
-
+  
       if (response.data && response.data.data.userList) {
         const userList = response.data.data.userList;
         if (userList.users) {
+          const newOffset = (currentPage - 1) * pageSize;
           setUsers(userList.users);
           setTotalCounts(userList.pagination.totalCounts);
-          setOffset(userList.pagination.offset);
+          setOffset(newOffset);
         }
       }
     } catch (error) {
@@ -66,36 +92,25 @@ const UserManagementComponent = () => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [selectedRoleId, searchText, currentPage, pageSize]);
-
-  const handleSearch = (value) => {
-    setSearchText(value);
+  const regenerateTable = () => {
+    setFilteredUsers(
+      users
+        .filter((user) => filterRole === "" || user.roleId === selectedRoleId)
+        .filter((user) =>
+          user.email.toLowerCase().includes(searchText.toLowerCase())
+        )
+    );
   };
-
-  useEffect(() => {
-    fetchData(selectedRoleId);
-  }, [selectedRoleId, searchText, currentPage, pageSize]);
 
   const handleSelectRole = (selectedRoleName) => {
-    setFilterRole(selectedRoleName);
-    const selectedRoleId = roleMapping[selectedRoleName] || "";
-    setSelectedRoleId(selectedRoleId);
+    if (selectedRoleName === "") {
+      setFilterRole(""); // Clear the filter
+      setSelectedRoleId(""); // Set selectedRoleId to an empty string
+    } else {
+      setFilterRole(selectedRoleName);
+      setSelectedRoleId(roleNameToIdMap[selectedRoleName]);
+    }
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [searchText, currentPage, pageSize]);
-
-  useEffect(() => {
-    const filtered = users
-      .filter((user) => filterRole === "" || user.role === filterRole)
-      .filter((user) =>
-        user.email.toLowerCase().includes(searchText.toLowerCase())
-      );
-    setFilteredUsers(filtered);
-  }, [users, searchText, filterRole]);
 
   const handleActivateDeactivate = (userId) => {
     const userToUpdate = users.find((user) => user._id === userId);
@@ -114,26 +129,36 @@ const UserManagementComponent = () => {
     }
   };
 
-  const handleUpdate = (userId) => {
-    // To implement the update user API later
-  };
-
   const handlePageChange = (page, pageSize) => {
     setCurrentPage(page);
     setOffset((page - 1) * pageSize);
-    fetchData(selectedRoleId);
+    fetchData();
   };
+
+  const handleUpdate = (userId, userRole, userRecord) => {
+};
 
   return (
     <div>
-      <h2>Users Management</h2>
-      <br></br>
+      <div className="users-management-container">
+        <h2>Users Management</h2>
+        <Link to={"/admin/register"}>
+          <Button
+            icon={<PlusOutlined />}
+            type="default"
+            className="green-btn"
+          >
+            Register A New Admin
+          </Button>
+        </Link>
+      </div>
+      <br />
       <div className="filter-search-container">
         <Input
           className="search-input"
           placeholder="Search by email"
           prefix={<SearchOutlined />}
-          onChange={(e) => handleSearch(e.target.value)}
+          onChange={(e) => setSearchText(e.target.value)}
         />
         <Select
           style={{ width: 200 }}
@@ -141,11 +166,11 @@ const UserManagementComponent = () => {
           onChange={handleSelectRole}
         >
           <Option key="all" value="">
-            All Roles
+            All Users
           </Option>
-          {Object.entries(roleMapping).map(([roleName, roleId]) => (
+          {Object.entries(roleMapping).map(([roleId, roleName]) => (
             <Option key={roleId} value={roleName}>
-              {roleName.charAt(0).toUpperCase() + roleName.slice(1)}{" "}
+              {roleName.charAt(0).toUpperCase() + roleName.slice(1)}
             </Option>
           ))}
         </Select>
@@ -154,10 +179,10 @@ const UserManagementComponent = () => {
         dataSource={filteredUsers}
         rowKey="_id"
         pagination={{
-          current: currentPage,
-          pageSize: pageSize,
-          total: totalCounts,
-          onChange: handlePageChange,
+            current: currentPage,
+            pageSize: pageSize,
+            total: totalCounts,
+            onChange: handlePageChange,
         }}
       >
         <Column
@@ -176,20 +201,18 @@ const UserManagementComponent = () => {
           key="phoneNumber"
         />
         <Column
-  title="Role"
-  dataIndex="roleId"
-  key="roleId"
-  render={(text, record) => (
-    <span>
-      {roleMapping[record.roleId]
-        ? roleMapping[record.roleId].charAt(0).toUpperCase() +
-          roleMapping[record.roleId].slice(1)
-        : "Unknown Role"}
-    </span>
-  )}
-/>
-
-
+          title="Role"
+          dataIndex="roleId"
+          key="roleId"
+          render={(text, record) => (
+            <span>
+              {roleMapping[record.roleId]
+                ? roleMapping[record.roleId].charAt(0).toUpperCase() +
+                roleMapping[record.roleId].slice(1)
+                : "Unknown Role"}
+            </span>
+          )}
+        />
         <Column
           title="Status"
           dataIndex="status"
@@ -203,11 +226,8 @@ const UserManagementComponent = () => {
           key="action"
           render={(text, record) => (
             <span>
-              <Button type="primary" onClick={() => handleUpdate(record.id)}>
-                Update
-              </Button>
               <Button
-                onClick={() => handleActivateDeactivate(record.id)}
+                onClick={() => handleActivateDeactivate(record._id)}
                 className={
                   record.status === "active"
                     ? "deactivate-button"
@@ -216,6 +236,24 @@ const UserManagementComponent = () => {
               >
                 {record.status === "active" ? "Deactivate" : "Activate"}
               </Button>
+             {(userRole === "superadmin" && roleMapping[record.roleId] === "admin") ? (
+                <Button className="btn-update" type="primary" onClick={() => handleUpdate(record.id)}>
+                  Update
+                </Button>
+              ) : null}
+              <Modal
+                title="Admin Profile"
+                open={isShowModalUpdate[record._id]}
+                centered
+                width={960}
+                onCancel={() => setIsShowModalUpdate(prevState => ({
+                  ...prevState,
+                  [record._id]: false
+                }))}
+                footer={null}
+              >
+                <ProfileModal isOpenModal={setIsShowModalUpdate} userId={record._id} userData={selectedUserData} />
+              </Modal>
             </span>
           )}
         />

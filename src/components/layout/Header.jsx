@@ -1,5 +1,5 @@
 import React from "react";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Dropdown, Menu } from "antd";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -11,18 +11,53 @@ import Recoil from "../../recoilContextProvider";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
 import authAPI from "../../apis/authAPI";
 import logo from "../../images/logo.png";
+import Notifications from "../notification/Notifications";
+import notificationAPI from "../../apis/notificationAPI";
+import AlertContext from "../../contexts/AlertContext/AlertContext";
+import { handleApplicationNotification } from "../../global/common";
 
 function Header() {
+  const { handleAlertStatus } = useContext(AlertContext);
+  const [notifications, setNotifications] = useState([]);
   const [myData, setMyInFor] = useRecoilState(Recoil.AtomDataUser);
   const [stopFecthAPI, setStopFectAPI] = useRecoilState(
     Recoil.AtomCheckDataUser
   );
-  const { auth, handleLogout } = useContext(AuthContext);
+  const { auth, handleLogout, socket } = useContext(AuthContext);
   const myInfor = auth.user;
   const navigate = useNavigate();
   const activeClass = (params) => {
     return params.isActive ? "menuIcon active-item" : "menuIcon";
   };
+
+  useEffect(() => {
+    auth.isAuthenticated && fetchNotification();
+  }, []);
+  const fetchNotification = async () => {
+    try {
+      await notificationAPI.getByReceiver().then((result) => {
+        setNotifications(result.data.data.notificationList);
+      });
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    if (auth.isAuthenticated && socket) {
+      socket.on("getJobNotification", (data) => {
+        // console.log("data",data)
+        const message = handleApplicationNotification(data);
+
+        handleAlertStatus({
+          type: "success",
+          message: message,
+        });
+       
+        setNotifications(prev=>[...prev, data]);
+      });
+    }
+  }, [socket]);
 
   const DeleteToken = () => {
     navigate("/login");
@@ -57,7 +92,12 @@ function Header() {
       </button>
     </Menu>
   );
-
+  // const addNoti = () => {
+  //   const newNoti = (
+  //     <button className="settings">abc has been applied for new job</button>
+  //   );
+  //   setNotifications((prev) => [...prev, newNoti]);
+  // };
   return (
     <div className="Header">
       <div className="menu">
@@ -75,8 +115,11 @@ function Header() {
         <NavLink
           to="/admin/userManagement" // The path to the user management page
           className={activeClass}
-          style={{ display: myInfor.roleName === "admin" ? "flex" : "none", alignItems: "center" }}
-          >
+          style={{
+            display: myInfor.roleName === "admin" ? "flex" : "none",
+            alignItems: "center",
+          }}
+        >
           Users
         </NavLink>
         <NavLink
@@ -89,9 +132,41 @@ function Header() {
         </NavLink>
       </div>
       <div className="navbar">
+        {/* <button onClick={addNoti}>Add notification</button> */}
         {auth.isAuthenticated ? (
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <BellRing size={32} color="white" />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            {notifications.length > 0 ? (
+              <Dropdown
+                // open={true}
+                overlay={
+                  <Menu className="menu">
+                    <div>
+                      <p className="notification-title m-0">
+                        Your notifications:
+                      </p>
+                      <Notifications
+                        notifications={notifications}
+                        setNotifications={setNotifications}
+                      />
+                    </div>
+                  </Menu>
+                }
+              >
+                <div className="notification-container">
+                  <BellRing color="white" />
+                  <span className="notification">{notifications.length}</span>
+                </div>
+              </Dropdown>
+            ) : (
+              <BellRing color="white" />
+            )}
 
             <Dropdown overlay={menu}>
               <div>

@@ -4,26 +4,50 @@ import AuthContext from "./contexts/AuthContext/AuthContext";
 import Forbidden from "./pages/Forbidden";
 
 const AdminRecruiterRoute = ({ component }) => {
-  const { auth } = useContext(AuthContext);
+  const { auth, handleLogin } = useContext(AuthContext);
   const { isAuthenticated, user } = auth;
 
-  if (
-    isAuthenticated &&
-    (user.roleName === "superadmin" ||
+  if (!isAuthenticated) {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      handleLogin().then((userInfo) => {
+        if (userInfo.email) {
+          checkComponent(component);
+        } else return <Navigate to="/login" />;
+      });
+    } else return <Navigate to="/login" />;
+  } else {
+    // checkComponent( component);
+    if (
+      user.roleName === "superadmin" ||
       user.roleName === "admin" ||
-      user.roleName === "recruiter")
-  ) {
-    return component;
-  } else if (
-    isAuthenticated &&
-    (user.roleName !== "superadmin" ||
-      user.roleName !== "admin" ||
-      user.roleName !== "recruiter")
-  ) {
-    return <Forbidden />;
+      user.roleName === "recruiter"
+    ) {
+      return component;
+    } else if (
+      user.roleName !== "superadmin" ||
+      user.roleName === "admin" ||
+      user.roleName !== "recruiter"
+    ) {
+      return <Forbidden />;
+    }
   }
 
-  return <Navigate to="/login" />;
+  function checkComponent(component) {
+    if (
+      user.roleName === "superadmin" ||
+      user.roleName === "admin" ||
+      user.roleName === "recruiter"
+    ) {
+      return component;
+    } else if (
+      user.roleName !== "superadmin" ||
+      user.roleName === "admin" ||
+      user.roleName !== "recruiter"
+    ) {
+      return <Forbidden />;
+    }
+  }
 };
 
 export default AdminRecruiterRoute;
