@@ -92,7 +92,7 @@ const Filter = () => {
     const handleGetSectors = async () => {
       try {
         const res = await businessSectorAPI.getAll();
-        setDataSectors(res.data.data.businessSectorList);
+        setDataSectors(res.data.data.businessSectorList.sectors);
       } catch (error) {
         handleAlertStatus({ type: "error", message: "Something went wrong" });
       }
@@ -126,10 +126,14 @@ const Filter = () => {
           placeholder="Choose your sectors"
           onChange={handleChangeSector}
           value={sectors}
-          options={dataSectors.map((sector) => ({
-            label: sector.name,
-            value: sector.name,
-          }))}
+          options={
+            dataSectors
+              ? dataSectors.map((sector) => ({
+                  label: sector.name,
+                  value: sector.name,
+                }))
+              : null
+          }
         />
       </div>
 

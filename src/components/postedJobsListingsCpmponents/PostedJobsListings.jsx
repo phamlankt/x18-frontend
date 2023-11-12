@@ -22,12 +22,15 @@ import { DownOutlined } from "@ant-design/icons";
 import { formatDate } from "../../utils/fomatDate";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
+import Recoil from "../../recoilContextProvider";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const pageSizeDefault = 10;
 
 const PostedJobsListings = () => {
   const navigate = useNavigate();
   const { handleAlertStatus } = useContext(AlertContext);
+  const { auth, handleLogin } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [spinConnect, setSpinConnect] = useState(false);
@@ -38,10 +41,13 @@ const PostedJobsListings = () => {
   const [jobId, setjobId] = useState("");
   const [checkDataJob, setCheckDataJob] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [saveDataApplicant, setSaveDataApplicant] = useState([]);
   const data = {};
   searchParams.forEach((value, key) => {
     data[key] = value;
   });
+
+  console.log(auth);
 
   const antIcon = (
     <LoadingOutlined
@@ -117,6 +123,25 @@ const PostedJobsListings = () => {
   useEffect(() => {
     const getData = async () => {
       try {
+        if (window.location.href === "http://localhost:3000/myListJob") {
+          jobAPI
+            .getListJob()
+            .then((response) => {
+              if (response.data.data.undefined.data) {
+                setLoading(false);
+                setSpinConnect(false);
+                console.log(response.data.data.undefined.data);
+                setSaveDataApplicant(response.data.data.undefined.data);
+                setDataJob(response.data.data.undefined.data);
+              } else {
+                return;
+              }
+              setCheckDataJob(false);
+            })
+            .catch((error) => {
+              setCheckDataJob(false);
+            });
+        }
         const res = await jobAPI.getBySearchAndFilter({
           search: data.search || "",
           sectors: data.sector || "",
@@ -125,7 +150,14 @@ const PostedJobsListings = () => {
           sortBy: data.sortBy || "desc",
           pageSize: pageSizeDefault,
         });
-        setDataJob(res.data.data.jobList.jobs);
+        const dataFilter = res.data.data.jobList.jobs;
+        console.log(dataFilter);
+        const filteredArray = saveDataApplicant.filter((obj1) => {
+          return dataFilter.some((obj2) => {
+            return obj2._id === obj1._id;
+          });
+        });
+        setDataJob(filteredArray);
       } catch (error) {
         handleAlertStatus({ type: "error", message: "Something went wrong" });
       } finally {
@@ -143,6 +175,8 @@ const PostedJobsListings = () => {
           if (response.data.data.undefined.data) {
             setLoading(false);
             setSpinConnect(false);
+            console.log(response.data.data.undefined.data);
+            setSaveDataApplicant(response.data.data.undefined.data);
             setDataJob(response.data.data.undefined.data);
           } else {
             return;
@@ -231,9 +265,9 @@ const PostedJobsListings = () => {
                     renderItem={(value) => (
                       <div className="job" key={value.item}>
                         <img
-                          src="https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
+                          src={auth.user.companyLogoUrl}
                           alt=""
-                          className="w-40 h-40"
+                          className="w-44 h-40"
                         />
                         <div>
                           <div>
