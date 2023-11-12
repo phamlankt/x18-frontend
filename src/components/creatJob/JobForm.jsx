@@ -59,7 +59,7 @@ const JobForm = (props) => {
           }))
         );
       } catch (error) {
-        setError(error.response.data.message);
+        setError(error);
       } finally {
         setLoading(false);
       }

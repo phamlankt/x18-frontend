@@ -22,13 +22,15 @@ import { DownOutlined } from "@ant-design/icons";
 import { formatDate } from "../../utils/fomatDate";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
+import Recoil from "../../recoilContextProvider";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const pageSizeDefault = 10;
 
 const PostedJobsListings = () => {
-  const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
   const { handleAlertStatus } = useContext(AlertContext);
+  const { auth, handleLogin } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [spinConnect, setSpinConnect] = useState(false);
@@ -39,6 +41,7 @@ const PostedJobsListings = () => {
   const [jobId, setjobId] = useState("");
   const [checkDataJob, setCheckDataJob] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [saveDataApplicant, setSaveDataApplicant] = useState([]);
   const data = {};
   searchParams.forEach((value, key) => {
     data[key] = value;
@@ -72,7 +75,6 @@ const PostedJobsListings = () => {
     });
     setSpinConnect(true);
     setOpen(false);
-    console.log(jobId);
     try {
       jobAPI
         .remove({ jobId })
@@ -117,6 +119,24 @@ const PostedJobsListings = () => {
   useEffect(() => {
     const getData = async () => {
       try {
+        if (window.location.href === "http://localhost:3000/myPost") {
+          jobAPI
+            .getListJob()
+            .then((response) => {
+              if (response.data.data.undefined.data) {
+                setLoading(false);
+                setSpinConnect(false);
+                setSaveDataApplicant(response.data.data.undefined.data);
+                setDataJob(response.data.data.undefined.data);
+              } else {
+                return;
+              }
+              setCheckDataJob(false);
+            })
+            .catch((error) => {
+              setCheckDataJob(false);
+            });
+        }
         const res = await jobAPI.getBySearchAndFilter({
           search: data.search || "",
           sectors: data.sector || "",
@@ -125,7 +145,13 @@ const PostedJobsListings = () => {
           sortBy: data.sortBy || "desc",
           pageSize: pageSizeDefault,
         });
-        setDataJob(res.data.data.jobList.jobs);
+        const dataFilter = res.data.data.jobList.jobs;
+        const filteredArray = saveDataApplicant.filter((obj1) => {
+          return dataFilter.some((obj2) => {
+            return obj2._id === obj1._id;
+          });
+        });
+        setDataJob(filteredArray);
       } catch (error) {
         handleAlertStatus({ type: "error", message: "Something went wrong" });
       } finally {
@@ -143,6 +169,7 @@ const PostedJobsListings = () => {
           if (response.data.data.undefined.data) {
             setLoading(false);
             setSpinConnect(false);
+            setSaveDataApplicant(response.data.data.undefined.data);
             setDataJob(response.data.data.undefined.data);
           } else {
             return;
@@ -231,17 +258,19 @@ const PostedJobsListings = () => {
                     renderItem={(value) => (
                       <div className="job" key={value.item}>
                         <img
-                          src={
-                            auth.user.companyLogoUrl ||
-                            "https://static.topcv.vn/v4/image/logo/topcv-logo-6.png"
-                          }
-                          alt="Company Logo"
+                          src={auth.user.companyLogoUrl}
+                          alt=""
                           className="w-40 h-40"
                         />
                         <div>
                           <div>
                             <h5
-                              onClick={() => navigate(`/jobs/${value._id}`)}
+                              onClick={() => {
+                                if (value.status !== "removed") {
+                                  navigate(`/jobs/${value._id}`);
+                                }
+                                return false;
+                              }}
                               style={{ cursor: "pointer" }}
                               onMouseEnter={(event) => {
                                 event.target.style.color = "blue";
@@ -255,8 +284,17 @@ const PostedJobsListings = () => {
                                 : value.title}
                             </h5>
                             <div style={{ zIndex: "10" }}>
-                              <Dropdown overlay={menu}>
+                              <Dropdown
+                                overlay={
+                                  value.status === "removed" ? (
+                                    <div></div>
+                                  ) : (
+                                    menu
+                                  )
+                                }
+                              >
                                 <Button
+                                  style={{ width: "56px" }}
                                   onMouseEnter={() => setjobId(value._id)}
                                 >
                                   <Settings />

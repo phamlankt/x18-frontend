@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MapPin } from "lucide-react";
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -126,6 +126,23 @@ const ListJobHaveApplied = () => {
   // SEARCH AND FILTER
   useEffect(() => {
     const getData = async () => {
+      if (window.location.href === "http://localhost:3000/myListJob") {
+        applicationAPI
+          .getAll()
+          .then((response) => {
+            if (response.data.data.applicationList.data) {
+              setDataJob(response.data.data.applicationList.data);
+              setSaveDataApplicant(response.data.data.applicationList.data);
+              return;
+            } else {
+              return;
+            }
+            setCheckDataJob(false);
+          })
+          .catch((error) => {
+            console.log(error, 15);
+          });
+      }
       try {
         const res = await jobAPI.getBySearchAndFilter({
           search: data.search || "",
@@ -142,6 +159,7 @@ const ListJobHaveApplied = () => {
             return obj2._id === obj1.job._id;
           });
         });                
+
         setDataJob(filteredArray);
       } catch (error) {
         handleAlertStatus({ type: "error", message: "Something went wrong" });

@@ -126,10 +126,14 @@ const Filter = () => {
           placeholder="Choose your sectors"
           onChange={handleChangeSector}
           value={sectors}
-          options={dataSectors.map((sector) => ({
-            label: sector.name,
-            value: sector.name,
-          }))}
+          options={
+            dataSectors
+              ? dataSectors.map((sector) => ({
+                  label: sector.name,
+                  value: sector.name,
+                }))
+              : null
+          }
         />
       </div>
 
