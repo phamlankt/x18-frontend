@@ -187,12 +187,15 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
   };
 
   const bsOptions = [];
-  businessSectors.map((businessSector) => {
-    return bsOptions.push({
-      name: businessSector.name,
-      value: businessSector.name,
+  console.log(businessSectors);
+  if (businessSectors.sectors) {
+    businessSectors.sectors.map((businessSector) => {
+      return bsOptions.push({
+        name: businessSector.name,
+        value: businessSector.name,
+      });
     });
-  });
+  }
   const handleChangeSector = (e) => {
     console.log("e", e);
     setSectors(e);
