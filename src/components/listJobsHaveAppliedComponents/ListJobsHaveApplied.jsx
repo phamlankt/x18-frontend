@@ -70,7 +70,6 @@ const ListJobHaveApplied = () => {
     setOpen(true);
   };
   const handleOk = () => {
-    console.log(12);
     window.scrollTo({
       top: 0,
       behavior: "instant",
@@ -80,7 +79,6 @@ const ListJobHaveApplied = () => {
     applicationAPI
       .cancel({ applicationId })
       .then((response) => {
-        console.log("response",response)
         socket.emit("sendApplicationEvent", {
           recruiter: response.data.data.applicationInfo.creator,
           applicant: auth.user.email,
@@ -139,14 +137,11 @@ const ListJobHaveApplied = () => {
           currentPage: currentPage,
         });
         const dataFilter = res.data.data.jobList.jobs;
-        console.log(res.data);
         const filteredArray = saveDataApplicant.filter((obj1) => {
           return dataFilter.some((obj2) => {
-            console.log(obj1.job._id, obj2._id);
             return obj2._id === obj1.job._id;
           });
-        });
-        console.log(filteredArray);                  
+        });                
         setDataJob(filteredArray);
       } catch (error) {
         handleAlertStatus({ type: "error", message: "Something went wrong" });

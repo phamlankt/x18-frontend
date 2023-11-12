@@ -1,18 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import { RecoilRoot } from 'recoil';
-// import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { RecoilRoot } from "recoil";
 import { BrowserRouter } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles.scss";
+import AlertState from "./contexts/AlertContext/AlertState";
+import AuthState from "./contexts/AuthContext/AuthState";
+import NotificationState from "./contexts/NotificationContext/NotificationState";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <RecoilRoot>
-   <BrowserRouter>
-    <App />
-   </BrowserRouter>
+    <BrowserRouter>
+      <AlertState>
+        <AuthState>
+          <NotificationState>
+            <App />
+          </NotificationState>
+        </AuthState>
+      </AlertState>
+    </BrowserRouter>
   </RecoilRoot>
 );
 

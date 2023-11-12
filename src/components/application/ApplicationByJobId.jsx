@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import applicationAPI from "../../apis/applicationAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
@@ -45,10 +45,6 @@ function ApplicationByJobId({ application, setApplication, jobInfo }) {
     <Spin />
   ) : application && application.jobId ? (
     <div className="ms-4 mt-4">
-      {/* <div className="d-flex">
-        <h6 className="fst-italic fw-light">Status: </h6>
-        <span className="ms-1">{application.status}</span>
-      </div> */}
       <div className="d-flex align-items-center justify-content-center">
         <div className="w-50">
           {application.status === "sent" ? (

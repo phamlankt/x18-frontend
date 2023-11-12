@@ -15,10 +15,11 @@ import Notifications from "../notification/Notifications";
 import notificationAPI from "../../apis/notificationAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import { handleApplicationNotification } from "../../global/common";
-
+import { toast } from "react-toastify";
+import NotificationContext from "../../contexts/NotificationContext/NotificationContext";
 function Header() {
   const { handleAlertStatus } = useContext(AlertContext);
-  const [notifications, setNotifications] = useState([]);
+  const {notifications,handleNotification}=useContext(NotificationContext)
   const [myData, setMyInFor] = useRecoilState(Recoil.AtomDataUser);
   const [stopFecthAPI, setStopFectAPI] = useRecoilState(
     Recoil.AtomCheckDataUser
@@ -36,28 +37,28 @@ function Header() {
   const fetchNotification = async () => {
     try {
       await notificationAPI.getByReceiver().then((result) => {
-        setNotifications(result.data.data.notificationList);
+        handleNotification(result.data.data.notificationList);
       });
     } catch (error) {
       console.log(error.response.data.message);
     }
   };
 
-  useEffect(() => {
-    if (auth.isAuthenticated && socket) {
-      socket.on("getJobNotification", (data) => {
-        // console.log("data",data)
-        const message = handleApplicationNotification(data);
+  // useEffect(() => {
+  //   if (auth.isAuthenticated && socket) {
+  //     socket.on("getJobNotification", (data) => {
+  //       console.log("data",data)
+  //       const message = handleApplicationNotification(data);
 
-        handleAlertStatus({
-          type: "success",
-          message: message,
-        });
+  //       handleAlertStatus({
+  //         type: "success",
+  //         message: message,
+  //       });
        
-        setNotifications(prev=>[...prev, data]);
-      });
-    }
-  }, [socket]);
+  //       setNotifications(prev=>[...prev, data]);
+  //     });
+  //   }
+  // }, [socket]);
 
   const DeleteToken = () => {
     navigate("/login");
@@ -71,7 +72,6 @@ function Header() {
       .authInfo()
       .then((response) => {
         setMyInFor(response.data.data.userInfo);
-        console.log(response.data.data.userInfo, 29);
       })
       .catch((error) => {
         console.error(error);
@@ -152,8 +152,8 @@ function Header() {
                         Your notifications:
                       </p>
                       <Notifications
-                        notifications={notifications}
-                        setNotifications={setNotifications}
+                        // notifications={notifications}
+                        // setNotifications={setNotifications}
                       />
                     </div>
                   </Menu>

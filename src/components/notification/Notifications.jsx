@@ -3,17 +3,18 @@ import notificationAPI from "../../apis/notificationAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import { parsePath, useNavigate } from "react-router-dom";
 import { getPastTime } from "../../utils/fomatDate";
+import NotificationContext from "../../contexts/NotificationContext/NotificationContext";
 
-function Notifications({ notifications, setNotifications }) {
+function Notifications() {
   const navigate = useNavigate();
-
-  const handleNotification = (notification) => {
+const{notifications,handleNotification}=useContext(NotificationContext)
+  const processNotification = (notification) => {
     const data = { ...notification, read: true };
     notificationAPI.updateNotification(data).then(() => {
       const updatedNotification = notifications.filter(
         (noti) => noti._id !== notification._id
       );
-      setNotifications(updatedNotification);
+      handleNotification(updatedNotification);
     });
     navigate(`/jobs/${notification.jobId}`);
   };
@@ -26,7 +27,7 @@ function Notifications({ notifications, setNotifications }) {
             <div
               className="notification-tag-container"
               key={index}
-              onClick={() => handleNotification(notification)}
+              onClick={() => processNotification(notification)}
             >
               <p>
                 {notification.status === "sent"
