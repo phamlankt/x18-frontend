@@ -77,7 +77,7 @@ const UserManagementComponent = () => {
         currentPage,
         pageSize,
       });
-  
+
       if (response.data && response.data.data.userList) {
         const userList = response.data.data.userList;
         if (userList.users) {
@@ -136,13 +136,22 @@ const UserManagementComponent = () => {
   };
 
   const handleUpdate = (userId, userRole, userRecord) => {
-};
+    if (userRole === "superadmin") {
+      setSelectedUserData(userRecord);
+      setIsShowModalUpdate(prevState => ({
+        ...prevState,
+        [userId]: true
+      }));
+    } else {
+      message.error("You don't have permission to update this user.");
+    }
+  };
 
   return (
     <div>
       <div className="users-management-container">
         <h2>Users Management</h2>
-        <Link to={"/admin/register"}>
+        {userRole === "superadmin" && (<Link to={"/admin/register"}>
           <Button
             icon={<PlusOutlined />}
             type="default"
@@ -150,7 +159,7 @@ const UserManagementComponent = () => {
           >
             Register A New Admin
           </Button>
-        </Link>
+        </Link>)}
       </div>
       <br />
       <div className="filter-search-container">
@@ -179,10 +188,10 @@ const UserManagementComponent = () => {
         dataSource={filteredUsers}
         rowKey="_id"
         pagination={{
-            current: currentPage,
-            pageSize: pageSize,
-            total: totalCounts,
-            onChange: handlePageChange,
+          current: currentPage,
+          pageSize: pageSize,
+          total: totalCounts,
+          onChange: handlePageChange,
         }}
       >
         <Column
@@ -236,8 +245,8 @@ const UserManagementComponent = () => {
               >
                 {record.status === "active" ? "Deactivate" : "Activate"}
               </Button>
-             {(userRole === "superadmin" && roleMapping[record.roleId] === "admin") ? (
-                <Button className="btn-update" type="primary" onClick={() => handleUpdate(record.id)}>
+              {(userRole === "superadmin" && roleMapping[record.roleId] === "admin") ? (
+                <Button type="primary" onClick={() => handleUpdate(record._id, userRole, record)}>
                   Update
                 </Button>
               ) : null}

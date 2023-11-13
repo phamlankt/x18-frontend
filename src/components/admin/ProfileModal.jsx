@@ -18,8 +18,6 @@ const ProfileModal = ({ isOpenModal, userId, userData }) => {
   const [error, setError] = useState(null);
   const [fileAvatar, setFileAvatar] = useState(null);
 
-  const defaultAvatarUrl =
-    "https://1.bp.blogspot.com/-LjgFJBMTmeM/YZ-UJ2Mdb-I/AAAAAAAACMk/3iYczLi5BTQefjXjnJsNtaSYlP-A2jO6wCLcBGAsYHQ/s1200/2a.jpg";
 
   const onFinish = async (data) => {
     try {
@@ -65,11 +63,6 @@ const ProfileModal = ({ isOpenModal, userId, userData }) => {
             name="avatar"
             getValueFromEvent={handleUploadFile}
           >
-            <img
-              className="avatar"
-              src={userData.avatarUrl ? userData.avatarUrl : defaultAvatarUrl}
-              alt=""
-            />
             <Upload
               name="avatar"
               listType="picture-card"
