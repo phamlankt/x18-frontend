@@ -30,7 +30,7 @@ function JobDescription() {
   
   useEffect(() => {
     getJobById();
-  }, []);
+  }, [jobId]);
   const getJobById = async () => {
     try {
       setLoading(true);
