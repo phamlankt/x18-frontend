@@ -119,7 +119,8 @@ const PostedJobsListings = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        if (window.location.href === "http://localhost:3000/myPost") {
+        // if (window.location.href === "http://localhost:3000/myPost") {
+          if (window.location.href === `${process.env.REACT_APP_BASE_URL}/myPost`) {
           jobAPI
             .getListJob()
             .then((response) => {
