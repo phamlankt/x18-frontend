@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Form,
   Input,
@@ -6,7 +6,6 @@ import {
   Upload,
   Avatar,
   message,
-  Spin,
   Alert,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
@@ -17,10 +16,12 @@ const ProfileModal = ({ isOpenModal, userId, userData }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fileAvatar, setFileAvatar] = useState(null);
+  const [currentAvatar, setCurrentAvatar] = useState(userData.avatarUrl || null);
 
 
   const onFinish = async (data) => {
     try {
+      console.log(userData);
       setLoading(true);
       setError(null);
       const formData = new FormData();
@@ -41,9 +42,12 @@ const ProfileModal = ({ isOpenModal, userId, userData }) => {
   };
 
   const handleUploadFile = (file) => {
-    console.log(file);
     setFileAvatar(file.fileList[0].originFileObj);
   };
+
+  useEffect(() => {
+    setCurrentAvatar(userData.avatarUrl || null);
+  }, [userData.avatarUrl]);
 
   return (
     <div className="container-admin-profile-modal">
@@ -52,7 +56,7 @@ const ProfileModal = ({ isOpenModal, userId, userData }) => {
           message={error}
           type="error"
           showIcon
-          closable
+          closablenpm
           onClose={() => setError(null)}
         />
       )}
@@ -74,7 +78,11 @@ const ProfileModal = ({ isOpenModal, userId, userData }) => {
               accept=".jpg,.png,.jpeg"
               maxCount={1}
             >
-              <Avatar size={64} icon={<UploadOutlined />} />
+              {currentAvatar ? (
+                <Avatar size={64} src={currentAvatar} />
+              ) : (
+                <Avatar size={64} icon={<UploadOutlined />} />
+              )}
             </Upload>
           </Form.Item>
         </Form>
@@ -119,11 +127,11 @@ const ProfileModal = ({ isOpenModal, userId, userData }) => {
           </Form.Item>
           <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
             <Button
+              loading={loading ? true : false}
               type="primary"
               htmlType="submit"
-              icon={loading ? <Spin /> : null}
             >
-              {loading ? "Uploading" : "Update"}
+              Update
             </Button>
           </Form.Item>
         </Form>
