@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import userAPI from "../../apis/userAPI";
 import { Field, Formik } from "formik";
 import UploadFile from "./UploadFile";
+import { capitalizeFirstLetter } from "../../global/common";
 
 function ApplicationForm({ setApplication, jobInfo }) {
   const { handleAlertStatus } = useContext(AlertContext);
@@ -69,7 +70,7 @@ function ApplicationForm({ setApplication, jobInfo }) {
         recruiter: jobInfo.creator,
         applicant: auth.user.email,
         jobId: jobId,
-        jobTitle:jobInfo.title,
+        jobTitle: jobInfo.title,
         applicationId: response.data.data.applicationInfo._id,
         status: "sent",
       });
@@ -108,8 +109,35 @@ function ApplicationForm({ setApplication, jobInfo }) {
             <div className="row">
               <div className="col-md-12 border-right">
                 <div className="p-3 py-5">
+                  <div className="mt-2 text-left">
+                    <span className="fw-700 fs-6 fw-bold text-primary">
+                      Saved documents:
+                    </span>
+                    <div>
+                      {auth.user.documents &&
+                        auth.user.documents.map((document, index) => {
+                          return (
+                            <div key={index}>
+                              <a
+                                href={document.path}
+                                className="text-danger text-decoration-underline"
+                              >
+                                {capitalizeFirstLetter(
+                                  document.fileName &&
+                                    document.fileName.substring(
+                                      document.fileName.indexOf("-") + 1
+                                    )
+                                )}
+                              </a>
+                              <input class="form-check-input ms-2"  type="checkbox" value="" id={document.name}/>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </div>
+
                   <div className="d-flex justify-content-center">
-                    {documents.map((document,index) => {
+                    {documents.map((document, index) => {
                       return (
                         <UploadFile
                           key={index}

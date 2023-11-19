@@ -20,7 +20,6 @@ function App() {
   useEffect(() => {
     if (auth.isAuthenticated && socket) {
       socket.on("getJobNotification", async (data) => {
-        // console.log("data1", data);
         const message = handleApplicationNotification(data);
 
         handleAlertStatus({
@@ -29,10 +28,8 @@ function App() {
         });
         try {
           await notificationAPI.getByReceiver().then((result) => {
-            // console.log("result.data.data.notificationList",result.data.data.notificationList)
             const notiListFromDB = result.data.data.notificationList;
             handleNotification(notiListFromDB);
-            // console.log("[notiListFromDB]", notiListFromDB);
           });
         } catch (error) {
           console.log(error.response.data.message);

@@ -18,7 +18,10 @@ function JobDetailsLayout() {
     getApplicationByJobIdAndApplicantID(1, 10);
     getJobById();
   }, []);
-
+  const onChange = (key) => {
+    getJobById();
+    getApplicationByJobIdAndApplicantID(1, 10);
+  };
   const getApplicationByJobIdAndApplicantID = async () => {
     try {
       const response = await applicationAPI.getApplicationByJobIdForApplicant(
@@ -54,7 +57,7 @@ function JobDetailsLayout() {
                 : "Application Form"),
         children:
           roleName === "recruiter" ? (
-            <ApplicantsByJobId jobTitle={jobInfo.title}/>
+            <ApplicantsByJobId jobTitle={jobInfo.title} />
           ) : (
             roleName === "applicant" && (
               <ApplicationByJobId
@@ -69,7 +72,12 @@ function JobDetailsLayout() {
   return (
     <div className="p-2">
       {" "}
-      <Tabs defaultActiveKey="1" items={items} destroyInactiveTabPane={true} />
+      <Tabs
+        defaultActiveKey="1"
+        onChange={onChange}
+        items={items}
+        destroyInactiveTabPane={true}
+      />
     </div>
   );
 }
