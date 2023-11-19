@@ -52,11 +52,12 @@ const AdminHeader = () => {
       <div className="navbar">
         {auth.isAuthenticated ? (
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <BellRing size={32} color="white" />
-
             <Dropdown overlay={menu}>
               <div>
-                <img src={myInfor.avatarUrl ? myInfor.avatarUrl : adminavatar} alt="" />
+                <img
+                  src={myInfor.avatarUrl ? myInfor.avatarUrl : adminavatar}
+                  alt=""
+                />
               </div>
             </Dropdown>
           </div>
