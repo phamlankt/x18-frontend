@@ -44,7 +44,6 @@ function UploadFile({
   };
 
   const removeDocument = (fieldN) => {
-    console.log("fieldN", fieldN);
     const updatedUploadedDocuments = uploadedDocuments.filter(
       (docu) => docu.name !== fieldN
     );

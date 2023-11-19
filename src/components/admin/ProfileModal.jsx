@@ -21,7 +21,6 @@ const ProfileModal = ({ isOpenModal, userId, userData }) => {
 
   const onFinish = async (data) => {
     try {
-      console.log(userData);
       setLoading(true);
       setError(null);
       const formData = new FormData();

@@ -74,7 +74,6 @@ function ApplicationForm({ setApplication, jobInfo }) {
         status: "sent",
       });
     } catch (error) {
-      console.log("error", error);
       handleAlertStatus({
         type: "error",
         message: error.response.data.message,

@@ -33,12 +33,9 @@ function UploadButton({ documentName }) {
     }
     if (info.file.status === "done") {
       // Get this url from response in real world.
-      console.log("info.file", info.file);
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
-        // onUpLoadDocument({ name: info.file.name, path: url });
-        // setUploadedDocument({ name: info.file.name, path: url });
       });
     }
   };
