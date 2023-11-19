@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../../images/logo.png";
+import adminavatar from "../../images/adminavatar.jpg";
 import { useContext } from "react";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
 import { Dropdown, Menu } from "antd";
@@ -55,7 +56,7 @@ const AdminHeader = () => {
 
             <Dropdown overlay={menu}>
               <div>
-                <img src={myInfor.avatarUrl} alt="" />
+                <img src={myInfor.avatarUrl ? myInfor.avatarUrl : adminavatar} alt="" />
               </div>
             </Dropdown>
           </div>
