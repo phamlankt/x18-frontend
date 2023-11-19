@@ -27,7 +27,7 @@ const ListJobHaveApplied = () => {
   const [applicationId, setapplicationId] = useState("");
   const [dataJob, setDataJob] = useState([]);
   const [modalText, setModalText] = useState(
-    "Do you really want to delete this job ?"
+    "Do you really want to cancel this application ?"
   );
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
@@ -126,7 +126,9 @@ const ListJobHaveApplied = () => {
   // SEARCH AND FILTER
   useEffect(() => {
     const getData = async () => {
-        if (window.location.href === `${process.env.REACT_APP_BASE_URL}/myListJob`) {
+      if (
+        window.location.href === `${process.env.REACT_APP_BASE_URL}/myListJob`
+      ) {
         applicationAPI
           .getAll()
           .then((response) => {
@@ -158,7 +160,7 @@ const ListJobHaveApplied = () => {
           return dataFilter.some((obj2) => {
             return obj2._id === obj1.job._id;
           });
-        });                
+        });
 
         setDataJob(filteredArray);
       } catch (error) {
@@ -254,23 +256,25 @@ const ListJobHaveApplied = () => {
                                 {formatDate(value.job.createdAt)}
                               </span>
                             </h4>
-                            <div>
-                              {value.status === "cancelled" ? (
-                                <div className="NotificationButton">
-                                  Cancelled
-                                </div>
-                              ) : (
-                                <button
-                                  className="CancelButton"
-                                  onClick={() => showModal()}
-                                  onMouseEnter={() =>
-                                    setapplicationId(value._id)
-                                  }
-                                >
-                                  <XCircle /> Cancel
-                                </button>
-                              )}
-                            </div>
+                            {value.status === "sent" ? (
+                              <div>
+                                {value.status === "cancelled" ? (
+                                  <div className="NotificationButton">
+                                    Cancelled
+                                  </div>
+                                ) : (
+                                  <button
+                                    className="CancelButton"
+                                    onClick={() => showModal()}
+                                    onMouseEnter={() =>
+                                      setapplicationId(value._id)
+                                    }
+                                  >
+                                    <XCircle /> Cancel
+                                  </button>
+                                )}
+                              </div>
+                            ) : null}
                           </div>
                           <h6>
                             Position: <span>{value.job.position}</span>
