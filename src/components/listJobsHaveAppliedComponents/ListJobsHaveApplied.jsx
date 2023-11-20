@@ -17,6 +17,7 @@ import jobAPI from "../../apis/jobAPI";
 import SearchBar from "../homePage/SearchBar";
 import Loading from "../layout/Loading";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
+import { capitalizeFirstLetter } from "../../global/common";
 
 let pageSizeDefault = 1;
 
@@ -27,7 +28,7 @@ const ListJobHaveApplied = () => {
   const [applicationId, setapplicationId] = useState("");
   const [dataJob, setDataJob] = useState([]);
   const [modalText, setModalText] = useState(
-    "Do you really want to delete this job ?"
+    "Do you really want to cancel this application ?"
   );
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,7 @@ const ListJobHaveApplied = () => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [checkDataJob, setCheckDataJob] = useState(true);
   const [saveDataApplicant, setSaveDataApplicant] = useState([]);
+  const [currentJob, setCurrentJob] = useState();
   const data = {};
   searchParams.forEach((value, key) => {
     data[key] = value;
@@ -66,8 +68,9 @@ const ListJobHaveApplied = () => {
         console.log(error, 15);
       });
   }
-  const showModal = () => {
+  const showModal = (currentJob) => {
     setOpen(true);
+    setCurrentJob(currentJob);
   };
   const handleOk = () => {
     window.scrollTo({
@@ -78,12 +81,12 @@ const ListJobHaveApplied = () => {
     setOpen(false);
     applicationAPI
       .cancel({ applicationId })
-      .then((response) => {
+      .then(() => {
         socket.emit("sendApplicationEvent", {
-          recruiter: response.data.data.applicationInfo.creator,
+          recruiter: currentJob.creator,
           applicant: auth.user.email,
-          jobId: response.jobId,
-          jobTitle: "",
+          jobId: currentJob._id,
+          jobTitle: currentJob.title,
           applicationId,
           status: "cancelled",
         });
@@ -126,7 +129,9 @@ const ListJobHaveApplied = () => {
   // SEARCH AND FILTER
   useEffect(() => {
     const getData = async () => {
-        if (window.location.href === `${process.env.REACT_APP_BASE_URL}/myListJob`) {
+      if (
+        window.location.href === `${process.env.REACT_APP_BASE_URL}/myListJob`
+      ) {
         applicationAPI
           .getAll()
           .then((response) => {
@@ -158,7 +163,7 @@ const ListJobHaveApplied = () => {
           return dataFilter.some((obj2) => {
             return obj2._id === obj1.job._id;
           });
-        });                
+        });
 
         setDataJob(filteredArray);
       } catch (error) {
@@ -254,23 +259,23 @@ const ListJobHaveApplied = () => {
                                 {formatDate(value.job.createdAt)}
                               </span>
                             </h4>
-                            <div>
-                              {value.status === "cancelled" ? (
-                                <div className="NotificationButton">
-                                  Cancelled
-                                </div>
-                              ) : (
+                            {value.status === "sent" ? (
+                              <div>
                                 <button
                                   className="CancelButton"
-                                  onClick={() => showModal()}
+                                  onClick={() => showModal(value.job)}
                                   onMouseEnter={() =>
                                     setapplicationId(value._id)
                                   }
                                 >
                                   <XCircle /> Cancel
                                 </button>
-                              )}
-                            </div>
+                              </div>
+                            ) : (
+                              <div className="NotificationButton text-info fw-bold">
+                                {capitalizeFirstLetter(value.status)}
+                              </div>
+                            )}
                           </div>
                           <h6>
                             Position: <span>{value.job.position}</span>

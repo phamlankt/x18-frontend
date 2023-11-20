@@ -85,9 +85,10 @@ const DeleteJobModal = ({ job }) => {
         onCancel={handleCancel}
       >
         <form>
-          <label htmlFor="delete-job">
+          <label htmlFor="delete-job" style={{ width: "100%" }}>
             <p>Reason for deleting the job:</p>
             <textarea
+              style={{ width: "100%" }}
               className="p-2"
               placeholder="Type the reason for removing this job..."
               maxlength="100"
