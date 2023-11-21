@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useNavigate } from "react";
 import AuthContext from "./AuthContext";
 import { io } from "socket.io-client";
 import authAPI from "../../apis/authAPI";
 
 const AuthState = ({ children }) => {
+  const navigate = useNavigate();
   const [auth, setAuth] = useState({
     isAuthenticated: false,
     user: {},
@@ -20,11 +21,15 @@ const AuthState = ({ children }) => {
         isAuthenticated: true,
         user: data.userInfo,
       });
-      
-      setSocket(io(`${process.env.REACT_APP_BASE_API}`, { transports: ["websocket"] }));
+
+      setSocket(
+        io(`${process.env.REACT_APP_BASE_API}`, { transports: ["websocket"] })
+      );
       return data.userInfo;
     } catch (error) {
       console.log(error.response.data.message);
+      if (error.response.data.message === "Token is expired")
+        navigate("/login");
     }
   };
 
