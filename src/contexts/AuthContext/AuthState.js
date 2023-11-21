@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useNavigate } from "react";
+import React, { useEffect, useState } from "react";
 import AuthContext from "./AuthContext";
 import { io } from "socket.io-client";
 import authAPI from "../../apis/authAPI";
+import { useNavigate } from "react-router-dom";
 
 const AuthState = ({ children }) => {
   const navigate = useNavigate();
