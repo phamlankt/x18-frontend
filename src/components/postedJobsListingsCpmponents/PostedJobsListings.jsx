@@ -162,28 +162,28 @@ const PostedJobsListings = () => {
     getData();
   }, [data.search, data.sector, data.location, data.sortField, data.sortBy]);
 
-  if (checkDataJob) {
-    try {
-      jobAPI
-        .getListJob()
-        .then((response) => {
-          if (response.data.data.undefined.data) {
-            setLoading(false);
-            setSpinConnect(false);
-            setSaveDataApplicant(response.data.data.undefined.data);
-            setDataJob(response.data.data.undefined.data);
-          } else {
-            return;
-          }
-          setCheckDataJob(false);
-        })
-        .catch((error) => {
-          setCheckDataJob(false);
-        });
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  // if (checkDataJob) {
+  //   try {
+  //     jobAPI
+  //       .getListJob()
+  //       .then((response) => {
+  //         if (response.data.data.undefined.data) {
+  //           setLoading(false);
+  //           setSpinConnect(false);
+  //           setSaveDataApplicant(response.data.data.undefined.data);
+  //           setDataJob(response.data.data.undefined.data);
+  //         } else {
+  //           return;
+  //         }
+  //         setCheckDataJob(false);
+  //       })
+  //       .catch((error) => {
+  //         setCheckDataJob(false);
+  //       });
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 
   const pageSize = 5;
   const totalItems = dataJob.length;

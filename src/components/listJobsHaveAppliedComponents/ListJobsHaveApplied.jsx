@@ -51,8 +51,8 @@ const ListJobHaveApplied = () => {
       spin
     />
   );
-  if (checkDataJob) {
-    applicationAPI
+  const fetchApplication = async () => {
+    await applicationAPI
       .getAll()
       .then((response) => {
         setLoading(false);
@@ -67,7 +67,13 @@ const ListJobHaveApplied = () => {
       .catch((error) => {
         console.log(error, 15);
       });
-  }
+  };
+  useEffect( () => {
+    if (checkDataJob) {
+      fetchApplication();
+    }
+  }, [checkDataJob]);
+
   const showModal = (currentJob) => {
     setOpen(true);
     setCurrentJob(currentJob);
