@@ -53,26 +53,7 @@ const ListJobHaveApplied = () => {
     />
   );
 
-  useEffect(() => {
-    const FecthData = async () => {
-      if (checkDataJob) {
-        try {
-          const responseData = await applicationAPI.getAll();
-          setDataJob(responseData.data.data.applicationList.data);
-          setSaveDataApplicant(responseData.data.data.applicationList.data);
-          setLoading(false);
-          setCheckDataJob(false);
-        } catch (error) {
-          return;
-        }
-      }
-    };
-    FecthData();
-  }, []);
-
-
   const showModal = (currentJob) => {
-
     setOpen(true);
     setCurrentJob(currentJob);
   };
@@ -140,6 +121,7 @@ const ListJobHaveApplied = () => {
           if (res.data.data.applicationList.data) {
             setDataJob(res.data.data.applicationList.data);
             setSaveDataApplicant(res.data.data.applicationList.data);
+            setLoading(false);
             return;
           } else {
             return;
@@ -270,12 +252,10 @@ const ListJobHaveApplied = () => {
                                 >
                                   <XCircle /> Cancel
                                 </button>
-
                               </div>
                             ) : (
                               <div className="NotificationButton text-info fw-bold">
                                 {capitalizeFirstLetter(value.status)}
-
                               </div>
                             )}
                           </div>
