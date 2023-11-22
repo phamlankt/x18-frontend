@@ -5,7 +5,7 @@ import {
   FaRightToBracket,
   FaTwitter,
 } from "react-icons/fa6";
-import React, { useContext, useState,useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext/AuthContext";
 import authAPI from "../apis/authAPI";
@@ -15,7 +15,6 @@ import { loginFormItems } from "../global/loginFormItems";
 import ForgotPasswordModal from "../components/forgotPassword/ForgotPasswordModal";
 
 const Login = () => {
-
   const { socket } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -44,11 +43,12 @@ const Login = () => {
       localStorage.setItem("accessToken", response.data.data.accessToken);
 
       const userInfo = await handleLogin();
-      socket && socket.emit("newUser", {"id":userInfo._id,"email":userInfo.email});
+      socket &&
+        socket.emit("newUser", { id: userInfo._id, email: userInfo.email });
       if (userInfo.roleName === "superadmin" || userInfo.roleName === "admin") {
         navigate("/admin");
       } else {
-        navigate("/");
+        navigate(-1);
       }
     } catch (error) {
       console.log(error);
