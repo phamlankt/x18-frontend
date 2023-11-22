@@ -37,7 +37,7 @@ const PostedJobsListings = () => {
   const [spinConnect, setSpinConnect] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [modalText, setModalText] = useState("Do you want to delete this job?");
+  const [modalText, setModalText] = useState("Do you really want to delete this job?");
   const [dataJob, setDataJob] = useState([]);
   const [jobId, setjobId] = useState("");
   const [checkDataJob, setCheckDataJob] = useState(true);

@@ -53,7 +53,7 @@ const ListJobHaveApplied = () => {
     />
   );
 
-  const showModal = () => {
+  const showModal = (currentJob) => {
     setOpen(true);
     setCurrentJob(currentJob);
   };
@@ -245,7 +245,7 @@ const ListJobHaveApplied = () => {
                               <div>
                                 <button
                                   className="CancelButton"
-                                  onClick={() => showModal()}
+                                  onClick={() => showModal(value.job)}
                                   onMouseEnter={() =>
                                     setapplicationId(value._id)
                                   }
