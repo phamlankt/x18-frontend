@@ -13,6 +13,8 @@ import { Pagination } from "antd";
 import { List } from "antd";
 import SearchBar from "../homePage/SearchBar";
 import applicationAPI from "../../apis/applicationAPI";
+import Recoil from "../../recoilContextProvider";
+import { useRecoilState, useRecoilValue } from "recoil";
 import Loading from "../layout/Loading";
 import jobAPI from "../../apis/jobAPI";
 import { Dropdown, Menu } from "antd";
@@ -22,8 +24,7 @@ import { DownOutlined } from "@ant-design/icons";
 import { formatDate } from "../../utils/fomatDate";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
-import Recoil from "../../recoilContextProvider";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { getCity } from "../../utils/getCity";
 
 const pageSizeDefault = 10;
 
@@ -119,24 +120,25 @@ const PostedJobsListings = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        // if (window.location.href === "http://localhost:3000/myPost") {
-          if (window.location.href === `${process.env.REACT_APP_BASE_URL}/myPost`) {
-          jobAPI
-            .getListJob()
-            .then((response) => {
-              if (response.data.data.undefined.data) {
-                setLoading(false);
-                setSpinConnect(false);
-                setSaveDataApplicant(response.data.data.undefined.data);
-                setDataJob(response.data.data.undefined.data);
-              } else {
-                return;
-              }
-              setCheckDataJob(false);
-            })
-            .catch((error) => {
-              setCheckDataJob(false);
-            });
+        if (
+          window.location.href === `${process.env.REACT_APP_BASE_URL}/myPost`
+        ) {
+          // jobAPI
+          try {
+            const responseData = await jobAPI.getAll();
+            if (responseData.data.data) {
+              setSaveDataApplicant(responseData.data.data);
+              setDataJob(responseData.data.data);
+              setSpinConnect(false);
+              setLoading(false);
+              return;
+            } else {
+              return;
+            }
+          } catch (e) {
+            console.log(e);
+            return;
+          }
         }
         const res = await jobAPI.getBySearchAndFilter({
           search: data.search || "",
@@ -162,28 +164,27 @@ const PostedJobsListings = () => {
     getData();
   }, [data.search, data.sector, data.location, data.sortField, data.sortBy]);
 
-  if (checkDataJob) {
-    try {
-      jobAPI
-        .getListJob()
-        .then((response) => {
-          if (response.data.data.undefined.data) {
-            setLoading(false);
-            setSpinConnect(false);
-            setSaveDataApplicant(response.data.data.undefined.data);
-            setDataJob(response.data.data.undefined.data);
-          } else {
-            return;
-          }
-          setCheckDataJob(false);
-        })
-        .catch((error) => {
-          setCheckDataJob(false);
-        });
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  useEffect(() => {
+    const FecthData = async () => {
+      try {
+        const responseData = await jobAPI.getAll();
+        if (responseData.data.data) {
+          setSaveDataApplicant(responseData.data.data);
+          setDataJob(responseData.data.data);
+          setSpinConnect(false);
+          setLoading(false);
+        } else {
+          return;
+        }
+        setCheckDataJob(true);
+      } catch (error) {
+        setCheckDataJob(true);
+        return;
+      }
+    };
+
+    FecthData();
+  }, []);
 
   const pageSize = 5;
   const totalItems = dataJob.length;
@@ -320,7 +321,7 @@ const PostedJobsListings = () => {
                             </p>
                             <p>
                               <MapPin />
-                              <span>{value.city}</span>
+                              <span>{getCity(value.city)}</span>
                             </p>
                             <p>
                               <CalendarCheck />
@@ -358,4 +359,4 @@ const PostedJobsListings = () => {
   );
 };
 
-export default PostedJobsListings;
+export default React.memo(PostedJobsListings);
