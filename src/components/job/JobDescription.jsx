@@ -19,15 +19,17 @@ import {
 } from "../../global/common";
 import { Spin, Tag } from "antd";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
+import AppContext from "../../contexts/AppContext/AppContext";
 
 function JobDescription() {
-  const navigate = useNavigate()
+  const { handlePreviousPage } = useContext(AppContext);
+  const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const jobId = useParams().jobId;
   const [jobInfo, setJobInfo] = useState();
-  
+
   useEffect(() => {
     getJobById();
   }, [jobId]);
@@ -106,7 +108,14 @@ function JobDescription() {
 
           {!auth.isAuthenticated && (
             <div className="text-center mt-5 w-75">
-              <button className="btn btn-primary fw-bold me-4 w-25" onClick={()=>navigate("/login")}>
+              <button
+                className="btn btn-primary fw-bold me-4 w-25"
+                onClick={() => {
+                  alert(window.location.pathname);
+                  handlePreviousPage(window.location.pathname);
+                  navigate("/login");
+                }}
+              >
                 Apply Now
               </button>
               {/* <button className="btn btn-info btn-gradient ms-4" ><Share2 className="me-1" /></button> */}

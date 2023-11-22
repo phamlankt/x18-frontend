@@ -39,6 +39,7 @@ const AuthState = ({ children }) => {
       isAuthenticated: false,
       user: {},
     });
+    navigate("/");
   };
 
   const parseJwt = (token) => {

@@ -99,34 +99,34 @@ const Register = () => {
                                   className={
                                     "form-control" +
                                     (errors[item.fieldName] &&
-                                      touched[item.fieldName]
+                                    touched[item.fieldName]
                                       ? " is-invalid"
                                       : "")
                                   }
                                 >
                                   {auth.user.roleName !== "superadmin"
                                     ? item.options &&
-                                    item.options.map((option) => (
-                                      <option
-                                        key={option.value}
-                                        value={option.value}
-                                        disabled={option.options && true}
-                                        hidden={option.options && true}
-                                      >
-                                        {option.name}
-                                      </option>
-                                    ))
+                                      item.options.map((option) => (
+                                        <option
+                                          key={option.value}
+                                          value={option.value}
+                                          disabled={option.options && true}
+                                          hidden={option.options && true}
+                                        >
+                                          {option.name}
+                                        </option>
+                                      ))
                                     : item.adminOption &&
-                                    item.adminOption.map((option) => (
-                                      <option
-                                        key={option.value}
-                                        value={option.value}
-                                        disabled={option.options && true}
-                                        hidden={option.options && true}
-                                      >
-                                        {option.name}
-                                      </option>
-                                    ))}
+                                      item.adminOption.map((option) => (
+                                        <option
+                                          key={option.value}
+                                          value={option.value}
+                                          disabled={option.options && true}
+                                          hidden={option.options && true}
+                                        >
+                                          {option.name}
+                                        </option>
+                                      ))}
                                 </Field>
                                 <ErrorMessage
                                   name={item.fieldName}
@@ -148,7 +148,7 @@ const Register = () => {
                                   className="ms-2"
                                   htmlFor="customSwitchSuccess"
                                 >
-                                  By registering you agree to the Frogetor{" "}
+                                  By registering you agree to the Jobstar{" "}
                                   <a href="#" className="text-primary">
                                     Terms of Use
                                   </a>

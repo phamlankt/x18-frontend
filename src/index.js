@@ -8,6 +8,7 @@ import "./styles.scss";
 import AlertState from "./contexts/AlertContext/AlertState";
 import AuthState from "./contexts/AuthContext/AuthState";
 import NotificationState from "./contexts/NotificationContext/NotificationState";
+import AppState from "./contexts/AppContext/AppState";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -16,7 +17,9 @@ root.render(
       <AlertState>
         <AuthState>
           <NotificationState>
-            <App />
+            <AppState>
+              <App />
+            </AppState>
           </NotificationState>
         </AuthState>
       </AlertState>

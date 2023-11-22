@@ -13,8 +13,10 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { loginFormItems } from "../global/loginFormItems";
 import ForgotPasswordModal from "../components/forgotPassword/ForgotPasswordModal";
+import AppContext from "../contexts/AppContext/AppContext";
 
 const Login = () => {
+  const { previousPage, handlePreviousPage } = useContext(AppContext);
   const { socket } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -48,7 +50,10 @@ const Login = () => {
       if (userInfo.roleName === "superadmin" || userInfo.roleName === "admin") {
         navigate("/admin");
       } else {
-        navigate(-1);
+        if (previousPage) {
+          navigate(previousPage);
+          handlePreviousPage("");
+        } else navigate("/");
       }
     } catch (error) {
       console.log(error);
