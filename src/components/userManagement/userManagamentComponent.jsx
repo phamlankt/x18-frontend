@@ -6,6 +6,8 @@ import userAPI from "../../apis/userAPI";
 import roleAPI from "../../apis/roleAPI";
 import ProfileModal from "../admin/ProfileModal";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../../contexts/AuthContext/AuthContext";
 
 const { Column } = Table;
 const { Option } = Select;
@@ -25,6 +27,7 @@ const UserManagementComponent = () => {
   const [roleNameToIdMap, setRoleNameToIdMap] = useState({});
   const [isShowModalUpdate, setIsShowModalUpdate] = useState({});
   const [selectedUserData, setSelectedUserData] = useState(null);
+  const { auth } = useContext(AuthContext);
 
   // Fetch roles and set roleMapping
   useEffect(() => {
@@ -52,7 +55,7 @@ const UserManagementComponent = () => {
   useEffect(() => {
     async function fetchUserRole() {
       try {
-        const userRole = "superadmin";
+        const userRole = auth.user.roleName;
         setUserRole(userRole);
       } catch (error) {
         console.error("Error fetching user role:", error);

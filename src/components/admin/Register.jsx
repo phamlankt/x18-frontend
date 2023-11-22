@@ -1,15 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Form, Input, Button, Alert } from 'antd';
-import AuthContext from "../../contexts/AuthContext/AuthContext";
 import { useNavigate } from "react-router-dom";
 import adminAPI from "../../apis/adminAPI";
-import authAPI from "../../apis/authAPI";
 
 const RegisterAdmin = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const { handleLogin } = useContext(AuthContext);
 
     const onFinish = async (data) => {
         try {
@@ -20,17 +17,8 @@ const RegisterAdmin = () => {
                 password: data.password,
                 role: data.role,
             });
-            if (response.status === 200) {
-                const response = await authAPI.login({
-                    email: data.email,
-                    password: data.password,
-                });
-
-                localStorage.setItem("accessToken", response.data.data.accessToken);
-
-                await handleLogin();
+            if (response.status === 200)
                 navigate("/admin/user");
-            }
         } catch (error) {
             setError(error.response.data.error);
         } finally {
@@ -97,8 +85,8 @@ const RegisterAdmin = () => {
                 <Form.Item wrapperCol={{ span: 12, offset: 4 }}
                 >
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Button type="primary" htmlType="submit">
-                            {loading ? "Loading" : "Register"}
+                        <Button loading={loading ? true : false} type="primary" htmlType="submit">
+                            Register
                         </Button>
                     </div>
                     {error && (
