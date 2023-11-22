@@ -15,7 +15,7 @@ import notificationAPI from "./apis/notificationAPI";
 function App() {
   const { handleAlertStatus } = useContext(AlertContext);
   const { auth, socket } = useContext(AuthContext);
-  const { notifications, handleNotification } = useContext(NotificationContext);
+  const { handleNotification } = useContext(NotificationContext);
 
   useEffect(() => {
     if (auth.isAuthenticated && socket) {
