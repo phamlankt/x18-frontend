@@ -37,13 +37,13 @@ export const routes = [
     path: "/admin/user",
     component: <User />,
     isPrivate: true,
-    isSuperAdmin: true,
+    isAdmin: true,
   },
   {
     path: "/admin/register",
     component: <AdminRegister />,
     isPrivate: true,
-    isSuperAdmin: true
+    isAdmin: true
   },
   {
     path: "/admin/price",
