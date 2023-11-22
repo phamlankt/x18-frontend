@@ -53,25 +53,6 @@ const ListJobHaveApplied = () => {
     />
   );
 
-  // useEffect(() => {
-  //   const FecthData = async () => {
-  //     if (checkDataJob) {
-  //       try {
-  //         const responseData = await applicationAPI.getAll();
-  //         setDataJob(responseData.data.data.applicationList.data);
-  //         setSaveDataApplicant(responseData.data.data.applicationList.data);
-  //         setLoading(false);
-  //         setCheckDataJob(false);
-  //       } catch (error) {
-  //         return;
-  //       }
-  //       setCheckDataJob(false);
-  //     }
-  //   };
-
-  //   FecthData();
-  // }, []);
-
   const showModal = () => {
     setOpen(true);
     setCurrentJob(currentJob);
@@ -262,21 +243,15 @@ const ListJobHaveApplied = () => {
                             </h4>
                             {value.status === "sent" ? (
                               <div>
-                                {value.status === "cancelled" ? (
-                                  <div className="NotificationButton">
-                                    Cancelled
-                                  </div>
-                                ) : (
-                                  <button
-                                    className="CancelButton"
-                                    onClick={() => showModal()}
-                                    onMouseEnter={() =>
-                                      setapplicationId(value._id)
-                                    }
-                                  >
-                                    <XCircle /> Cancel
-                                  </button>
-                                )}
+                                <button
+                                  className="CancelButton"
+                                  onClick={() => showModal()}
+                                  onMouseEnter={() =>
+                                    setapplicationId(value._id)
+                                  }
+                                >
+                                  <XCircle /> Cancel
+                                </button>
                               </div>
                             ) : (
                               <div className="NotificationButton text-info fw-bold">
