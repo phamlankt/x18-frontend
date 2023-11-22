@@ -1,6 +1,6 @@
 import { Delete, DeleteIcon, Trash, Trash2 } from "lucide-react";
 import React from "react";
-
+import { useRef } from "react";
 function UploadFile({
   setFieldValue,
   setFieldTouched,
@@ -12,6 +12,7 @@ function UploadFile({
   documents,
   setDocuments,
 }) {
+  const inputElement = useRef();
   const existedDocument = uploadedDocuments.filter(
     (docu) => docu.name === fieldName
   );
@@ -73,7 +74,9 @@ function UploadFile({
                   <>
                     <p
                       style={{ cursor: "pointer" }}
-                      className={fieldName.includes("other") && "fs-3"}
+                      className={
+                        fieldName.includes("other") ? "fs-3" : undefined
+                      }
                     >
                       + {fieldName.includes("other") ? "" : fieldName}
                     </p>
@@ -90,8 +93,9 @@ function UploadFile({
                 style={{ cursor: "pointer" }}
                 className="my-1 text-danger"
                 onClick={async () => {
-                  await setFieldValue("CV" , "")
-                  removeDocument(fieldName)
+                  inputElement.current.value = "";
+                  // setFieldValue(fieldName , null)
+                  removeDocument(fieldName);
                   await setFieldTouched({ fieldName }, true);
                 }}
               >
@@ -109,6 +113,7 @@ function UploadFile({
           <input
             type="file"
             accept="application/pdf"
+            ref={inputElement}
             id={fieldName}
             name={fieldName}
             style={{ display: "none" }}

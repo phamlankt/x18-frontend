@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import applicationAPI from "../../apis/applicationAPI";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
@@ -21,8 +21,17 @@ function ApplicationForm({ setApplication, jobInfo }) {
     "Cover Letter": "",
     note: "",
   };
+
+  const isCVUploaded = useMemo(() => {
+    const filterDocu = uploadedDocuments.filter(
+      (document) => document.name === "CV"
+    );
+    if (filterDocu.length > 0) return true;
+    else return false;
+  }, [uploadedDocuments]);
+
   const validationSchema = Yup.object().shape({
-    CV: Yup.mixed().required("CV is required"),
+    CV: Yup.mixed().test("is-valid", "CV is required", () => isCVUploaded),
     "Cover Letter": Yup.mixed(),
     note: Yup.string(),
   });
@@ -69,7 +78,7 @@ function ApplicationForm({ setApplication, jobInfo }) {
         recruiter: jobInfo.creator,
         applicant: auth.user.email,
         jobId: jobId,
-        jobTitle:jobInfo.title,
+        jobTitle: jobInfo.title,
         applicationId: response.data.data.applicationInfo._id,
         status: "sent",
       });
@@ -108,7 +117,7 @@ function ApplicationForm({ setApplication, jobInfo }) {
               <div className="col-md-12 border-right">
                 <div className="p-3 py-5">
                   <div className="d-flex justify-content-center">
-                    {documents.map((document,index) => {
+                    {documents.map((document, index) => {
                       return (
                         <UploadFile
                           key={index}
@@ -144,7 +153,7 @@ function ApplicationForm({ setApplication, jobInfo }) {
                       as="textarea"
                       className="mt-2 w-100"
                       rows={6}
-                      placeholder="maxLength is 1000"
+                      placeholder="Put the note for your application here"
                       maxLength={1000}
                     />
                   </div>
