@@ -18,6 +18,7 @@ import jobAPI from "../../apis/jobAPI";
 import SearchBar from "../homePage/SearchBar";
 import Loading from "../layout/Loading";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
+import { capitalizeFirstLetter } from "../../global/common";
 
 let pageSizeDefault = 1;
 
@@ -37,6 +38,7 @@ const ListJobHaveApplied = () => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [checkDataJob, setCheckDataJob] = useState(true);
   const [saveDataApplicant, setSaveDataApplicant] = useState([]);
+  const [currentJob, setCurrentJob] = useState();
   const data = {};
   searchParams.forEach((value, key) => {
     data[key] = value;
@@ -51,25 +53,28 @@ const ListJobHaveApplied = () => {
     />
   );
 
-  useEffect(() => {
-    const FecthData = async () => {
-      if (checkDataJob) {
-        try {
-          const responseData = await applicationAPI.getAll();
-          setDataJob(responseData.data.data.applicationList.data);
-          setSaveDataApplicant(responseData.data.data.applicationList.data);
-          setLoading(false);
-          setCheckDataJob(false);
-        } catch (error) {
-          return;
-        }
-      }
-    };
-    FecthData();
-  }, []);
+  // useEffect(() => {
+  //   const FecthData = async () => {
+  //     if (checkDataJob) {
+  //       try {
+  //         const responseData = await applicationAPI.getAll();
+  //         setDataJob(responseData.data.data.applicationList.data);
+  //         setSaveDataApplicant(responseData.data.data.applicationList.data);
+  //         setLoading(false);
+  //         setCheckDataJob(false);
+  //       } catch (error) {
+  //         return;
+  //       }
+  //       setCheckDataJob(false);
+  //     }
+  //   };
+
+  //   FecthData();
+  // }, []);
 
   const showModal = () => {
     setOpen(true);
+    setCurrentJob(currentJob);
   };
   const handleOk = () => {
     window.scrollTo({
@@ -80,12 +85,12 @@ const ListJobHaveApplied = () => {
     setOpen(false);
     applicationAPI
       .cancel({ applicationId })
-      .then((response) => {
+      .then(() => {
         socket.emit("sendApplicationEvent", {
-          recruiter: response.data.data.applicationInfo.creator,
+          recruiter: currentJob.creator,
           applicant: auth.user.email,
-          jobId: response.jobId,
-          jobTitle: "",
+          jobId: currentJob._id,
+          jobTitle: currentJob.title,
           applicationId,
           status: "cancelled",
         });
@@ -135,6 +140,7 @@ const ListJobHaveApplied = () => {
           if (res.data.data.applicationList.data) {
             setDataJob(res.data.data.applicationList.data);
             setSaveDataApplicant(res.data.data.applicationList.data);
+            setLoading(false);
             return;
           } else {
             return;
@@ -256,17 +262,27 @@ const ListJobHaveApplied = () => {
                             </h4>
                             {value.status === "sent" ? (
                               <div>
-                                <button
-                                  className="CancelButton"
-                                  onClick={() => showModal()}
-                                  onMouseEnter={() =>
-                                    setapplicationId(value._id)
-                                  }
-                                >
-                                  <XCircle /> Cancel
-                                </button>
+                                {value.status === "cancelled" ? (
+                                  <div className="NotificationButton">
+                                    Cancelled
+                                  </div>
+                                ) : (
+                                  <button
+                                    className="CancelButton"
+                                    onClick={() => showModal()}
+                                    onMouseEnter={() =>
+                                      setapplicationId(value._id)
+                                    }
+                                  >
+                                    <XCircle /> Cancel
+                                  </button>
+                                )}
                               </div>
-                            ) : null}
+                            ) : (
+                              <div className="NotificationButton text-info fw-bold">
+                                {capitalizeFirstLetter(value.status)}
+                              </div>
+                            )}
                           </div>
                           <h6>
                             Position: <span>{value.job.position}</span>

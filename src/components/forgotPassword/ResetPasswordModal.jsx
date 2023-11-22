@@ -57,7 +57,6 @@ const ResetPasswordModal = ({ show, handleClose }) => {
         navigate("/");
       })
       .catch((error) => {
-        console.log("error Message", error);
         setErrorMessage(error.response.data.error);
         console.log("error", error.response.data.error);
       });

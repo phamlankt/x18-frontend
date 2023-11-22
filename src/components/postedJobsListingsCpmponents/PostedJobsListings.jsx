@@ -125,10 +125,10 @@ const PostedJobsListings = () => {
         ) {
           // jobAPI
           try {
-            const responseData = await jobAPI.getAll();
-            if (responseData.data.data) {
-              setSaveDataApplicant(responseData.data.data);
-              setDataJob(responseData.data.data);
+            const responseData = await jobAPI.getListJob();
+            if (responseData.data.data.undefined.data) {
+              setSaveDataApplicant(responseData.data.data.undefined.data);
+              setDataJob(responseData.data.data.undefined.data);
               setSpinConnect(false);
               setLoading(false);
               return;
@@ -163,28 +163,6 @@ const PostedJobsListings = () => {
     };
     getData();
   }, [data.search, data.sector, data.location, data.sortField, data.sortBy]);
-
-  useEffect(() => {
-    const FecthData = async () => {
-      try {
-        const responseData = await jobAPI.getAll();
-        if (responseData.data.data) {
-          setSaveDataApplicant(responseData.data.data);
-          setDataJob(responseData.data.data);
-          setSpinConnect(false);
-          setLoading(false);
-        } else {
-          return;
-        }
-        setCheckDataJob(true);
-      } catch (error) {
-        setCheckDataJob(true);
-        return;
-      }
-    };
-
-    FecthData();
-  }, []);
 
   const pageSize = 5;
   const totalItems = dataJob.length;

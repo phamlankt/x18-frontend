@@ -62,7 +62,11 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     address: Yup.string().required("Address is required"),
     businessSector: Yup.array()
       .required("Business sector is required")
-      .test("is-valid", "Sectors is required", (value) => value.length > 0),
+      .test(
+        "is-valid",
+        "Business sector is required",
+        (value) => value.length > 0
+      ),
     companyLogo: Yup.mixed().required("Company logo is required"),
     description: Yup.string().required("Company description is required"),
     password: Yup.string()
@@ -81,7 +85,13 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     email: Yup.string().email(),
     phoneNumber: Yup.string().required("Phone Number is required"),
     address: Yup.string().required("Address is required"),
-    businessSector: Yup.array().required("Business sector is required"),
+    businessSector: Yup.array()
+      .required("Business sector is required")
+      .test(
+        "is-valid",
+        "Business sector is required",
+        (value) => value.length > 0
+      ),
     description: Yup.string().required("Company description is required"),
     password: Yup.string()
       .concat(false ? Yup.string().required("Password is required") : null)
@@ -186,10 +196,9 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     }
   };
 
-  const bsOptions = [];
-  console.log(businessSectors);
-  if (businessSectors.sectors) {
-    businessSectors.sectors.map((businessSector) => {
+  const bsOptions = []; 
+  if (businessSectors.length > 0) {
+    businessSectors.map((businessSector) => {
       return bsOptions.push({
         name: businessSector.name,
         value: businessSector.name,
@@ -197,7 +206,6 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     });
   }
   const handleChangeSector = (e) => {
-    console.log("e", e);
     setSectors(e);
   };
 

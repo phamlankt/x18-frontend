@@ -44,22 +44,6 @@ function Header() {
     }
   };
 
-  // useEffect(() => {
-  //   if (auth.isAuthenticated && socket) {
-  //     socket.on("getJobNotification", (data) => {
-  //       console.log("data",data)
-  //       const message = handleApplicationNotification(data);
-
-  //       handleAlertStatus({
-  //         type: "success",
-  //         message: message,
-  //       });
-       
-  //       setNotifications(prev=>[...prev, data]);
-  //     });
-  //   }
-  // }, [socket]);
-
   const DeleteToken = () => {
     navigate("/login");
     handleLogout();
