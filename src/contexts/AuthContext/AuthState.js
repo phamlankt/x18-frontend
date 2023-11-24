@@ -35,6 +35,7 @@ const AuthState = ({ children }) => {
   };
 
   const handleLogout = () => {
+    socket.disconnect();
     setAuth({
       isAuthenticated: false,
       user: {},

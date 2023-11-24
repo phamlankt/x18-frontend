@@ -45,8 +45,8 @@ const Login = () => {
       localStorage.setItem("accessToken", response.data.data.accessToken);
 
       const userInfo = await handleLogin();
-      socket &&
-        socket.emit("newUser", { id: userInfo._id, email: userInfo.email });
+      // socket &&
+      //   socket.emit("newUser", { id: userInfo._id, email: userInfo.email });
       if (userInfo.roleName === "superadmin" || userInfo.roleName === "admin") {
         navigate("/admin");
       } else {
