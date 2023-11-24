@@ -34,7 +34,6 @@ const ProfileModal = ({ isOpenModal, userId, userData, setIsUserDataUpdated }) =
       message.success("Profile updated successfully", 3);
       isOpenModal(false);
       setIsUserDataUpdated((prev) => !prev);
-      setFileAvatar(null);
     } catch (error) {
       setError(error.response.data.error);
     } finally {
