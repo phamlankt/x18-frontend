@@ -117,6 +117,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
   });
 
   function onSubmit(fields, { setStatus, setSubmitting, resetForm }) {
+    console.log("fields:", fields);
     setStatus();
     const userInfo_recruiter = {
       id: auth.user._id,
@@ -275,6 +276,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                       isEditMode={true}
                       setFieldTouched={setFieldTouched}
                       setFieldValue={setFieldValue}
+                      gender={auth.user.gender}
                     />
                   ))}
 
