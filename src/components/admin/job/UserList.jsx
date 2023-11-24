@@ -74,7 +74,10 @@ const UserList = ({ currentUser, setCurrentUser }) => {
       <Button
         className="mt-2"
         type="primary"
-        onClick={() => setCurrentUser("")}
+        onClick={() => {
+          setCurrentUser("");
+          setSearch("");
+        }}
       >
         See All Jobs
       </Button>

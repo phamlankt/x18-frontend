@@ -23,7 +23,6 @@ const AdminHeader = () => {
   const navigate = useNavigate();
 
   const DeleteToken = () => {
-    navigate("/login");
     handleLogout();
     localStorage.removeItem("accessToken");
   };

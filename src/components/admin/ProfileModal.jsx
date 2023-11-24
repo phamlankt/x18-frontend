@@ -12,7 +12,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import adminAPI from "../../apis/adminAPI";
 import "../../scss/_admin-profile-modal.scss";
 
-const ProfileModal = ({ isOpenModal, userId, userData }) => {
+const ProfileModal = ({ isOpenModal, userId, userData, setIsUserDataUpdated }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fileAvatar, setFileAvatar] = useState(null);
@@ -33,6 +33,7 @@ const ProfileModal = ({ isOpenModal, userId, userData }) => {
       await adminAPI.update(formData);
       message.success("Profile updated successfully", 3);
       isOpenModal(false);
+      setIsUserDataUpdated((prev) => !prev);
     } catch (error) {
       setError(error.response.data.error);
     } finally {

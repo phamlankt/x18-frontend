@@ -13,6 +13,7 @@ import { CalendarCheck } from "lucide-react";
 import applicationAPI from "../../apis/applicationAPI";
 import { useContext } from "react";
 import AlertContext from "../../contexts/AlertContext/AlertContext";
+import { getCity } from "../../utils/getCity";
 import jobAPI from "../../apis/jobAPI";
 import SearchBar from "../homePage/SearchBar";
 import Loading from "../layout/Loading";
@@ -51,23 +52,7 @@ const ListJobHaveApplied = () => {
       spin
     />
   );
-  if (checkDataJob) {
-    applicationAPI
-      .getAll()
-      .then((response) => {
-        setLoading(false);
-        if (response.data.data.applicationList.data) {
-          setDataJob(response.data.data.applicationList.data);
-          setSaveDataApplicant(response.data.data.applicationList.data);
-        } else {
-          return;
-        }
-        setCheckDataJob(false);
-      })
-      .catch((error) => {
-        console.log(error, 15);
-      });
-  }
+
   const showModal = (currentJob) => {
     setOpen(true);
     setCurrentJob(currentJob);
@@ -90,7 +75,6 @@ const ListJobHaveApplied = () => {
           applicationId,
           status: "cancelled",
         });
-
         applicationAPI
           .getAll()
           .then((res) => {
@@ -132,21 +116,20 @@ const ListJobHaveApplied = () => {
       if (
         window.location.href === `${process.env.REACT_APP_BASE_URL}/myListJob`
       ) {
-        applicationAPI
-          .getAll()
-          .then((response) => {
-            if (response.data.data.applicationList.data) {
-              setDataJob(response.data.data.applicationList.data);
-              setSaveDataApplicant(response.data.data.applicationList.data);
-              return;
-            } else {
-              return;
-            }
-            setCheckDataJob(false);
-          })
-          .catch((error) => {
-            console.log(error, 15);
-          });
+        try {
+          const res = await applicationAPI.getAll();
+          if (res.data.data.applicationList.data) {
+            setDataJob(res.data.data.applicationList.data);
+            setSaveDataApplicant(res.data.data.applicationList.data);
+            setLoading(false);
+            return;
+          } else {
+            return;
+          }
+        } catch (error) {
+          console.log(error);
+          return;
+        }
       }
       try {
         const res = await jobAPI.getBySearchAndFilter({
@@ -164,7 +147,6 @@ const ListJobHaveApplied = () => {
             return obj2._id === obj1.job._id;
           });
         });
-
         setDataJob(filteredArray);
       } catch (error) {
         handleAlertStatus({ type: "error", message: "Something went wrong" });
@@ -294,7 +276,7 @@ const ListJobHaveApplied = () => {
                             </p>
                             <p>
                               <MapPin />
-                              <span>{value.job.city}</span>
+                              <span>{getCity(value.job.city)}</span>
                             </p>
                             <p>
                               <CalendarCheck />
@@ -332,4 +314,4 @@ const ListJobHaveApplied = () => {
   );
 };
 
-export default ListJobHaveApplied;
+export default React.memo(ListJobHaveApplied);

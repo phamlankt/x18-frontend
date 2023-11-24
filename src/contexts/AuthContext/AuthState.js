@@ -35,10 +35,12 @@ const AuthState = ({ children }) => {
   };
 
   const handleLogout = () => {
+    socket.disconnect();
     setAuth({
       isAuthenticated: false,
       user: {},
     });
+    navigate("/");
   };
 
   const parseJwt = (token) => {
