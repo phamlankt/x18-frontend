@@ -275,6 +275,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                       isEditMode={true}
                       setFieldTouched={setFieldTouched}
                       setFieldValue={setFieldValue}
+                      gender={auth.user.gender}
                     />
                   ))}
 

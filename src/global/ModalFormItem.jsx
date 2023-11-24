@@ -1,6 +1,7 @@
 import { Field, ErrorMessage } from "formik";
 import { Select } from "antd";
 import React, { useState } from "react";
+import { capitalizeFirstLetter } from "./common";
 
 function ModalFormItem({
   item,
@@ -9,9 +10,10 @@ function ModalFormItem({
   touched,
   setFieldTouched,
   setFieldValue,
+  gender,
 }) {
   const fieldName = item.fieldName;
-  const [value, setValue] = useState();
+  const [value, setValue] = useState(item.fieldName === "gender" && gender);
   return (
     <div className="form-row">
       {item.as === "select" ? (
@@ -33,13 +35,13 @@ function ModalFormItem({
               borderRadius: "4px",
             }}
             bordered={false}
-            allowClear={true}
+            allowClear={false}
             placeholder={`Choose your ${item.fieldName}`}
             onChange={(e) => {
               setValue(e);
               setFieldValue(item.fieldName, e.toLowerCase());
             }}
-            value={value}
+            value={capitalizeFirstLetter(value)}
             options={item.options.map((value) => ({
               label: value.name,
               value: value.name,
