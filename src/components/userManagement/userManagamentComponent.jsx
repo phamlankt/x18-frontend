@@ -27,6 +27,7 @@ const UserManagementComponent = () => {
   const [roleNameToIdMap, setRoleNameToIdMap] = useState({});
   const [isShowModalUpdate, setIsShowModalUpdate] = useState({});
   const [selectedUserData, setSelectedUserData] = useState(null);
+  const [isUserDataUpdated, setIsUserDataUpdated] = useState(false);
   const { auth } = useContext(AuthContext);
 
   // Fetch roles and set roleMapping
@@ -71,6 +72,10 @@ const UserManagementComponent = () => {
   useEffect(() => {
     regenerateTable();
   }, [filteredUsers]);
+
+  useEffect(() => {
+    fetchData(); // 
+  }, [isUserDataUpdated]);
 
   const fetchData = async () => {
     try {
@@ -263,8 +268,9 @@ const UserManagementComponent = () => {
                   [record._id]: false
                 }))}
                 footer={null}
+                afterClose={() => setIsUserDataUpdated((prev) => !prev)}
               >
-                <ProfileModal isOpenModal={setIsShowModalUpdate} userId={record._id} userData={selectedUserData} />
+                <ProfileModal isOpenModal={setIsShowModalUpdate} userId={record._id} userData={selectedUserData} setIsUserDataUpdated={setIsUserDataUpdated} />
               </Modal>
             </span>
           )}
