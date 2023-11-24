@@ -12,13 +12,19 @@ import { handleApplicationNotification } from "./global/common";
 import AlertContext from "./contexts/AlertContext/AlertContext";
 import NotificationContext from "./contexts/NotificationContext/NotificationContext";
 import notificationAPI from "./apis/notificationAPI";
+import { io } from "socket.io-client";
+
 function App() {
   const { handleAlertStatus } = useContext(AlertContext);
   const { auth, socket } = useContext(AuthContext);
   const { handleNotification } = useContext(NotificationContext);
-
+  
   useEffect(() => {
     if (auth.isAuthenticated && socket) {
+      socket.once("connect", () => {
+        socket.emit("newUser", { id: auth.user._id, email: auth.user.email });
+      });
+
       socket.on("getJobNotification", async (data) => {
         const message = handleApplicationNotification(data);
 
