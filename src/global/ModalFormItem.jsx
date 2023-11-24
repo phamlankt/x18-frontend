@@ -13,7 +13,6 @@ function ModalFormItem({
   gender,
 }) {
   const fieldName = item.fieldName;
-  console.log("gender", gender);
   const [value, setValue] = useState(item.fieldName === "gender" && gender);
   return (
     <div className="form-row">
