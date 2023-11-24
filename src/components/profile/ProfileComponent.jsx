@@ -1,4 +1,4 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import React, { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import AuthContext from "../../contexts/AuthContext/AuthContext";
@@ -196,7 +196,7 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
     }
   };
 
-  const bsOptions = []; 
+  const bsOptions = [];
   if (businessSectors.length > 0) {
     businessSectors.map((businessSector) => {
       return bsOptions.push({
@@ -273,6 +273,8 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                       errors={errors}
                       touched={touched}
                       isEditMode={true}
+                      setFieldTouched={setFieldTouched}
+                      setFieldValue={setFieldValue}
                     />
                   ))}
 
@@ -301,7 +303,6 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                           }}
                           bordered={false}
                           allowClear={true}
-                          // maxTagCount={3}
                           placeholder="Choose your sectors"
                           onChange={(e) => {
                             setSectors(e);
@@ -363,7 +364,6 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                               </p>
                             )}
                           </div>
-
                           <input
                             placeholder="logo"
                             type="file"
@@ -397,9 +397,9 @@ function ProfileComponent({ onOpenResetPasswordModal }) {
                       className="btn btn-primary profile-button"
                       type="submit"
                     >
-                      {isLoading && (
+                      {isLoading ? (
                         <span className="spinner-border spinner-border-sm mr-1"></span>
-                      )}
+                      ) : undefined}
                       Save Profile
                     </button>
                   </div>

@@ -60,7 +60,7 @@ function Avatar() {
       <div className="mb-3 mt-3">
         <label
           className="btn-primary btn"
-          for="formFile"
+          htmlFor="formFile"
           onChange={handleFileUpload}
         >
           {loading && (
