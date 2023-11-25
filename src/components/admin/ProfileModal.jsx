@@ -17,6 +17,7 @@ const ProfileModal = ({ isOpenModal, userId, userData, setIsUserDataUpdated }) =
   const [error, setError] = useState(null);
   const [fileAvatar, setFileAvatar] = useState(null);
   const [currentAvatar, setCurrentAvatar] = useState(userData.avatarUrl || null);
+  const [fileList, setFileList] = useState([]);
 
 
   const onFinish = async (data) => {
@@ -42,12 +43,19 @@ const ProfileModal = ({ isOpenModal, userId, userData, setIsUserDataUpdated }) =
   };
 
   const handleUploadFile = (file) => {
-    setFileAvatar(file.fileList[0].originFileObj);
+    if (file.fileList.length > 0) {
+      setFileAvatar(file.fileList[0].originFileObj);
+    } else {
+      setFileAvatar(null);
+    }
+    setFileList(file.fileList);
   };
 
   useEffect(() => {
     setCurrentAvatar(userData.avatarUrl || null);
+    setFileList([]);
   }, [userData.avatarUrl]);
+
 
   return (
     <div className="container-admin-profile-modal">
@@ -77,6 +85,8 @@ const ProfileModal = ({ isOpenModal, userId, userData, setIsUserDataUpdated }) =
               }}
               accept=".jpg,.png,.jpeg"
               maxCount={1}
+              fileList={fileList}
+              beforeUpload={() => false}
             >
               {currentAvatar ? (
                 <Avatar size={64} src={currentAvatar} />
