@@ -53,12 +53,9 @@ const ProfileModal = ({ isOpenModal, userId, userData, setIsUserDataUpdated }) =
 
   useEffect(() => {
     setCurrentAvatar(userData.avatarUrl || null);
-  }, [userData.avatarUrl]);
-
-  useEffect(() => {
-    setCurrentAvatar(userData.avatarUrl || null);
     setFileList([]);
   }, [userData.avatarUrl]);
+
 
   return (
     <div className="container-admin-profile-modal">
