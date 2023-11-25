@@ -111,7 +111,6 @@ function JobDescription() {
               <button
                 className="btn btn-primary fw-bold me-4 w-25"
                 onClick={() => {
-                  alert(window.location.pathname);
                   handlePreviousPage(window.location.pathname);
                   navigate("/login");
                 }}
