@@ -14,6 +14,7 @@ const ChangePasswordModal = ({ show, handleClose }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const { auth } = useContext(AuthContext);
   const initialValues = {
+    currentPassword: "",
     password: "",
     confirmPassword: "",
   };
@@ -97,7 +98,7 @@ const ChangePasswordModal = ({ show, handleClose }) => {
                 <h5>New password</h5>
                 {passwordProfileModal.map((item) => (
                   <ModalFormItem
-                  key={item.fieldName}
+                    key={item.fieldName}
                     item={item}
                     errors={errors}
                     touched={touched}
